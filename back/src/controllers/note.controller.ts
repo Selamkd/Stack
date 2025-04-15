@@ -52,7 +52,7 @@ export const getNoteById = async (req: Request, res: Response) => {
   }
 };
 
-export const createNote = async (req: Request, res: Response) => {
+export const upsertNote = async (req: Request, res: Response) => {
   try {
     const { _id, title, content, tags, isStarred } = req.body;
 

@@ -37,7 +37,7 @@ export const getTagById = async (req: Request, res: Response) => {
   }
 };
 
-export const createTag = async (req: Request, res: Response) => {
+export const upsertTag = async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
 
