@@ -9,7 +9,7 @@ router.get('/:id', QuickLookupController.getLookupById);
 
 router.get('/search', QuickLookupController.searchLookups);
 
-router.post('/', QuickLookupController.UpsertLookUp);
+router.post('/', QuickLookupController.upsertLookUp);
 
 router.delete('/:id', QuickLookupController.deleteQuickLookup);
 

@@ -7,7 +7,6 @@ export const getAllLookUps = async (req: Request, res: Response) => {
   try {
     logger.debug('Fetching all quick lookups with filters:', req.query);
 
-
     const query: FilterQuery<IQuickLookup> = {};
 
     if (req.query.tag) {
@@ -56,7 +55,7 @@ export const getLookupById = async (req: Request, res: Response) => {
   }
 };
 
-export const UpsertLookUp = async (req: Request, res: Response) => {
+export const upsertLookUp = async (req: Request, res: Response) => {
   try {
     const { _id, title, answer, tags, isStarred } = req.body;
 
@@ -80,7 +79,6 @@ export const UpsertLookUp = async (req: Request, res: Response) => {
     } else {
       logger.debug('Creating new quick lookup:', title);
 
-      
       if (!title || !answer) {
         logger.warn('Missing required fields for quick lookup creation');
         res.status(400).json({ message: 'Title and answer are required' });

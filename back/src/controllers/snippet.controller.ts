@@ -5,11 +5,11 @@ import mongoose, { FilterQuery } from 'mongoose';
 export const getAllSnippets = async (req: Request, res: Response) => {
   try {
     const query: FilterQuery<ISnippet> = {};
-    if (req.body.tag) {
+    if (req.query.tag) {
       query.tags = req.query.tag;
     }
 
-    if (req.body.isStarred) {
+    if (req.query.isStarred) {
       query.isStarred = req.query.isStarred === 'true';
     }
 
