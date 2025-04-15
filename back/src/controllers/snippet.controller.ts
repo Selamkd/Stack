@@ -38,7 +38,7 @@ export const getSnippetById = async (req: Request, res: Response) => {
   }
 };
 
-export const createSnippet = async (req: Request, res: Response) => {
+export const upsertSnippet = async (req: Request, res: Response) => {
   try {
     const { title, description, code, tags, isStarred } = req.body;
 
@@ -85,6 +85,7 @@ export const deleteSnippet = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error deleting snippet', error });
   }
 };
+
 export const toggleStarred = async (req: Request, res: Response) => {
   try {
     const snippet = await Snippet.findById(req.params.id);
