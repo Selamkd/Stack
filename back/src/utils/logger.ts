@@ -1,7 +1,6 @@
-import chalk, { ChalkInstance } from 'chalk';
-import fs from 'fs';
-import path from 'path';
+import * as kleur from 'kleur';
 import { format } from 'date-fns';
+
 enum LogLevel {
   DEBUG = 0,
   INFO = 1,
@@ -32,14 +31,13 @@ class Logger {
       const now = new Date();
       return `[${format(now, 'Pp')}]: ${message}`;
     }
-
     return message;
   }
 
   private log(
     level: LogLevel,
     levelStr: string,
-    color: ChalkInstance,
+    colorFn: (str: string) => string,
     ...args: any[]
   ) {
     if (level < this.config.level) return;
@@ -51,27 +49,32 @@ class Logger {
       .join(' ');
 
     const formattedMessage = this.formatLogMessage(message);
-
-    console.log(color(`[${level}]`), formattedMessage);
+    console.log(colorFn(`[${levelStr}]`), formattedMessage);
   }
+
   debug(...args: any[]): void {
-    this.log(LogLevel.DEBUG, 'DEBUG', chalk.blue, ...args);
+    this.log(LogLevel.DEBUG, 'DEBUG', kleur.blue, ...args);
   }
 
   info(...args: any[]): void {
-    this.log(LogLevel.INFO, 'INFO', chalk.green, ...args);
+    this.log(LogLevel.INFO, 'INFO', kleur.green, ...args);
   }
 
   warn(...args: any[]): void {
-    this.log(LogLevel.WARN, 'WARN', chalk.yellow, ...args);
+    this.log(LogLevel.WARN, 'WARN', kleur.yellow, ...args);
   }
 
   error(...args: any[]): void {
-    this.log(LogLevel.ERROR, 'ERROR', chalk.red, ...args);
+    this.log(LogLevel.ERROR, 'ERROR', kleur.red, ...args);
   }
 
   fatal(...args: any[]): void {
-    this.log(LogLevel.FATAL, 'FATAL', chalk.bgRed.white, ...args);
+    this.log(
+      LogLevel.FATAL,
+      'FATAL',
+      (str) => kleur.bgRed().white(str),
+      ...args
+    );
   }
 
   middleware() {
@@ -97,5 +100,6 @@ class Logger {
 }
 
 const logger = new Logger();
+
 export { Logger, LogLevel };
 export default logger;
