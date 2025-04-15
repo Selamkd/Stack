@@ -16,7 +16,19 @@ export class APIService {
 
       const response = await fetch(url, options);
 
-      let data = await response.json();
+      let data;
+      const contentType = response.headers.get('Content-Type') || '';
+      if (contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          logger.error(`APIService JSON Parsing Error: ${url}`, jsonError);
+          throw new Error('Failed to parse JSON response');
+        }
+      } else {
+        logger.error(`APIService Unexpected Content-Type: ${contentType} - ${url}`);
+        throw new Error('Unexpected Content-Type, expected application/json');
+      }
 
       if (!response.ok) {
         logger.error(
