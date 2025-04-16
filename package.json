@@ -1,5 +1,16 @@
 {
   "dependencies": {
     "kleur": "^4.1.5"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run start:front\" \"npm run start:back\"",
+    "start:front": "cd view && npm start",
+    "start:back": "cd back && npm run dev",
+    "build": "concurrently \"npm run build:front\" \"npm run build:back\"",
+    "build:front": "cd view && npm run build",
+    "build:back": "cd back && npm run build"
   }
 }
