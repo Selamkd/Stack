@@ -16,9 +16,12 @@ root.render(
       <AppLayout>
         <Routes>
           <Route path="/" element={<App />} />
-          <Route path="/test" element={<AppTest />} />
         </Routes>
       </AppLayout>
+
+      <Routes>
+        <Route path="/test" element={<AppTest />} />
+      </Routes>
     </BrowserRouter>
   </React.StrictMode>
 );
