@@ -3,11 +3,15 @@
     "kleur": "^4.1.5"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@craco/craco": "^7.1.0",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4"
   },
   "scripts": {
     "start": "concurrently \"npm run start:front\" \"npm run start:back\"",
-    "start:front": "cd view && npm start",
+    "start:front": "cd view && npm run dev",
     "start:back": "cd back && npm run dev",
     "build": "concurrently \"npm run build:front\" \"npm run build:back\"",
     "build:front": "cd view && npm run build",
