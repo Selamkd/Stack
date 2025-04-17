@@ -6,14 +6,11 @@ import quickLookupRoutes from './lookups.routes';
 import logger from '../utils/logger';
 
 const router = Router();
-
 router.use(logger.middleware());
-
-router.use('/api/tags', tagRoutes);
-router.use('/api/notes', noteRoutes);
-router.use('/api/snippets', snippetRoutes);
-router.use('/api/quicklookups', quickLookupRoutes);
-
+router.use('/tags', tagRoutes);
+router.use('/notes', noteRoutes);
+router.use('/snippets', snippetRoutes);
+router.use('/quicklookups', quickLookupRoutes);
 router.get('/ping', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });

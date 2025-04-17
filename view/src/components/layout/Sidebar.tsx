@@ -96,7 +96,7 @@ export default function Sidebar(props: ISideBar) {
             icon={<Bookmark size={18} />}
             label="Lookups"
             isActive={false}
-            link={'/search-lookup'}
+            link={'/lookups'}
             mode={props?.sidebarMode}
           />
           <NavButton
@@ -151,7 +151,7 @@ function NavButton(props: INavLink) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/${props.link}`);
+    navigate(`${props.link}`);
   };
 
   if (props.mode === 'compact') {

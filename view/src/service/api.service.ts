@@ -26,7 +26,9 @@ export class APIService {
           throw new Error('Failed to parse JSON response');
         }
       } else {
-        logger.error(`APIService Unexpected Content-Type: ${contentType} - ${url}`);
+        logger.error(
+          `APIService Unexpected Content-Type: ${contentType} - ${url}`
+        );
         throw new Error('Unexpected Content-Type, expected application/json');
       }
 

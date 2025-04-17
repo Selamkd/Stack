@@ -1,4 +1,3 @@
-import * as kleur from 'kleur';
 import { format } from 'date-fns';
 
 enum LogLevel {
@@ -26,61 +25,47 @@ class Logger {
     this.config = { ...defaultConfig, ...config };
   }
 
-  private formatLogMessage(message: string) {
-    if (this.config.timestamp) {
-      const now = new Date();
-      return `[${format(now, 'Pp')}]: ${message}`;
-    }
-    return message;
-  }
-
-  private log(
-    level: LogLevel,
-    levelStr: string,
-    colorFn: (str: string) => string,
-    ...args: any[]
-  ) {
-    if (level < this.config.level) return;
-
+  private formatLogMessage(levelStr: string, args: any[]) {
     const message = args
       .map((arg) =>
         typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
       )
       .join(' ');
 
-    const formattedMessage = this.formatLogMessage(message);
-    console.log(colorFn(`[${levelStr}]`), formattedMessage);
+    const timestamp = this.config.timestamp
+      ? `[${format(new Date(), 'Pp')}] `
+      : '';
+    return `${timestamp}[${levelStr}] ${message}`;
+  }
+
+  private log(level: LogLevel, levelStr: string, ...args: any[]) {
+    if (level < this.config.level) return;
+    console.log(this.formatLogMessage(levelStr, args));
   }
 
   debug(...args: any[]): void {
-    this.log(LogLevel.DEBUG, 'DEBUG', kleur.blue, ...args);
+    this.log(LogLevel.DEBUG, 'DEBUG', ...args);
   }
 
   info(...args: any[]): void {
-    this.log(LogLevel.INFO, 'INFO', kleur.green, ...args);
+    this.log(LogLevel.INFO, 'INFO', ...args);
   }
 
   warn(...args: any[]): void {
-    this.log(LogLevel.WARN, 'WARN', kleur.yellow, ...args);
+    this.log(LogLevel.WARN, 'WARN', ...args);
   }
 
   error(...args: any[]): void {
-    this.log(LogLevel.ERROR, 'ERROR', kleur.red, ...args);
+    this.log(LogLevel.ERROR, 'ERROR', ...args);
   }
 
   fatal(...args: any[]): void {
-    this.log(
-      LogLevel.FATAL,
-      'FATAL',
-      (str) => kleur.bgRed().white(str),
-      ...args
-    );
+    this.log(LogLevel.FATAL, 'FATAL', ...args);
   }
 
   middleware() {
     return (req: any, res: any, next: any) => {
       const start = Date.now();
-
       res.on('finish', () => {
         const duration = Date.now() - start;
         const message = `${req.method} ${req.url} ${res.statusCode} - ${duration}ms`;
@@ -93,7 +78,6 @@ class Logger {
           this.info(message);
         }
       });
-
       next();
     };
   }
