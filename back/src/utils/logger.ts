@@ -1,5 +1,3 @@
-import { format } from 'date-fns';
-
 enum LogLevel {
   DEBUG = 0,
   INFO = 1,
@@ -25,6 +23,10 @@ class Logger {
     this.config = { ...defaultConfig, ...config };
   }
 
+  private getTimestamp(): string {
+    return new Date().toLocaleString();
+  }
+
   private formatLogMessage(levelStr: string, args: any[]) {
     const message = args
       .map((arg) =>
@@ -32,9 +34,7 @@ class Logger {
       )
       .join(' ');
 
-    const timestamp = this.config.timestamp
-      ? `[${format(new Date(), 'Pp')}] `
-      : '';
+    const timestamp = this.config.timestamp ? `[${this.getTimestamp()}] ` : '';
     return `${timestamp}[${levelStr}] ${message}`;
   }
 
