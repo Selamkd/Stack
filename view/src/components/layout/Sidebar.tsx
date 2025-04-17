@@ -2,24 +2,23 @@ import {
   Bookmark,
   Code,
   Database,
-  FileCode,
   FileText,
-  FolderCode,
   Hash,
   Home,
-  Menu,
   Wrench,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-type ISideBarMode = 'expanded' | 'compact';
+export type ISideBarMode = 'expanded' | 'compact';
 
-export default function Sidebar() {
-  const [sidebarMode, setSidebarMode] = useState<ISideBarMode>('expanded');
-
+interface ISideBar {
+  sidebarMode: ISideBarMode;
+  setSidebarMode: React.Dispatch<React.SetStateAction<ISideBarMode>>;
+}
+export default function Sidebar(props: ISideBar) {
   const toggleSidebar = () => {
-    setSidebarMode((prev) => {
+    props.setSidebarMode((prev) => {
       if (prev === 'expanded') return 'compact';
       if (prev === 'compact') return 'expanded';
       return 'expanded';
@@ -29,9 +28,9 @@ export default function Sidebar() {
   return (
     <aside
       className={`fixed inset-y-0 left-0 z-20 transition-all duration-300 ease-in-out ${
-        sidebarMode === 'expanded'
+        props?.sidebarMode === 'expanded'
           ? 'w-64'
-          : sidebarMode === 'compact'
+          : props?.sidebarMode === 'compact'
           ? 'w-20'
           : 'w-0'
       }`}
@@ -44,7 +43,7 @@ export default function Sidebar() {
         <div
           className={`flex items-center h-16 px-4 border-b border-custom-border`}
         >
-          {sidebarMode === 'expanded' ? (
+          {props?.sidebarMode === 'expanded' ? (
             <div className="flex items-center space-x-1">
               <div className="relative h-9 w-9 mx-auto">
                 <div className="absolute inset-0  rounded-lg opacity-80" />
@@ -56,7 +55,7 @@ export default function Sidebar() {
                 Stack
               </h1>
             </div>
-          ) : sidebarMode === 'compact' ? (
+          ) : props?.sidebarMode === 'compact' ? (
             <div className="relative h-9 w-9 mx-auto">
               <div className="absolute inset-0 rounded-lg opacity-80" />
               <div className="relative h-full w-full flex items-center justify-center">
@@ -67,7 +66,9 @@ export default function Sidebar() {
         </div>
         <nav
           className={`flex-1 py-3 space-y-1 px-2 transition-all duration-300 ${
-            sidebarMode === 'compact' ? 'overflow-hidden' : 'overflow-y-auto'
+            props?.sidebarMode === 'compact'
+              ? 'overflow-hidden'
+              : 'overflow-y-auto'
           }`}
         >
           <NavButton
@@ -75,39 +76,39 @@ export default function Sidebar() {
             label="Search"
             isActive={true}
             link={'/search'}
-            mode={sidebarMode}
+            mode={props?.sidebarMode}
           />
           <NavButton
             icon={<FileText size={18} />}
             label="Notes"
             isActive={false}
             link={'/notes'}
-            mode={sidebarMode}
+            mode={props?.sidebarMode}
           />
           <NavButton
             icon={<Code size={18} />}
             label="Snippets"
             isActive={false}
             link={'/snippets'}
-            mode={sidebarMode}
+            mode={props?.sidebarMode}
           />
           <NavButton
             icon={<Bookmark size={18} />}
             label="Lookups"
             isActive={false}
             link={'/search-lookup'}
-            mode={sidebarMode}
+            mode={props?.sidebarMode}
           />
           <NavButton
             icon={<Wrench size={18} />}
             label="Tools"
             isActive={false}
             link={'/tools'}
-            mode={sidebarMode}
+            mode={props.sidebarMode}
           />
         </nav>
 
-        {sidebarMode === 'expanded' && (
+        {props?.sidebarMode === 'expanded' && (
           <div className="p-3 border-t border-custom-border">
             <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider px-2 mb-2">
               Tags
@@ -126,10 +127,10 @@ export default function Sidebar() {
             onClick={toggleSidebar}
             className="p-2 rounded-lg hover:bg-custom-surface text-zinc-400 hover:text-lime-400 transition-colors"
           >
-            {sidebarMode === 'expanded' ? (
-              <SidebarIconLeft size={20} />
+            {props?.sidebarMode === 'expanded' ? (
+              <SidebarIcon size={20} />
             ) : (
-              <SidebarIconRight size={20} />
+              <SidebarIcon size={20} />
             )}
           </button>
         </div>
@@ -204,25 +205,7 @@ function TagButton(props: ITagButton) {
   );
 }
 
-function SidebarIconLeft(props: { size: number; className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={props.size}
-      height={props.size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={props.className}
-    >
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  );
-}
-function SidebarIconRight(props: { size: number; className?: string }) {
+function SidebarIcon(props: { size: number; className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
