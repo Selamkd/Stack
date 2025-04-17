@@ -5,6 +5,7 @@ import App from './app/App';
 import AppTest from './app/AppTest';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout';
+import Admin from './admin/Admin';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,12 +14,10 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/test" element={<AppTest />} />
-      </Routes>
       <AppLayout>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>

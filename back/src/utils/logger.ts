@@ -1,4 +1,4 @@
-import * as kleur from 'kleur';
+import kleur from 'kleur';
 import { format } from 'date-fns';
 
 enum LogLevel {
