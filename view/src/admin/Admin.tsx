@@ -161,11 +161,11 @@ function ContentItem({ item, type }: IContentItem) {
   const getTypeIcon = () => {
     switch (type) {
       case 'notes':
-        return <FileText size={20} className="text-zinc-400 mb-5" />;
+        return <FileText size={20} className="text-lime-200/70 mb-5" />;
       case 'snippets':
         return <Code size={20} className="text-emerald-400 mb-5" />;
       case 'lookups':
-        return <Bookmark size={16} className="text-amber-400 mb-5" />;
+        return <Bookmark size={16} className="text-amber-200 mb-5" />;
       case 'tools':
         return <Wrench size={16} className="text-violet-400" />;
       default:

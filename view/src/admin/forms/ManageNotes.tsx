@@ -7,6 +7,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { INote } from '../../../../back/src/models/note.model';
 import ReactMarkdown from 'react-markdown';
+
 export default function ManageNotes(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [note, setNote] = useState<Partial<INote>>({});
@@ -156,15 +157,3 @@ export default function ManageNotes(props: { id?: string }) {
     </div>
   );
 }
-
-const languages = [
-  { value: 'javascript', label: 'JavaScript' },
-  { value: 'typescript', label: 'TypeScript' },
-  { value: 'python', label: 'Python' },
-  { value: 'java', label: 'Java' },
-  { value: 'go', label: 'Go' },
-  { value: 'html', label: 'HTML' },
-  { value: 'css', label: 'CSS' },
-  { value: 'bash', label: 'Bash' },
-  { value: 'json', label: 'JSON' },
-];
