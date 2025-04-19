@@ -11,6 +11,6 @@ const limiter = rateLimit({
 
 const router = Router();
 
-router.post('/check-pass', limiter, AdminController.checkPass);
+router.post('/', limiter, AdminController.checkPass);
 
 export default router;

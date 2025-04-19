@@ -5,13 +5,13 @@ import { Request, Response } from 'express';
 dotenv.config();
 const ADMIN_PASS_KEY = process.env.ADMIN_KEY;
 
-if (!ADMIN_PASS_KEY) {
-  throw new Error('Missing ADMIN_KEY');
-}
-
 export const checkPass = async (req: Request, res: Response): Promise<void> => {
   try {
     const { pass } = req.body;
+
+    if (!ADMIN_PASS_KEY) {
+      throw new Error('Missing ADMIN_KEY');
+    }
 
     if (!pass) {
       res.status(400).json({ message: 'Password is required' });

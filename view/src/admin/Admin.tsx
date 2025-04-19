@@ -213,12 +213,35 @@ interface IPasswordModal {
 
 function PasswordModal(props: IPasswordModal) {
   const navigate = useNavigate();
-  const [password, setPassword] = useState('');
-
-  const [isLoading, setIsLoading] = useState(false);
-  function handleSubmit(e: React.FormEvent): void {
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    throw new Error('Function not implemented.');
+
+    if (!password) {
+      setError('Password is required');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const checkPassRes = await APIService.post('check-pass', {
+        pass: password,
+      });
+
+      if (checkPassRes && checkPassRes.message === ':)') {
+        props.onSuccess();
+      } else {
+        setError(checkPassRes.message);
+      }
+    } catch (err) {
+      setError(`Incorrect password`);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -240,10 +263,10 @@ function PasswordModal(props: IPasswordModal) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter admin password"
-            className="w-full px-4 py-2 mb-4 rounded-lg bg-custom-dark-base border border-custom-dark-border text-white focus:outline-none focus:ring-2 focus:ring-lime-100 focus:border-lime-200"
+            className="w-full px-4 py-2 mb-4 rounded-lg bg-custom-dark-base border border-custom-dark-border text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-100 focus:border-lime-200"
             autoFocus
           />
-
+          {error && <div className="mb-4 text-red-400 text-sm">{error}</div>}
           <div className="flex justify-end space-x-2">
             <button
               type="button"
