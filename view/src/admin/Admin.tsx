@@ -25,11 +25,6 @@ interface ITabButton {
   onClick: () => void;
 }
 
-interface IContentItem {
-  type: ContentType;
-  item: INote | ISnippet | IQuickLookup;
-}
-
 function AdminPage() {
   const [activeTab, setActiveTab] = useState<ContentType>('notes');
   const [notes, setNotes] = useState<INote[]>();
@@ -42,26 +37,23 @@ function AdminPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [notesRes, snippetsRes, lookupsRes, toolsRes] = await Promise.all(
-          [
-            APIService.get('notes'),
-            APIService.get('snippets'),
-            APIService.get('quicklookups'),
-            APIService.get('tools'),
-          ]
-        );
-        console.log(notesRes.Res);
+        const [notesRes, snippetsRes, lookupsRes] = await Promise.all([
+          APIService.get('notes'),
+          APIService.get('snippets'),
+          APIService.get('quicklookups'),
+        ]);
+
         setNotes(notesRes);
         setSnippets(snippetsRes);
+        console.log(snippetsRes);
         setLookups(lookupsRes);
-        setTools(toolsRes);
       } catch (error) {
         console.error('Error loading admin data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [activeTab]);
 
   function getContentData(tab: ContentType) {
     switch (tab) {
@@ -158,7 +150,13 @@ function TabButton({ icon, label, isActive, onClick }: ITabButton) {
   );
 }
 
+interface IContentItem {
+  type: ContentType;
+  item: INote | ISnippet | IQuickLookup;
+}
+
 function ContentItem({ item, type }: IContentItem) {
+  const navigate = useNavigate();
   const getTypeIcon = () => {
     switch (type) {
       case 'notes':
@@ -196,7 +194,10 @@ function ContentItem({ item, type }: IContentItem) {
       </div>
 
       <div className="flex space-x-1">
-        <button className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-custom-surface transition-colors">
+        <button
+          onClick={() => navigate(`snippets/${item._id}`)}
+          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-custom-surface transition-colors"
+        >
           <Edit size={16} />
         </button>
         <button className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-custom-surface transition-colors">
@@ -218,7 +219,7 @@ function PasswordModal(props: IPasswordModal) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
+    console.log('Heloooooooooo');
     if (!password) {
       setError('Password is required');
       return;
@@ -231,9 +232,12 @@ function PasswordModal(props: IPasswordModal) {
       const checkPassRes = await APIService.post('check-pass', {
         pass: password,
       });
+      console.log('checkPassRes:', checkPassRes);
 
       if (checkPassRes && checkPassRes.message === ':)') {
         props.onSuccess();
+      } else if (checkPassRes.status === 429) {
+        setError('Max attempt reached please try again');
       } else {
         setError(checkPassRes.message);
       }
