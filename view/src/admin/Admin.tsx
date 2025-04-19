@@ -11,7 +11,7 @@ import {
 import { INote } from '../../../back/src/models/note.model';
 import { ISnippet } from '../../../back/src/models/snippet.model';
 import { IQuickLookup } from '../../../back/src/models/quicklookup.model';
-import { format } from 'date-fns';
+
 import APIService from '../service/api.service';
 import { useNavigate } from 'react-router-dom';
 

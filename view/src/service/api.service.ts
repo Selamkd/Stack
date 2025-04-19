@@ -1,10 +1,11 @@
 import logger from '../../../back/src/utils/logger';
 
 export class APIService {
-  static baseUrl = '/api';
+  static BASE_URL = 'http://localhost:3226/api';
 
   static async request(endpoint: string, options: RequestInit) {
-    const url = `${this.baseUrl}/${endpoint}`;
+    const url = `${this.BASE_URL}/${endpoint}`;
+    console.log(url);
 
     if (!options.headers) {
       options.headers = {
