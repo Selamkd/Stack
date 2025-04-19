@@ -7,6 +7,7 @@ import {
   Edit,
   Trash,
   Plus,
+  X,
 } from 'lucide-react';
 import { INote } from '../../../back/src/models/note.model';
 import { ISnippet } from '../../../back/src/models/snippet.model';
@@ -35,6 +36,7 @@ function AdminPage() {
   const [snippets, setSnippets] = useState<ISnippet[]>();
   const [lookups, setLookups] = useState<IQuickLookup[]>();
   const [tools, setTools] = useState<INote[]>();
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -116,7 +118,7 @@ function AdminPage() {
             {activeTab === 'tools' && 'Tools'}
           </h3>
           <button
-            onClick={() => navigate(`${activeTab}/new`)}
+            onClick={() => setShowPasswordModal(true)}
             className="px-4 py-2 rounded-lg bg-lime-200/70 hover:bg-lime-300 text-zinc-900 font-medium transition-colors flex items-center"
           >
             <Plus size={18} />
@@ -129,6 +131,12 @@ function AdminPage() {
           ))}
         </div>
       </div>
+      {showPasswordModal && (
+        <PasswordModal
+          onSuccess={() => navigate(`${activeTab}/new`)}
+          onClose={() => setShowPasswordModal(false)}
+        />
+      )}
     </div>
   );
 }
@@ -194,6 +202,64 @@ function ContentItem({ item, type }: IContentItem) {
         <button className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-custom-surface transition-colors">
           <Trash size={16} />
         </button>
+      </div>
+    </div>
+  );
+}
+interface IPasswordModal {
+  onSuccess: () => void;
+  onClose: () => void;
+}
+
+function PasswordModal(props: IPasswordModal) {
+  const navigate = useNavigate();
+  const [password, setPassword] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
+  function handleSubmit(e: React.FormEvent): void {
+    e.preventDefault();
+    throw new Error('Function not implemented.');
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/80 backdrop-blur-sm">
+      <div className="bg-custom-dark-surface border border-custom-dark-border rounded-xl p-6 max-w-md w-full">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-white">Admin Access</h2>
+          <button
+            onClick={props.onClose}
+            className="text-zinc-400 hover:text-white"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter admin password"
+            className="w-full px-4 py-2 mb-4 rounded-lg bg-custom-dark-base border border-custom-dark-border text-white focus:outline-none focus:ring-2 focus:ring-lime-100 focus:border-lime-200"
+            autoFocus
+          />
+
+          <div className="flex justify-end space-x-2">
+            <button
+              type="button"
+              onClick={props.onClose}
+              className="px-4 py-2 rounded-lg text-zinc-400 hover:text-white"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-lg bg-lime-200 hover:bg-lime-300 text-zinc-900 font-medium"
+            >
+              {isLoading ? 'Verifying...' : 'Continue'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
