@@ -263,7 +263,7 @@ function PasswordModal(props: IPasswordModal) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter admin password"
-            className="w-full px-4 py-2 mb-4 rounded-lg bg-custom-dark-base border border-custom-dark-border text-gray-800 focus:outline-none focus:ring-2 focus:ring-lime-100 focus:border-lime-200"
+            className="w-full px-4 py-2 mb-4 rounded-lg bg-custom-dark-base border border-custom-dark-border text-gray-800focus:outline-none focus:ring-2 focus:ring-lime-100 focus:border-lime-200"
             autoFocus
           />
           {error && <div className="mb-4 text-red-400 text-sm">{error}</div>}
