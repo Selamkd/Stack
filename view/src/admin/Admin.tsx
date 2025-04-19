@@ -15,6 +15,7 @@ import { IQuickLookup } from '../../../back/src/models/quicklookup.model';
 
 import APIService from '../service/api.service';
 import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
 
 type ContentType = 'notes' | 'snippets' | 'lookups' | 'tools';
 
@@ -140,7 +141,7 @@ function TabButton({ icon, label, isActive, onClick }: ITabButton) {
       className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm transition-colors whitespace-nowrap
         ${
           isActive
-            ? 'bg-lime-500/20 text-lime-400 font-medium border border-lime-500/30'
+            ? 'border border-lime-500/20 text-lime-200 font-medium'
             : 'text-zinc-400 hover:bg-custom-surface hover:text-white'
         }`}
     >
@@ -160,11 +161,11 @@ function ContentItem({ item, type }: IContentItem) {
   const getTypeIcon = () => {
     switch (type) {
       case 'notes':
-        return <FileText size={16} className="text-lime-400" />;
+        return <FileText size={20} className="text-zinc-400 mb-5" />;
       case 'snippets':
-        return <Code size={16} className="text-emerald-400" />;
+        return <Code size={20} className="text-emerald-400 mb-5" />;
       case 'lookups':
-        return <Bookmark size={16} className="text-amber-400" />;
+        return <Bookmark size={16} className="text-amber-400 mb-5" />;
       case 'tools':
         return <Wrench size={16} className="text-violet-400" />;
       default:
@@ -180,7 +181,9 @@ function ContentItem({ item, type }: IContentItem) {
           <h4 className="text-white font-medium">{item.title}</h4>
           <div className="flex items-center mt-1 text-sm text-zinc-500">
             <span className="mr-3">
-              {/* {format(new Date(item?.createdAt), 'PPP')} */}
+              {item?.createdAt
+                ? format(new Date(item.createdAt), 'PPP')
+                : 'No date'}
             </span>
             <div className="flex space-x-1">
               {item.tags?.map((tag, index) => (
@@ -195,7 +198,7 @@ function ContentItem({ item, type }: IContentItem) {
 
       <div className="flex space-x-1">
         <button
-          onClick={() => navigate(`snippets/${item._id}`)}
+          onClick={() => navigate(`${type}/${item._id}`)}
           className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-custom-surface transition-colors"
         >
           <Edit size={16} />

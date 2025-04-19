@@ -21,9 +21,9 @@ root.render(
           <Route path="/" element={<App />} />
           <Route index path="/admin" element={<Admin />} />
           <Route path="/admin/notes/new" element={<ManageNote />} />
+          <Route path="/admin/notes/:id" element={<ManageNote />} />
           <Route path="/admin/snippets/new" element={<ManageSnippets />} />
           <Route path="/admin/snippets/:id" element={<ManageSnippets />} />
-          <Route path="/admin/lookups" element={<ManageSnippets />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>
