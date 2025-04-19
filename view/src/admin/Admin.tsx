@@ -8,6 +8,8 @@ import {
   Trash,
   Plus,
   X,
+  Hash,
+  GitBranch,
 } from 'lucide-react';
 import { INote } from '../../../back/src/models/note.model';
 import { ISnippet } from '../../../back/src/models/snippet.model';
@@ -16,8 +18,10 @@ import { IQuickLookup } from '../../../back/src/models/quicklookup.model';
 import APIService from '../service/api.service';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import { ICategory } from '../../../back/src/models/category.model';
+import { ITag } from '../../../back/src/models/tag.model';
 
-type ContentType = 'notes' | 'snippets' | 'lookups' | 'tools';
+type ContentType = 'notes' | 'snippets' | 'lookups' | 'tags' | 'categories';
 
 interface ITabButton {
   icon: React.ReactNode;
@@ -31,7 +35,8 @@ function AdminPage() {
   const [notes, setNotes] = useState<INote[]>();
   const [snippets, setSnippets] = useState<ISnippet[]>();
   const [lookups, setLookups] = useState<IQuickLookup[]>();
-  const [tools, setTools] = useState<INote[]>();
+  const [categories, setCategories] = useState<ICategory[]>();
+  const [tags, setTags] = useState<ITag[]>();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const navigate = useNavigate();
 
@@ -64,8 +69,8 @@ function AdminPage() {
         return snippets || [];
       case 'lookups':
         return lookups || [];
-      case 'tools':
-        return tools || [];
+      case 'categories':
+        return categories || [];
       default:
         return [];
     }
@@ -94,10 +99,16 @@ function AdminPage() {
             onClick={() => setActiveTab('lookups')}
           />
           <TabButton
-            icon={<Wrench size={16} />}
-            label="Tools"
-            isActive={activeTab === 'tools'}
-            onClick={() => setActiveTab('tools')}
+            icon={<GitBranch size={16} />}
+            label="Categories"
+            isActive={activeTab === 'categories'}
+            onClick={() => setActiveTab('categories')}
+          />
+          <TabButton
+            icon={<Hash size={16} />}
+            label="Tags"
+            isActive={activeTab === 'tags'}
+            onClick={() => setActiveTab('tags')}
           />
         </div>
       </div>
@@ -108,7 +119,8 @@ function AdminPage() {
             {activeTab === 'notes' && 'Notes'}
             {activeTab === 'snippets' && 'Snippets'}
             {activeTab === 'lookups' && 'Lookups'}
-            {activeTab === 'tools' && 'Tools'}
+            {activeTab === 'categories' && 'Categories'}
+            {activeTab === 'tags' && 'Tags'}
           </h3>
           <button
             onClick={() => setShowPasswordModal(true)}
@@ -153,7 +165,7 @@ function TabButton({ icon, label, isActive, onClick }: ITabButton) {
 
 interface IContentItem {
   type: ContentType;
-  item: INote | ISnippet | IQuickLookup;
+  item: INote | ISnippet | IQuickLookup | ICategory | ITag;
 }
 
 function ContentItem({ item, type }: IContentItem) {
@@ -166,11 +178,17 @@ function ContentItem({ item, type }: IContentItem) {
         return <Code size={20} className="text-emerald-400 mb-5" />;
       case 'lookups':
         return <Bookmark size={16} className="text-amber-200 mb-5" />;
-      case 'tools':
+      case 'categories':
         return <Wrench size={16} className="text-violet-400" />;
       default:
         return <FileText size={16} className="text-lime-400" />;
     }
+  };
+  const getItemTitle = () => {
+    if (type === 'categories' || type === 'tags') {
+      return 'name' in item ? item.name : 'Untitled';
+    }
+    return 'title' in item ? item.title : 'Untitled';
   };
 
   return (
@@ -178,20 +196,22 @@ function ContentItem({ item, type }: IContentItem) {
       <div className="flex items-center space-x-3">
         {getTypeIcon()}
         <div>
-          <h4 className="text-white font-medium">{item.title}</h4>
+          <h4 className="text-white font-medium">{getItemTitle()}</h4>
           <div className="flex items-center mt-1 text-sm text-zinc-500">
             <span className="mr-3">
               {item?.createdAt
                 ? format(new Date(item.createdAt), 'PPP')
                 : 'No date'}
             </span>
-            <div className="flex space-x-1">
-              {item.tags?.map((tag, index) => (
-                <span key={index} className="text-xs text-zinc-400">
-                  #{tag.name}
-                </span>
-              ))}
-            </div>
+            {'tags' in item && item.tags && (
+              <div className="flex space-x-1">
+                {item.tags?.map((tag, index) => (
+                  <span key={index} className="text-xs text-zinc-400">
+                    #{tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
