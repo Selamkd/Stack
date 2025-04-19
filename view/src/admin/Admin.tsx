@@ -7,11 +7,12 @@ import {
   Edit,
   Trash,
   Plus,
+  X,
 } from 'lucide-react';
 import { INote } from '../../../back/src/models/note.model';
 import { ISnippet } from '../../../back/src/models/snippet.model';
 import { IQuickLookup } from '../../../back/src/models/quicklookup.model';
-import { format } from 'date-fns';
+
 import APIService from '../service/api.service';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,42 +25,35 @@ interface ITabButton {
   onClick: () => void;
 }
 
-interface IContentItem {
-  type: ContentType;
-  item: INote | ISnippet | IQuickLookup;
-}
-
 function AdminPage() {
   const [activeTab, setActiveTab] = useState<ContentType>('notes');
   const [notes, setNotes] = useState<INote[]>();
   const [snippets, setSnippets] = useState<ISnippet[]>();
   const [lookups, setLookups] = useState<IQuickLookup[]>();
   const [tools, setTools] = useState<INote[]>();
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [notesRes, snippetsRes, lookupsRes, toolsRes] = await Promise.all(
-          [
-            APIService.get('notes'),
-            APIService.get('snippets'),
-            APIService.get('quicklookups'),
-            APIService.get('tools'),
-          ]
-        );
-        console.log(notesRes.Res);
+        const [notesRes, snippetsRes, lookupsRes] = await Promise.all([
+          APIService.get('notes'),
+          APIService.get('snippets'),
+          APIService.get('quicklookups'),
+        ]);
+
         setNotes(notesRes);
         setSnippets(snippetsRes);
+        console.log(snippetsRes);
         setLookups(lookupsRes);
-        setTools(toolsRes);
       } catch (error) {
         console.error('Error loading admin data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [activeTab]);
 
   function getContentData(tab: ContentType) {
     switch (tab) {
@@ -116,7 +110,7 @@ function AdminPage() {
             {activeTab === 'tools' && 'Tools'}
           </h3>
           <button
-            onClick={() => navigate(`${activeTab}/new`)}
+            onClick={() => setShowPasswordModal(true)}
             className="px-4 py-2 rounded-lg bg-lime-200/70 hover:bg-lime-300 text-zinc-900 font-medium transition-colors flex items-center"
           >
             <Plus size={18} />
@@ -129,6 +123,12 @@ function AdminPage() {
           ))}
         </div>
       </div>
+      {showPasswordModal && (
+        <PasswordModal
+          onSuccess={() => navigate(`${activeTab}/new`)}
+          onClose={() => setShowPasswordModal(false)}
+        />
+      )}
     </div>
   );
 }
@@ -150,7 +150,13 @@ function TabButton({ icon, label, isActive, onClick }: ITabButton) {
   );
 }
 
+interface IContentItem {
+  type: ContentType;
+  item: INote | ISnippet | IQuickLookup;
+}
+
 function ContentItem({ item, type }: IContentItem) {
+  const navigate = useNavigate();
   const getTypeIcon = () => {
     switch (type) {
       case 'notes':
@@ -188,12 +194,99 @@ function ContentItem({ item, type }: IContentItem) {
       </div>
 
       <div className="flex space-x-1">
-        <button className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-custom-surface transition-colors">
+        <button
+          onClick={() => navigate(`snippets/${item._id}`)}
+          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-custom-surface transition-colors"
+        >
           <Edit size={16} />
         </button>
         <button className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-custom-surface transition-colors">
           <Trash size={16} />
         </button>
+      </div>
+    </div>
+  );
+}
+interface IPasswordModal {
+  onSuccess: () => void;
+  onClose: () => void;
+}
+
+function PasswordModal(props: IPasswordModal) {
+  const navigate = useNavigate();
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    console.log('Heloooooooooo');
+    if (!password) {
+      setError('Password is required');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const checkPassRes = await APIService.post('check-pass', {
+        pass: password,
+      });
+      console.log('checkPassRes:', checkPassRes);
+
+      if (checkPassRes && checkPassRes.message === ':)') {
+        props.onSuccess();
+      } else if (checkPassRes.status === 429) {
+        setError('Max attempt reached please try again');
+      } else {
+        setError(checkPassRes.message);
+      }
+    } catch (err) {
+      setError(`Incorrect password`);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/80 backdrop-blur-sm">
+      <div className="bg-custom-dark-surface border border-custom-dark-border rounded-xl p-6 max-w-md w-full">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-white">Admin Access</h2>
+          <button
+            onClick={props.onClose}
+            className="text-zinc-400 hover:text-white"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter admin password"
+            className="w-full px-4 py-2 mb-4 rounded-lg bg-custom-dark-base border border-custom-dark-border text-gray-800focus:outline-none focus:ring-2 focus:ring-lime-100 focus:border-lime-200"
+            autoFocus
+          />
+          {error && <div className="mb-4 text-red-400 text-sm">{error}</div>}
+          <div className="flex justify-end space-x-2">
+            <button
+              type="button"
+              onClick={props.onClose}
+              className="px-4 py-2 rounded-lg text-zinc-400 hover:text-white"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-lg bg-lime-200 hover:bg-lime-300 text-zinc-900 font-medium"
+            >
+              {isLoading ? 'Verifying...' : 'Continue'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

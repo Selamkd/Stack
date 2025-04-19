@@ -3,7 +3,11 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import logger from './utils/logger';
+
+import apiRouter from './routes/app.routes';
+
 dotenv.config();
+
 const app: Express = express();
 const port = process.env.PORT || 8080;
 
@@ -11,6 +15,7 @@ const DB_URI = process.env.DB_CONNECTION_KEY;
 
 app.use(cors());
 app.use(express.json());
+app.use('/api', apiRouter);
 
 if (!DB_URI) {
   logger.error('Unable to find connection string');

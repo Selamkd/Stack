@@ -1,10 +1,10 @@
 import logger from '../../../back/src/utils/logger';
 
 export class APIService {
-  static baseUrl = '/api';
+  static BASE_URL = 'http://localhost:3226/api';
 
   static async request(endpoint: string, options: RequestInit) {
-    const url = `${this.baseUrl}/${endpoint}`;
+    const url = `${this.BASE_URL}/${endpoint}`;
 
     if (!options.headers) {
       options.headers = {
@@ -12,8 +12,6 @@ export class APIService {
       };
     }
     try {
-      logger.debug(`APIService Request: ${options.method || 'GET'} ${url}`);
-
       const response = await fetch(url, options);
 
       let data;
@@ -22,28 +20,21 @@ export class APIService {
         try {
           data = await response.json();
         } catch (jsonError) {
-          logger.error(`APIService JSON Parsing Error: ${url}`, jsonError);
-          throw new Error('Failed to parse JSON response');
+          console.error('Failed to parse JSON response', endpoint);
         }
       } else {
-        logger.error(
-          `APIService Unexpected Content-Type: ${contentType} - ${url}`
+        console.error(
+          'Unexpected Content-Type, expected application/json',
+          endpoint
         );
-        throw new Error('Unexpected Content-Type, expected application/json');
       }
 
       if (!response.ok) {
-        logger.error(
-          `APIService Error: ${response.status} ${response.statusText} - ${url}`,
-          data
-        );
         throw new Error(data.message || 'API request failed');
       }
 
-      logger.info(`APIService Success: ${options.method || 'GET'} ${url}`);
       return data;
     } catch (error) {
-      logger.error(`APIService Request Failed: ${url}`, error);
       throw error;
     }
   }
