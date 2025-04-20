@@ -8,7 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { IQuickLookup } from '../../../../back/src/models/quicklookup.model';
 import { ICategory } from '../../../../back/src/models/category.model';
-export default function ManageQuickLookup(props: { id?: string }) {
+export default function ManageCategories(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
 
   const [category, setCategory] = useState<Partial<ICategory>>({});

@@ -6,7 +6,7 @@ import APIService from '../../service/api.service';
 
 import { ITag } from '../../../../back/src/models/tag.model';
 
-export default function ManageQuickLookup(props: { id?: string }) {
+export default function ManageTags(props: { id?: string }) {
   const [tag, setTag] = useState<Partial<ITag>>({});
 
   const [error, setError] = useState<string>('');
@@ -23,7 +23,7 @@ export default function ManageQuickLookup(props: { id?: string }) {
 
           setTag(tagRes);
         } catch (err) {
-          console.error('Error loading categories', error);
+          console.error('Error loading tags', error);
         }
       };
 

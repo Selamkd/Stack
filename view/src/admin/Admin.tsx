@@ -192,7 +192,7 @@ function ContentItem({ item, type }: IContentItem) {
       case 'tags':
         return <HashIcon size={20} className="text-violet-300 mb-5" />;
       default:
-        return <FileText size={20} className="text-zink-400" />;
+        return <FileText size={20} className="text-zinc-400" />;
     }
   };
   const getItemTitle = () => {

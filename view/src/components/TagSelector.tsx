@@ -17,7 +17,7 @@ export default function TagSelector(props: ITagSelector) {
         const res = await APIService.get('tags');
         setTags(res);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching tags:', error);
       }
     };
 
