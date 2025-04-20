@@ -23,7 +23,6 @@ export const getAllNotes = async (req: Request, res: Response) => {
       .populate('tags')
       .sort({ updatedAt: -1 });
 
-    logger.info(`Retrieved ${notes.length} notes`);
     res.status(200).json(notes);
   } catch (error) {
     logger.error('Failed to fetch notes:', error);
@@ -44,7 +43,6 @@ export const getNoteById = async (req: Request, res: Response) => {
       return;
     }
 
-    logger.info('Note retrieved successfully:', id);
     res.status(200).json(note);
   } catch (error) {
     logger.error(`Error fetching note with ID ${req.params.id}:`, error);
@@ -90,7 +88,6 @@ export const upsertNote = async (req: Request, res: Response) => {
       });
 
       const savedNote = await newNote.save();
-      logger.info('New note created with ID:', savedNote._id);
 
       const populatedNote = await Note.findById(savedNote._id).populate('tags');
       res.status(201).json(populatedNote);

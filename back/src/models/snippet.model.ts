@@ -6,7 +6,7 @@ export interface ISnippet {
   _id: string;
   category?: ICategory;
   title: string;
-  description: string;
+  description?: string;
   language?: string;
   code: string;
   tags?: ITag[];
@@ -19,7 +19,7 @@ const snippetSchema = new Schema<ISnippet>(
   {
     title: { type: String, required: true },
     category: { type: Schema.Types.ObjectId, ref: 'Category' },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     language: { type: String },
     code: { type: String, required: true },
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],

@@ -7,6 +7,7 @@ export default function AppLayout(props: { children: ReactNode }) {
   const [scrolled, setScrolled] = useState(false);
   const [sidebarMode, setSidebarMode] = useState<ISideBarMode>('expanded');
   const location = useLocation();
+
   function getActivePage() {
     if (location.pathname.endsWith('/')) return 'Search';
     if (location.pathname.endsWith('/search/notes')) return 'Notes';
