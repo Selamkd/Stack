@@ -4,11 +4,8 @@ import logger from '../utils/logger';
 
 export const getAllTags = async (req: Request, res: Response) => {
   try {
-    logger.debug('Fetching all tags');
-
     const tags = await Tag.find().sort({ name: 1 });
 
-    logger.info(`Retrieved ${tags.length} tags successfully`);
     res.status(200).json(tags);
   } catch (error) {
     logger.error('Failed to fetch tags:', error);
@@ -19,7 +16,6 @@ export const getAllTags = async (req: Request, res: Response) => {
 export const getTagById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    logger.debug('Fetching tag by ID:', id);
 
     const tag = await Tag.findById(id);
 
@@ -48,8 +44,6 @@ export const upsertTag = async (req: Request, res: Response) => {
     }
 
     if (_id) {
-      logger.info(`Tag already exists with name: ${name}, ID: ${_id}`);
-
       const updatedTag = await Tag.findByIdAndUpdate(
         _id,
         { $set: req.body },
@@ -58,7 +52,6 @@ export const upsertTag = async (req: Request, res: Response) => {
       res.status(200).json(updatedTag);
       return;
     } else {
-      logger.debug('Creating new tag:', name);
       const newTag = new Tag({ name });
       const savedTag = await newTag.save();
 
@@ -71,52 +64,9 @@ export const upsertTag = async (req: Request, res: Response) => {
   }
 };
 
-export const updateTag = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { name } = req.body;
-
-    if (!name) {
-      logger.warn('Missing tag name in update request');
-      res.status(400).json({ message: 'Tag name is required' });
-      return;
-    }
-
-    logger.debug(`Updating tag ${id} to name: ${name}`);
-
-    const existingTag = await Tag.findOne({ name, _id: { $ne: id } });
-    if (existingTag) {
-      logger.warn(
-        `Cannot update tag: name "${name}" already exists for another tag`
-      );
-      res.status(400).json({ message: 'Tag name already exists' });
-      return;
-    }
-
-    const updatedTag = await Tag.findByIdAndUpdate(
-      id,
-      { name },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedTag) {
-      logger.warn('Tag not found for update with ID:', id);
-      res.status(404).json({ message: 'Tag not found' });
-      return;
-    }
-
-    logger.info('Tag updated successfully:', id);
-    res.status(200).json(updatedTag);
-  } catch (error) {
-    logger.error(`Error updating tag with ID ${req.params.id}:`, error);
-    res.status(500).json({ message: 'Error updating tag', error });
-  }
-};
-
 export const deleteTag = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    logger.debug('Deleting tag with ID:', id);
 
     const deletedTag = await Tag.findByIdAndDelete(id);
 

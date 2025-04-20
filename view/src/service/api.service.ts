@@ -57,7 +57,6 @@ export class APIService {
   }
 
   static async post(endpoint: string, data: any): Promise<any> {
-    logger.debug('APIService POST Request data:', data);
     return this.request(endpoint, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -65,7 +64,6 @@ export class APIService {
   }
 
   static async patch(endpoint: string, data: any): Promise<any> {
-    logger.debug('APIService PATCH Request data:', data);
     return this.request(endpoint, {
       method: 'PATCH',
       body: JSON.stringify(data),

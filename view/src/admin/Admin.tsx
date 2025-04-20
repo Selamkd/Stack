@@ -50,12 +50,13 @@ function AdminPage() {
             APIService.get('snippets'),
             APIService.get('quicklookups'),
             APIService.get('tags'),
-            APIService.get('tags'),
+            APIService.get('categories'),
           ]);
 
         setNotes(notesRes);
         setSnippets(snippetsRes);
         setLookups(lookupsRes);
+
         setCategories(categoriesRes);
         setTags(tagsRes);
       } catch (error) {
