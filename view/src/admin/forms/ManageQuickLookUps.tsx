@@ -7,11 +7,18 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import ReactMarkdown from 'react-markdown';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { IQuickLookup } from '../../../../back/src/models/quicklookup.model';
+import { ICategory } from '../../../../back/src/models/category.model';
+import CategorySelector from '../../components/CategorySelector';
+import { ITag } from '../../../../back/src/models/tag.model';
+import TagSelector from '../../components/TagSelector';
+
 export default function ManageQuickLookup(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [lookup, setLookup] = useState<Partial<IQuickLookup>>({});
-  const [snippet, setSnippet] = useState<Partial<ISnippet>>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
   const params = useParams();
   const navigate = useNavigate();
   const id = props?.id ?? params?.id ?? null;
@@ -20,41 +27,83 @@ export default function ManageQuickLookup(props: { id?: string }) {
     if (id) {
       const getQuickLookup = async () => {
         try {
+          setError('');
           const lookupRes: Partial<IQuickLookup> = await APIService.get(
             `quicklookups/${id}`
           );
 
-          console.log(lookupRes);
-          setSnippet(lookupRes);
-        } catch (err) {
-          console.error('Error loading lookup:', error);
-          navigate('/admin');
+          console.log('Lookup response:', lookupRes);
+          setLookup(lookupRes);
+        } catch (err: any) {
+          const errorMessage = err?.message || 'Failed to load quick lookup';
+          console.error('Error loading lookup:', errorMessage);
+          setError(errorMessage);
+          setTimeout(() => {
+            navigate('/admin');
+          }, 2000);
         }
       };
 
       getQuickLookup();
     }
-  }, []);
+  }, [id, navigate]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+
+    if (!lookup.title?.trim()) {
+      setError('Question is required');
+      return;
+    }
+
+    if (!lookup.answer?.trim()) {
+      setError('Answer is required');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError('');
+
     try {
-      if (id) {
-        await APIService.post(`quicklookups/${id}`, lookup);
-      } else {
-        await APIService.post('quicklookups', lookup);
-      }
-    } catch (err) {
-      console.error('Error submitting form:', error);
+      await APIService.post('quicklookups', lookup);
+      setSuccessMessage('Quick lookup created successfully!');
+
+      setTimeout(() => {
+        navigate('/admin');
+      }, 1500);
+    } catch (err: any) {
+      const errorMessage =
+        err?.message || 'Something went wrong. Please try again.';
+      console.error('Error submitting form:', errorMessage);
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   }
+
+  async function handleCategoryChange(category: ICategory) {
+    setLookup((prev) => {
+      return { ...prev, category: category };
+    });
+  }
+
+  const getSelectedTags = () => {
+    if (!lookup?.tags) return [];
+    return lookup.tags;
+  };
+
+  const handleTagsChange = (tags: ITag[]) => {
+    setLookup((prev) => {
+      return { ...prev, tags };
+    });
+  };
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-4">
       <div className="bg-custom-sidebar/70 backdrop-blur-sm border border-custom-border rounded-xl p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-white">
-            {props?.id ? 'Edit' : 'Create'} Quick lookup
+            {id ? 'Edit' : 'Create'} Quick lookup
           </h2>
 
           <div className="flex space-x-2">
@@ -68,14 +117,28 @@ export default function ManageQuickLookup(props: { id?: string }) {
             </button>
           </div>
         </div>
+
+        {successMessage && (
+          <div className="mt-4 p-3 bg-custom-dark  border border-custom-border rounded-lg text-lime-200">
+            {successMessage}
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-4 p-3 bg-custom-dark border border-custom-border rounded-lg text-red-200">
+            {error}
+          </div>
+        )}
       </div>
 
       <form onSubmit={handleSubmit}>
         <div>
-          <label className="block text-zinc-300 mb-2">Question</label>
+          <label className="block text-zinc-300 mb-2">
+            Question <span className="text-red-400">*</span>
+          </label>
           <input
             type="text"
-            value={lookup?.title}
+            value={lookup?.title || ''}
             onChange={(e) => {
               setLookup((prev) => {
                 if (!prev) return { title: e.target.value };
@@ -83,17 +146,33 @@ export default function ManageQuickLookup(props: { id?: string }) {
               });
             }}
             className={`w-full px-4 py-2 rounded-lg bg-custom-base border ${
-              error ? 'border-red-500' : 'border-custom-border'
+              !lookup?.title && error
+                ? 'border-red-500'
+                : 'border-custom-border'
             } text-white focus:outline-none focus:ring-1 focus:ring-lime-100/20 focus:border-custom-border`}
             placeholder="Enter question..."
+            required
           />
-          {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
+        </div>
+
+        <div className="mt-4">
+          <CategorySelector
+            selectedCategory={lookup?.category?._id || ''}
+            onChange={handleCategoryChange}
+          />
+        </div>
+
+        <div className="mt-4">
+          <TagSelector
+            selectedTags={getSelectedTags()}
+            onChange={handleTagsChange}
+          />
         </div>
 
         <div className="mt-6">
           <label className="text-zinc-300 mb-2 flex items-center">
             <Bookmark size={16} className="mr-2" />
-            Answer
+            Answer <span className="text-red-400">*</span>
           </label>
           {showPreview ? (
             <div className="p-4 bg-custom-base border border-custom-border rounded-lg prose prose-invert max-w-none min-h-[300px]">
@@ -123,7 +202,7 @@ export default function ManageQuickLookup(props: { id?: string }) {
             </div>
           ) : (
             <textarea
-              value={lookup?.answer}
+              value={lookup?.answer || ''}
               onChange={(e) => {
                 setLookup((prev) => {
                   if (!prev) return { answer: e.target.value };
@@ -132,12 +211,14 @@ export default function ManageQuickLookup(props: { id?: string }) {
               }}
               rows={15}
               className={`w-full px-4 py-2 rounded-lg bg-custom-base border ${
-                error ? 'border-red-500' : 'border-custom-border'
+                !lookup?.answer && error
+                  ? 'border-red-500'
+                  : 'border-custom-border'
               } text-white font-mono text-sm focus:outline-none focus:ring-1 focus:ring-lime-100/20 focus:border-custom-border`}
               placeholder="# Markdown content here..."
+              required
             />
           )}
-          {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
         </div>
 
         <div className="mt-8 flex justify-end space-x-3">
@@ -145,6 +226,7 @@ export default function ManageQuickLookup(props: { id?: string }) {
             type="button"
             onClick={() => navigate('/admin')}
             className="px-4 py-2 rounded-lg text-zinc-400 hover:text-white flex items-center"
+            disabled={isSubmitting}
           >
             <X size={18} className="mr-2" />
             Cancel
@@ -153,9 +235,10 @@ export default function ManageQuickLookup(props: { id?: string }) {
           <button
             type="submit"
             className="px-5 py-2 rounded-lg bg-lime-200 hover:bg-lime-300 text-zinc-900 font-medium flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isSubmitting}
           >
             <Save size={18} className="mr-2" />
-            {id ? 'Update' : 'Save'}
+            {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>
         </div>
       </form>

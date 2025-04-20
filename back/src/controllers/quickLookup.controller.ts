@@ -5,25 +5,21 @@ import logger from '../utils/logger';
 
 export const getAllLookUps = async (req: Request, res: Response) => {
   try {
-    logger.debug('Fetching all quick lookups with filters:', req.query);
-
     const query: FilterQuery<IQuickLookup> = {};
 
     if (req.query.tag) {
       query.tags = req.query.tag;
-      logger.debug('Filtering by tag:', req.query.tag);
     }
 
     if (req.query.isStarred) {
       query.isStarred = req.query.isStarred === 'true';
-      logger.debug('Filtering by starred status:', req.query.isStarred);
     }
 
     const lookups = await QuickLookup.find(query)
       .populate('tags')
+      .populate('category')
       .sort({ updatedAt: -1 });
 
-    logger.info(`Retrieved ${lookups.length} quick lookups successfully`);
     res.status(200).json(lookups);
   } catch (error) {
     logger.error('Failed to fetch quick lookups:', error);
@@ -34,7 +30,6 @@ export const getAllLookUps = async (req: Request, res: Response) => {
 export const getLookupById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    logger.debug('Fetching quick lookup by ID:', id);
 
     const quickLookup = await QuickLookup.findById(id).populate('tags');
 
@@ -60,13 +55,13 @@ export const upsertLookUp = async (req: Request, res: Response) => {
     const { _id, title, answer, tags, isStarred } = req.body;
 
     if (_id) {
-      logger.debug('Updating existing quick lookup:', _id);
-
       const updatedLookup = await QuickLookup.findByIdAndUpdate(
         _id,
         { $set: req.body },
         { new: true, runValidators: true }
-      ).populate('tags');
+      )
+        .populate('tags')
+        .populate('category');
 
       if (!updatedLookup) {
         logger.warn('Quick lookup not found for update with ID:', _id);
@@ -77,8 +72,6 @@ export const upsertLookUp = async (req: Request, res: Response) => {
       logger.info('Quick lookup updated successfully:', _id);
       res.status(200).json(updatedLookup);
     } else {
-      logger.debug('Creating new quick lookup:', title);
-
       if (!title || !answer) {
         logger.warn('Missing required fields for quick lookup creation');
         res.status(400).json({ message: 'Title and answer are required' });
@@ -128,11 +121,10 @@ export const searchLookups = async (req: Request, res: Response) => {
         { title: { $regex: searchTerm, $options: 'i' } },
         { answer: { $regex: searchTerm, $options: 'i' } },
       ],
-    }).populate('tags');
+    })
+      .populate('tags')
+      .populate('category');
 
-    logger.info(
-      `Search for "${searchTerm}" returned ${results.length} results`
-    );
     res.status(200).json(results);
   } catch (error) {
     logger.error('Error searching quick lookups:', error);
@@ -143,7 +135,6 @@ export const searchLookups = async (req: Request, res: Response) => {
 export const deleteQuickLookup = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    logger.debug('Deleting quick lookup with ID:', id);
 
     const deletedQuickLookup = await QuickLookup.findByIdAndDelete(id);
 
@@ -167,7 +158,6 @@ export const deleteQuickLookup = async (req: Request, res: Response) => {
 export const toggleStarred = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    logger.debug('Toggling starred status for quick lookup:', id);
 
     const quickLookup = await QuickLookup.findById(id);
 
@@ -180,10 +170,6 @@ export const toggleStarred = async (req: Request, res: Response) => {
     quickLookup.isStarred = !quickLookup.isStarred;
     const updatedQuickLookup = await quickLookup.save();
 
-    logger.info(
-      `Quick lookup starred status toggled to ${quickLookup.isStarred} for ID:`,
-      id
-    );
     res.status(200).json(updatedQuickLookup);
   } catch (error) {
     logger.error(
