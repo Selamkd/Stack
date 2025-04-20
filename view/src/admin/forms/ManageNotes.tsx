@@ -19,11 +19,12 @@ export default function ManageNotes(props: { id?: string }) {
 
   useEffect(() => {
     if (id) {
+      console.log('----- note id', id);
       const getNote = async () => {
         try {
           const noteRes: Partial<INote> = await APIService.get(`notes/${id}`);
-
-          setSnippet(noteRes);
+          console.log('Note res', noteRes);
+          setNote(noteRes);
         } catch (err) {
           console.error('Error loading snippet:', error);
           navigate('/admin');
@@ -37,11 +38,7 @@ export default function ManageNotes(props: { id?: string }) {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     try {
-      if (id) {
-        await APIService.post(`notes/${id}`, note);
-      } else {
-        await APIService.post('notes', note);
-      }
+      await APIService.post('notes', note);
     } catch (err) {
       console.error('Error submitting form:', error);
     }
