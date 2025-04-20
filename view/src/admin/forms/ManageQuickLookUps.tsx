@@ -7,6 +7,10 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import ReactMarkdown from 'react-markdown';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { IQuickLookup } from '../../../../back/src/models/quicklookup.model';
+import { ICategory } from '../../../../back/src/models/category.model';
+import CategorySelector from '../../components/CategorySelector';
+import { ITag } from '../../../../back/src/models/tag.model';
+import TagSelector from '../../components/TagSelector';
 export default function ManageQuickLookup(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [lookup, setLookup] = useState<Partial<IQuickLookup>>({});
@@ -43,7 +47,21 @@ export default function ManageQuickLookup(props: { id?: string }) {
       console.error('Error submitting form:', error);
     }
   }
+  async function handleCategoryChange(category: ICategory) {
+    setLookup((prev) => {
+      return { ...prev, category: category };
+    });
+  }
 
+  const getSelectedTags = () => {
+    if (!lookup?.tags) return [];
+    return lookup.tags;
+  };
+  const handleTagsChange = (tags: ITag[]) => {
+    setLookup((prev) => {
+      return { ...prev, tags };
+    });
+  };
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-4">
       <div className="bg-custom-sidebar/70 backdrop-blur-sm border border-custom-border rounded-xl p-6">
@@ -84,7 +102,18 @@ export default function ManageQuickLookup(props: { id?: string }) {
           />
           {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
         </div>
-
+        <div className="mt-4">
+          <CategorySelector
+            selectedCategory={lookup?.category?._id || ''}
+            onChange={handleCategoryChange}
+          />
+        </div>
+        <div className="mt-4">
+          <TagSelector
+            selectedTags={getSelectedTags()}
+            onChange={handleTagsChange}
+          />
+        </div>
         <div className="mt-6">
           <label className="text-zinc-300 mb-2 flex items-center">
             <Bookmark size={16} className="mr-2" />

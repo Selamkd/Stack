@@ -5,6 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import APIService from '../../service/api.service';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import CategorySelector from '../../components/CategorySelector';
+import { ICategory } from '../../../../back/src/models/category.model';
+import { ITag } from '../../../../back/src/models/tag.model';
+import TagSelector from '../../components/TagSelector';
 export default function ManageSnippets(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [snippet, setSnippet] = useState<Partial<ISnippet>>({});
@@ -40,7 +44,24 @@ export default function ManageSnippets(props: { id?: string }) {
       console.error('Error submitting form:', error);
     }
   }
+  async function handleCategoryChange(category: ICategory) {
+    console.log(category);
+    setSnippet((prev) => {
+      if (!prev) return { category: category };
+      return { ...prev, category: category };
+    });
+  }
 
+  const getSelectedTags = () => {
+    if (!snippet?.tags) return [];
+    return snippet.tags;
+  };
+
+  const handleTagsChange = (tags: ITag[]) => {
+    setSnippet((prev) => {
+      return { ...prev, tags };
+    });
+  };
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-4">
       <div className="bg-custom-sidebar/70 backdrop-blur-sm border border-custom-border rounded-xl p-6">
@@ -81,7 +102,18 @@ export default function ManageSnippets(props: { id?: string }) {
           />
           {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
         </div>
-
+        <div className="mt-4">
+          <CategorySelector
+            selectedCategory={snippet?.category?._id || ''}
+            onChange={handleCategoryChange}
+          />
+        </div>
+        <div className="mt-4">
+          <TagSelector
+            selectedTags={getSelectedTags()}
+            onChange={handleTagsChange}
+          />
+        </div>
         <div className="mt-6">
           <label className="block text-zinc-300 mb-2">Description</label>
           <textarea

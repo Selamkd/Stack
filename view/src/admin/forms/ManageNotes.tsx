@@ -9,11 +9,13 @@ import { INote } from '../../../../back/src/models/note.model';
 import ReactMarkdown from 'react-markdown';
 import CategorySelector from '../../components/CategorySelector';
 import { ICategory } from '../../../../back/src/models/category.model';
+import TagSelector from '../../components/TagSelector';
+import { ITag } from '../../../../back/src/models/tag.model';
 
 export default function ManageNotes(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [note, setNote] = useState<Partial<INote>>({});
-  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
+
   const [error, setError] = useState<string>('');
   const params = useParams();
   const navigate = useNavigate();
@@ -47,13 +49,20 @@ export default function ManageNotes(props: { id?: string }) {
   }
 
   async function handleCategoryChange(category: ICategory) {
-    console.log(category);
     setNote((prev) => {
-      if (!prev) return { category: category };
       return { ...prev, category: category };
     });
   }
+  const getSelectedTags = () => {
+    if (!note?.tags) return [];
+    return note.tags;
+  };
 
+  const handleTagsChange = (tags: ITag[]) => {
+    setNote((prev) => {
+      return { ...prev, tags };
+    });
+  };
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-4">
       <div className="bg-custom-sidebar/70 backdrop-blur-sm border border-custom-border rounded-xl p-6">
@@ -98,6 +107,13 @@ export default function ManageNotes(props: { id?: string }) {
           <CategorySelector
             selectedCategory={note?.category?._id || ''}
             onChange={handleCategoryChange}
+          />
+        </div>
+
+        <div className="mt-4">
+          <TagSelector
+            selectedTags={getSelectedTags()}
+            onChange={handleTagsChange}
           />
         </div>
         <div className="mt-6">
