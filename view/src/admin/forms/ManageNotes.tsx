@@ -15,36 +15,66 @@ import { ITag } from '../../../../back/src/models/tag.model';
 export default function ManageNotes(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [note, setNote] = useState<Partial<INote>>({});
-
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
   const params = useParams();
   const navigate = useNavigate();
   const id = props?.id ?? params?.id ?? null;
 
   useEffect(() => {
     if (id) {
-      console.log('----- note id', id);
       const getNote = async () => {
         try {
+          setError('');
           const noteRes: Partial<INote> = await APIService.get(`notes/${id}`);
-          console.log('Note res', noteRes);
+
           setNote(noteRes);
-        } catch (err) {
-          console.error('Error loading snippet:', error);
-          navigate('/admin');
+        } catch (err: any) {
+          const errorMessage = err?.message || 'Failed to load note';
+          console.error('Error loading note:', errorMessage);
+          setError(errorMessage);
+          setTimeout(() => {
+            navigate('/admin');
+          }, 33000);
         }
       };
 
       getNote();
     }
-  }, []);
+  }, [id, navigate]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+
+    if (!note.title?.trim()) {
+      setError('Title is required');
+      return;
+    }
+
+    if (!note.content?.trim()) {
+      setError('Content is required');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError('');
+
     try {
       await APIService.post('notes', note);
-    } catch (err) {
-      console.error('Error submitting form:', error);
+      setSuccessMessage('Note created successfully!');
+
+      setTimeout(() => {
+        navigate('/admin');
+      }, 1500);
+    } catch (err: any) {
+      const errorMessage =
+        err?.message || 'Something went wrong. Please try again.';
+      console.error('Error submitting form:', errorMessage);
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -53,6 +83,7 @@ export default function ManageNotes(props: { id?: string }) {
       return { ...prev, category: category };
     });
   }
+
   const getSelectedTags = () => {
     if (!note?.tags) return [];
     return note.tags;
@@ -63,12 +94,13 @@ export default function ManageNotes(props: { id?: string }) {
       return { ...prev, tags };
     });
   };
+
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-4">
       <div className="bg-custom-sidebar/70 backdrop-blur-sm border border-custom-border rounded-xl p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-white">
-            {props?.id ? 'Edit' : 'Create'} Note
+            {id ? 'Edit' : 'Create'} Note
           </h2>
 
           <div className="flex space-x-2">
@@ -82,14 +114,28 @@ export default function ManageNotes(props: { id?: string }) {
             </button>
           </div>
         </div>
+
+        {successMessage && (
+          <div className="mt-4 p-3 bg-custom-dark  border border-custom-border rounded-lg text-lime-200">
+            {successMessage}
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-4 p-3 bg-custom-dark border border-custom-border rounded-lg text-red-200">
+            {error}
+          </div>
+        )}
       </div>
 
       <form onSubmit={handleSubmit}>
         <div>
-          <label className="block text-zinc-300 mb-2">Title</label>
+          <label className="block text-zinc-300 mb-2">
+            Title <span className="text-red-400">*</span>
+          </label>
           <input
             type="text"
-            value={note?.title}
+            value={note?.title || ''}
             onChange={(e) => {
               setNote((prev) => {
                 if (!prev) return { title: e.target.value };
@@ -97,12 +143,13 @@ export default function ManageNotes(props: { id?: string }) {
               });
             }}
             className={`w-full px-4 py-2 rounded-lg bg-custom-base border ${
-              error ? 'border-red-500' : 'border-custom-border'
+              !note?.title && error ? 'border-red-500' : 'border-custom-border'
             } text-white focus:outline-none focus:ring-1 focus:ring-lime-100/20 focus:border-custom-border`}
             placeholder="Enter note title..."
+            required
           />
-          {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
         </div>
+
         <div className="mt-4">
           <CategorySelector
             selectedCategory={note?.category?._id || ''}
@@ -116,8 +163,11 @@ export default function ManageNotes(props: { id?: string }) {
             onChange={handleTagsChange}
           />
         </div>
+
         <div className="mt-6">
-          <label className="block text-zinc-300 mb-2">Content</label>
+          <label className="block text-zinc-300 mb-2">
+            Content <span className="text-red-400">*</span>
+          </label>
           {showPreview ? (
             <div className="p-4 bg-custom-base border border-custom-border rounded-lg prose prose-invert max-w-none min-h-[300px]">
               <ReactMarkdown
@@ -146,7 +196,7 @@ export default function ManageNotes(props: { id?: string }) {
             </div>
           ) : (
             <textarea
-              value={note?.content}
+              value={note?.content || ''}
               onChange={(e) => {
                 setNote((prev) => {
                   if (!prev) return { content: e.target.value };
@@ -155,12 +205,14 @@ export default function ManageNotes(props: { id?: string }) {
               }}
               rows={15}
               className={`w-full px-4 py-2 rounded-lg bg-custom-base border ${
-                error ? 'border-red-500' : 'border-custom-border'
+                !note?.content && error
+                  ? 'border-red-500'
+                  : 'border-custom-border'
               } text-white font-mono text-sm focus:outline-none focus:ring-1 focus:ring-lime-100/20 focus:border-custom-border`}
               placeholder="# Markdown content here..."
+              required
             />
           )}
-          {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
         </div>
 
         <div className="mt-8 flex justify-end space-x-3">
@@ -168,6 +220,7 @@ export default function ManageNotes(props: { id?: string }) {
             type="button"
             onClick={() => navigate('/admin')}
             className="px-4 py-2 rounded-lg text-zinc-400 hover:text-white flex items-center"
+            disabled={isSubmitting}
           >
             <X size={18} className="mr-2" />
             Cancel
@@ -176,9 +229,10 @@ export default function ManageNotes(props: { id?: string }) {
           <button
             type="submit"
             className="px-5 py-2 rounded-lg bg-lime-200 hover:bg-lime-300 text-zinc-900 font-medium flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isSubmitting}
           >
             <Save size={18} className="mr-2" />
-            {id ? 'Update' : 'Save'}
+            {isSubmitting ? 'Saving...' : id ? 'Update' : 'Save'}
           </button>
         </div>
       </form>
