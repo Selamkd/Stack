@@ -25,10 +25,9 @@ export default function ManageQuickLookup(props: { id?: string }) {
           );
 
           console.log(lookupRes);
-          setSnippet(lookupRes);
+          setLookup(lookupRes);
         } catch (err) {
           console.error('Error loading lookup:', error);
-          navigate('/admin');
         }
       };
 
@@ -40,8 +39,6 @@ export default function ManageQuickLookup(props: { id?: string }) {
     event.preventDefault();
     try {
       if (id) {
-        await APIService.post(`quicklookups/${id}`, lookup);
-      } else {
         await APIService.post('quicklookups', lookup);
       }
     } catch (err) {

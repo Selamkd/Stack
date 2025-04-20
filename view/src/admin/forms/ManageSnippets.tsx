@@ -37,8 +37,6 @@ export default function ManageSnippets(props: { id?: string }) {
     event.preventDefault();
     try {
       if (id) {
-        await APIService.post(`snippets/${id}`, snippet);
-      } else {
         await APIService.post('snippets', snippet);
       }
     } catch (err) {

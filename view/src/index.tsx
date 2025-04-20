@@ -26,7 +26,7 @@ root.render(
           <Route path="/admin/snippets/new" element={<ManageSnippets />} />
           <Route path="/admin/snippets/:id" element={<ManageSnippets />} />
           <Route path="/admin/lookups/new" element={<ManageQuickLookup />} />
-          <Route path="/admin/lookups/:id" element={<ManageSnippets />} />
+          <Route path="/admin/lookups/:id" element={<ManageQuickLookup />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>

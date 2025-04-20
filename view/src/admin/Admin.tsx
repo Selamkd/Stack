@@ -242,7 +242,7 @@ function PasswordModal(props: IPasswordModal) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log('Heloooooooooo');
+
     if (!password) {
       setError('Password is required');
       return;
@@ -255,7 +255,6 @@ function PasswordModal(props: IPasswordModal) {
       const checkPassRes = await APIService.post('check-pass', {
         pass: password,
       });
-      console.log('checkPassRes:', checkPassRes);
 
       if (checkPassRes && checkPassRes.message === ':)') {
         props.onSuccess();
