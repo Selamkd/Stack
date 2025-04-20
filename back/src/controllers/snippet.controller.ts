@@ -15,6 +15,7 @@ export const getAllSnippets = async (req: Request, res: Response) => {
 
     const snippets = await Snippet.find(query)
       .populate('tags')
+      .populate('category')
       .sort({ updatedAt: -1 });
 
     res.status(200).json(snippets);
@@ -47,7 +48,9 @@ export const upsertSnippet = async (req: Request, res: Response) => {
         req.body._id,
         { $set: req.body },
         { new: true }
-      ).populate('tags');
+      )
+        .populate('tags')
+        .populate('category');
 
       res.status(200).json(updatedSnippet);
     } else {

@@ -5,7 +5,6 @@ import logger from '../utils/logger';
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
     const categories = await Category.find().sort({ name: 1 });
-    console.log(categories);
     res.status(200).json(categories);
   } catch (error) {
     logger.error('Failed to fetch categories:', error);
@@ -33,7 +32,6 @@ export const getCategoryById = async (req: Request, res: Response) => {
 
 export const upsertCategory = async (req: Request, res: Response) => {
   try {
-    console.log('called!');
     const { _id, name } = req.body;
     if (!name) {
       logger.warn('Missing category name in request');

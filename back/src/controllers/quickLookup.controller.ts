@@ -17,6 +17,7 @@ export const getAllLookUps = async (req: Request, res: Response) => {
 
     const lookups = await QuickLookup.find(query)
       .populate('tags')
+      .populate('category')
       .sort({ updatedAt: -1 });
 
     res.status(200).json(lookups);
@@ -58,7 +59,9 @@ export const upsertLookUp = async (req: Request, res: Response) => {
         _id,
         { $set: req.body },
         { new: true, runValidators: true }
-      ).populate('tags');
+      )
+        .populate('tags')
+        .populate('category');
 
       if (!updatedLookup) {
         logger.warn('Quick lookup not found for update with ID:', _id);
@@ -118,7 +121,9 @@ export const searchLookups = async (req: Request, res: Response) => {
         { title: { $regex: searchTerm, $options: 'i' } },
         { answer: { $regex: searchTerm, $options: 'i' } },
       ],
-    }).populate('tags');
+    })
+      .populate('tags')
+      .populate('category');
 
     res.status(200).json(results);
   } catch (error) {

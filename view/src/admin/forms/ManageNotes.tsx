@@ -7,11 +7,13 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { INote } from '../../../../back/src/models/note.model';
 import ReactMarkdown from 'react-markdown';
+import CategorySelector from '../../components/CategorySelector';
+import { ICategory } from '../../../../back/src/models/category.model';
 
 export default function ManageNotes(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [note, setNote] = useState<Partial<INote>>({});
-  const [snippet, setSnippet] = useState<Partial<ISnippet>>({});
+  const [selectedCategory, setSelectedCategory] = useState<ICategory>();
   const [error, setError] = useState<string>('');
   const params = useParams();
   const navigate = useNavigate();
@@ -42,6 +44,14 @@ export default function ManageNotes(props: { id?: string }) {
     } catch (err) {
       console.error('Error submitting form:', error);
     }
+  }
+
+  async function handleCategoryChange(category: ICategory) {
+    console.log(category);
+    setNote((prev) => {
+      if (!prev) return { category: category };
+      return { ...prev, category: category };
+    });
   }
 
   return (
@@ -84,7 +94,12 @@ export default function ManageNotes(props: { id?: string }) {
           />
           {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
         </div>
-
+        <div className="mt-4">
+          <CategorySelector
+            selectedCategory={note?.category?._id || ''}
+            onChange={handleCategoryChange}
+          />
+        </div>
         <div className="mt-6">
           <label className="block text-zinc-300 mb-2">Content</label>
           {showPreview ? (

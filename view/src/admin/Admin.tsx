@@ -11,6 +11,7 @@ import {
   Hash,
   GitBranch,
   HashIcon,
+  Folder,
 } from 'lucide-react';
 import { INote } from '../../../back/src/models/note.model';
 import { ISnippet } from '../../../back/src/models/snippet.model';
@@ -213,6 +214,14 @@ function ContentItem({ item, type }: IContentItem) {
                 ? format(new Date(item.createdAt), 'PPP')
                 : 'No date'}
             </span>
+
+            {type !== 'categories' && 'category' in item && item.category && (
+              <span className="flex items-center mr-3 text-zinc-400">
+                <Folder size={14} className="mr-1" />
+                {item?.category?.name}
+              </span>
+            )}
+
             {'tags' in item && item.tags && (
               <div className="flex space-x-1">
                 {item.tags?.map((tag, index) => (

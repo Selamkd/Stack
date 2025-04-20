@@ -17,6 +17,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
 
     const notes = await Note.find(query)
       .populate('tags')
+      .populate('category')
       .sort({ updatedAt: -1 });
 
     res.status(200).json(notes);
