@@ -39,7 +39,7 @@ export const getTagById = async (req: Request, res: Response) => {
 
 export const upsertTag = async (req: Request, res: Response) => {
   try {
-    const { name } = req.body;
+    const { _id, name } = req.body;
 
     if (!name) {
       logger.warn('Missing tag name in request');
@@ -47,23 +47,24 @@ export const upsertTag = async (req: Request, res: Response) => {
       return;
     }
 
-    logger.debug('Checking if tag exists:', name);
-    const existingTag = await Tag.findOne({ name });
+    if (_id) {
+      logger.info(`Tag already exists with name: ${name}, ID: ${_id}`);
 
-    if (existingTag) {
-      logger.info(
-        `Tag already exists with name: ${name}, ID: ${existingTag._id}`
+      const updatedTag = await Tag.findByIdAndUpdate(
+        _id,
+        { $set: req.body },
+        { new: true }
       );
-      res.status(200).json(existingTag);
+      res.status(200).json(updatedTag);
       return;
+    } else {
+      logger.debug('Creating new tag:', name);
+      const newTag = new Tag({ name });
+      const savedTag = await newTag.save();
+
+      logger.info('New tag created successfully:', savedTag._id);
+      res.status(201).json(savedTag);
     }
-
-    logger.debug('Creating new tag:', name);
-    const newTag = new Tag({ name });
-    const savedTag = await newTag.save();
-
-    logger.info('New tag created successfully:', savedTag._id);
-    res.status(201).json(savedTag);
   } catch (error) {
     logger.error('Error creating tag:', error);
     res.status(500).json({ message: 'Error creating tag', error });

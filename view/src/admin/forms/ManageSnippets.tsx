@@ -21,7 +21,6 @@ export default function ManageSnippets(props: { id?: string }) {
             `snippets/${id}`
           );
 
-          console.log(snippetRes);
           setSnippet(snippetRes);
         } catch (err) {
           console.error('Error loading snippet:', error);
@@ -36,9 +35,7 @@ export default function ManageSnippets(props: { id?: string }) {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     try {
-      if (id) {
-        await APIService.post('snippets', snippet);
-      }
+      await APIService.post('snippets', snippet);
     } catch (err) {
       console.error('Error submitting form:', error);
     }

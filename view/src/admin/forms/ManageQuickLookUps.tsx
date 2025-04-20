@@ -38,9 +38,7 @@ export default function ManageQuickLookup(props: { id?: string }) {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     try {
-      if (id) {
-        await APIService.post('quicklookups', lookup);
-      }
+      await APIService.post('quicklookups', lookup);
     } catch (err) {
       console.error('Error submitting form:', error);
     }

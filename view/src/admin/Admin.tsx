@@ -10,6 +10,7 @@ import {
   X,
   Hash,
   GitBranch,
+  HashIcon,
 } from 'lucide-react';
 import { INote } from '../../../back/src/models/note.model';
 import { ISnippet } from '../../../back/src/models/snippet.model';
@@ -43,16 +44,20 @@ function AdminPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [notesRes, snippetsRes, lookupsRes] = await Promise.all([
-          APIService.get('notes'),
-          APIService.get('snippets'),
-          APIService.get('quicklookups'),
-        ]);
+        const [notesRes, snippetsRes, lookupsRes, tagsRes, categoriesRes] =
+          await Promise.all([
+            APIService.get('notes'),
+            APIService.get('snippets'),
+            APIService.get('quicklookups'),
+            APIService.get('tags'),
+            APIService.get('tags'),
+          ]);
 
         setNotes(notesRes);
         setSnippets(snippetsRes);
-        console.log(snippetsRes);
         setLookups(lookupsRes);
+        setCategories(categoriesRes);
+        setTags(tagsRes);
       } catch (error) {
         console.error('Error loading admin data:', error);
       }
@@ -71,6 +76,8 @@ function AdminPage() {
         return lookups || [];
       case 'categories':
         return categories || [];
+      case 'tags':
+        return tags || [];
       default:
         return [];
     }
@@ -173,15 +180,17 @@ function ContentItem({ item, type }: IContentItem) {
   const getTypeIcon = () => {
     switch (type) {
       case 'notes':
-        return <FileText size={20} className="text-lime-200/70 mb-5" />;
+        return <FileText size={20} className="text-zinc-200/70 mb-5" />;
       case 'snippets':
         return <Code size={20} className="text-emerald-400 mb-5" />;
       case 'lookups':
-        return <Bookmark size={16} className="text-amber-200 mb-5" />;
+        return <Bookmark size={20} className="text-amber-200 mb-5" />;
       case 'categories':
-        return <Wrench size={16} className="text-violet-400" />;
+        return <GitBranch size={20} className="text-lime-200 mb-5" />;
+      case 'tags':
+        return <HashIcon size={20} className="text-violet-300 mb-5" />;
       default:
-        return <FileText size={16} className="text-lime-400" />;
+        return <FileText size={20} className="text-zink-400" />;
     }
   };
   const getItemTitle = () => {
