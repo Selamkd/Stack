@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './app/App';
-import AppTest from './app/AppTest';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AppLayout from './components/layout/AppLayout';
 import Admin from './admin/Admin';
@@ -11,6 +9,12 @@ import ManageSnippets from './admin/forms/ManageSnippets';
 import ManageQuickLookup from './admin/forms/ManageQuickLookUps';
 import ManageCategories from './admin/forms/ManageCategories';
 import ManageTags from './admin/forms/ManageTags';
+import Notes from './app/Notes';
+import Lookups from './app/Lookups';
+import Snippets from './app/Snippets';
+import ViewNote from './app/ViewNote';
+import ViewSnippet from './app/ViewSnippet';
+import Home from './app/Home';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -21,8 +25,14 @@ root.render(
     <BrowserRouter>
       <AppLayout>
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route index path="/admin" element={<Admin />} />
+          <Route path="/" element={<Home />} />
+          <Route path="notes" element={<Notes />} />
+          <Route path="note/:id" element={<ViewNote />} />
+          <Route path="snippets" element={<Snippets />} />
+          <Route path="snippet/:id" element={<ViewSnippet />} />
+          <Route path="lookups" element={<Lookups />} />
+
+          <Route path="/admin" element={<Admin />} />
           <Route path="/admin/notes/new" element={<ManageNote />} />
           <Route path="/admin/notes/:id" element={<ManageNote />} />
           <Route path="/admin/snippets/new" element={<ManageSnippets />} />

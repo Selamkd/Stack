@@ -143,7 +143,7 @@ export default function ManageSnippets(props: { id?: string }) {
             onChange={(e) => {
               setSnippet((prev) => {
                 if (!prev) return { title: e.target.value };
-                return { ...prev, title: e.target.value };
+                return { ...prev, title: e.target.value }; // Fixed typo in original: langauge -> language
               });
             }}
             className={`w-full px-4 py-2 rounded-lg bg-custom-base border ${
@@ -196,7 +196,7 @@ export default function ManageSnippets(props: { id?: string }) {
             onChange={(e) => {
               setSnippet((prev) => {
                 if (!prev) return { language: e.target.value };
-                return { ...prev, language: e.target.value }; // Fixed typo in original: langauge -> language
+                return { ...prev, language: e.target.value };
               });
             }}
             className={`w-full px-4 py-2 rounded-lg bg-custom-base border ${
