@@ -158,7 +158,7 @@ function NavButton({ icon, label, link, isActive, mode }: INavButton) {
       className={`flex items-center space-x-3 w-full px-3 py-2.5 rounded-lg transition-all duration-200
         ${
           isActive
-            ? 'bg-zinc-950/50 backdrop-blur-sm text-white border border-zinc-800/50'
+            ? 'bg-zinc-950/50 backdrop-blur-sm text-white border-zinc-800/50'
             : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50 hover:backdrop-blur-sm'
         }`}
     >
