@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Note, { INote } from '../models/note.model';
 import mongoose, { FilterQuery } from 'mongoose';
 import logger from '../utils/logger';
+import Category from '../models/category.model';
 
 export const getAllNotes = async (req: Request, res: Response) => {
   try {
@@ -48,7 +49,7 @@ export const getNoteById = async (req: Request, res: Response) => {
 
 export const upsertNote = async (req: Request, res: Response) => {
   try {
-    const { _id, title, content, tags, isStarred } = req.body;
+    const { _id, title, content, tags, isStarred, category } = req.body;
 
     if (_id) {
       const updatedNote = await Note.findByIdAndUpdate(
@@ -75,13 +76,18 @@ export const upsertNote = async (req: Request, res: Response) => {
       const newNote = new Note({
         title,
         content,
+        category,
         tags: tags || [],
         isStarred: isStarred || false,
       });
 
       const savedNote = await newNote.save();
 
-      const populatedNote = await Note.findById(savedNote._id).populate('tags');
+      const populatedNote = await Note.findById(savedNote._id)
+        .populate('tags')
+        .populate('category');
+
+      await Category.findByIdAndUpdate(category._id, { $inc: { count: 1 } });
       res.status(201).json(populatedNote);
     }
   } catch (error) {

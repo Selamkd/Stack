@@ -13,7 +13,7 @@ import Notes from './app/Notes';
 import Lookups from './app/Lookups';
 import Snippets from './app/Snippets';
 import ViewNote from './app/ViewNote';
-import ViewSnippet from './app/ViewSnippet';
+
 import Home from './app/Home';
 
 const root = ReactDOM.createRoot(
@@ -29,7 +29,7 @@ root.render(
           <Route path="notes" element={<Notes />} />
           <Route path="note/:id" element={<ViewNote />} />
           <Route path="snippets" element={<Snippets />} />
-          <Route path="snippet/:id" element={<ViewSnippet />} />
+
           <Route path="lookups" element={<Lookups />} />
 
           <Route path="/admin" element={<Admin />} />
