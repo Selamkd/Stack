@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import QuickLookup, { IQuickLookup } from '../models/quicklookup.model';
 import mongoose, { FilterQuery } from 'mongoose';
 import logger from '../utils/logger';
+import Category from '../models/category.model';
 
 export const getAllLookUps = async (req: Request, res: Response) => {
   try {
@@ -52,7 +53,7 @@ export const getLookupById = async (req: Request, res: Response) => {
 
 export const upsertLookUp = async (req: Request, res: Response) => {
   try {
-    const { _id, title, answer, tags, isStarred } = req.body;
+    const { _id, title, answer, tags, isStarred, category } = req.body;
 
     if (_id) {
       const updatedLookup = await QuickLookup.findByIdAndUpdate(
@@ -82,6 +83,7 @@ export const upsertLookUp = async (req: Request, res: Response) => {
         title,
         answer,
         tags: tags || [],
+        category,
         isStarred: isStarred || false,
       });
 
@@ -91,6 +93,8 @@ export const upsertLookUp = async (req: Request, res: Response) => {
       const populatedLookup = await QuickLookup.findById(
         savedLookup._id
       ).populate('tags');
+
+      await Category.findByIdAndUpdate(category._id, { $inc: { count: 1 } });
       res.status(201).json(populatedLookup);
     }
   } catch (error) {

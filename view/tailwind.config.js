@@ -1,41 +1,36 @@
 module.exports = {
-  // update from 'purge' - specifies which files to include in build
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        primary: {
-          400: '#a3e635',
-          500: '#84cc16',
-        },
         zinc: {
           200: '#e4e4e7',
           300: '#d4d4d8',
           400: '#a1a1aa',
           500: '#71717a',
+          600: '#52525b',
+          700: '#3f3f46',
           800: '#27272a',
           900: '#18181b',
-          950: '#0a0a0e',
+          950: '#0a0a0a',
         },
-
-        emerald: {
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
+        indigo: {
+          200: '#c7d2fe',
+          500: '#6366f1',
+          600: '#4f46e5',
         },
-        amber: {
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
+        violet: {
+          500: '#8b5cf6',
+          600: '#7c3aed',
         },
-
         custom: {
-          base: '#0a0a0e',
-          surface: '#1c1c24',
-          border: '#2a2a35',
-          hover: '#3a3a45',
-          sidebar: '#111116',
+          base: '#0A0A0A',
+          surface: '#111111',
+          border: '#1A1A1A',
+          hover: '#242424',
+          active: '#2A2A2A',
+          text: '#606060',
         },
       },
       fontFamily: {
@@ -59,7 +54,7 @@ module.exports = {
       typography: (theme) => ({
         DEFAULT: {
           css: {
-            color: theme('colors.zinc.300'),
+            color: theme('colors.zinc.400'),
             a: {
               'color': theme('colors.lime.400'),
               '&:hover': {
@@ -78,17 +73,15 @@ module.exports = {
             h4: {
               color: theme('colors.white'),
             },
-            // inline code editor styling
             code: {
               color: theme('colors.lime.400'),
-              backgroundColor: 'rgba(28, 28, 36, 0.5)',
+              backgroundColor: 'rgba(17, 17, 17, 0.5)',
               padding: '0.2em 0.4em',
               borderRadius: '0.25rem',
             },
-            // code block
             pre: {
-              backgroundColor: 'rgba(28, 28, 36, 0.5)',
-              border: '1px solid rgba(42, 42, 53, 0.8)',
+              backgroundColor: 'rgba(17, 17, 17, 0.5)',
+              border: '1px solid rgba(26, 26, 26, 0.8)',
             },
           },
         },
@@ -97,13 +90,9 @@ module.exports = {
   },
   variants: {
     extend: {
-      // changes opacity when elements are disabled
       opacity: ['disabled'],
-      // changes cursor when elements are disabled
       cursor: ['disabled'],
-      // bg color changes on active state and group hover
       backgroundColor: ['active', 'group-hover'],
-      // text color changes on active state and group hover
       textColor: ['active', 'group-hover'],
       borderColor: ['active', 'focus-visible'],
       ringColor: ['focus-visible'],
