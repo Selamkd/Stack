@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Snippet, { ISnippet } from '../models/snippet.model';
 import mongoose, { FilterQuery } from 'mongoose';
+import Category from '../models/category.model';
 
 export const getAllSnippets = async (req: Request, res: Response) => {
   try {
@@ -41,7 +42,7 @@ export const getSnippetById = async (req: Request, res: Response) => {
 
 export const upsertSnippet = async (req: Request, res: Response) => {
   try {
-    const { title, description, code, tags, isStarred } = req.body;
+    const { title, description, code, tags, isStarred, category } = req.body;
 
     if (req.body._id) {
       const updatedSnippet = await Snippet.findByIdAndUpdate(
@@ -54,10 +55,12 @@ export const upsertSnippet = async (req: Request, res: Response) => {
 
       res.status(200).json(updatedSnippet);
     } else {
+      console.log('---test adding category count', req.body);
       const newSnippet = new Snippet({
         title,
         description,
         code,
+        category,
         tags: tags || [],
         isStarred: isStarred || false,
       });
@@ -66,6 +69,8 @@ export const upsertSnippet = async (req: Request, res: Response) => {
       const populatedSnippet = await Snippet.findById(
         savedSnippet._id
       ).populate('tags');
+
+      await Category.findByIdAndUpdate(category._id, { $inc: { count: 1 } });
 
       res.status(201).json(populatedSnippet);
     }

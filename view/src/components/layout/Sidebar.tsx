@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Bookmark,
   Code,
@@ -9,6 +9,8 @@ import {
   ChevronLeft,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { ICategory } from '../../../../back/src/models/category.model';
+import APIService from '../../service/api.service';
 
 export type ISideBarMode = 'expanded' | 'compact';
 
@@ -19,6 +21,19 @@ interface ISideBar {
 
 export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
   const location = useLocation();
+  const [categories, setCategories] = useState<ICategory[]>();
+
+  useEffect(() => {
+    async function getSnippets() {
+      try {
+        const categoriesRes = await APIService.get('categories');
+        setCategories(categoriesRes);
+      } catch (e) {
+        console.error('Error fetching snippets', e);
+      }
+    }
+    getSnippets();
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarMode((prev) => (prev === 'expanded' ? 'compact' : 'expanded'));
@@ -78,12 +93,16 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
             <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-3">
               Topics
             </h3>
-            <div className="space-y-1">
-              <TagButton label="React" count={15} />
-              <TagButton label="JavaScript" count={23} />
-              <TagButton label="CSS" count={8} />
-              <TagButton label="API" count={7} />
-            </div>
+
+            {categories &&
+              categories.slice(0, 5).map((cat) => (
+                <div className="space-y-1">
+                  <TagButton
+                    label={cat.name}
+                    count={cat.count ? cat.count : null}
+                  />
+                </div>
+              ))}
           </div>
         )}
 
@@ -151,19 +170,21 @@ function NavButton({ icon, label, link, isActive, mode }: INavButton) {
 
 interface ITagButton {
   label: string;
-  count: number;
+  count: number | null;
 }
 
 function TagButton({ label, count }: ITagButton) {
   return (
-    <button className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200 hover:border hover:border-zinc-700/50 transition-all duration-200">
+    <button className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200 hover:border-zinc-700/50 transition-all duration-200">
       <div className="flex items-center">
         <Hash size={14} className="mr-2 text-zinc-500" />
         <span>{label}</span>
       </div>
-      <span className="text-xs bg-zinc-800/50 border border-zinc-700/30 px-2 py-0.5 rounded-full text-zinc-400">
-        {count}
-      </span>
+      {count && (
+        <span className="text-xs bg-zinc-800/50 border border-zinc-700/30 px-2 py-0.5 rounded-full text-zinc-400">
+          {count}
+        </span>
+      )}
     </button>
   );
 }

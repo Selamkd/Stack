@@ -143,7 +143,7 @@ export default function ManageSnippets(props: { id?: string }) {
             onChange={(e) => {
               setSnippet((prev) => {
                 if (!prev) return { title: e.target.value };
-                return { ...prev, title: e.target.value }; // Fixed typo in original: langauge -> language
+                return { ...prev, title: e.target.value };
               });
             }}
             className={`w-full px-4 py-2 rounded-lg bg-custom-base border ${
@@ -289,4 +289,5 @@ const languages = [
   { value: 'css', label: 'CSS' },
   { value: 'bash', label: 'Bash' },
   { value: 'json', label: 'JSON' },
+  { value: 'jsx', label: 'JSX' },
 ];
