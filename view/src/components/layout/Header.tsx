@@ -16,17 +16,11 @@ export default function Header(props: IHeader) {
         props?.scrolled ? 'py-2' : 'py-3.5'
       }`}
     >
-      <div className="flex items-center justify-between px-4 mx-8">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-medium text-zinc-300">
-            {props.activePage}
-          </h1>
-        </div>
-
+      <div className="flex flex-row-reverse items-center justify-between px-4 mx-8">
         <div className="flex items-center space-x-3">
           <button
             onClick={() => navigate('/admin')}
-            className="p-2 rounded-lg text-zinc-400 hover:text-lime-200 hover:bg-custom-surface transition-colors"
+            className="px-8 rounded-lg text-zinc-400 hover:text-lime-200 hover:bg-custom-surface transition-colors"
           >
             <Settings size={20} />
           </button>
