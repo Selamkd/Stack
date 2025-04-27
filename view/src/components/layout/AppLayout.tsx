@@ -38,7 +38,7 @@ export default function AppLayout(props: { children: ReactNode }) {
           sidebarMode={sidebarMode}
           activePage={getActivePage()}
         />
-        <FilterTabs />
+
         {props?.children}
       </main>
     </div>
