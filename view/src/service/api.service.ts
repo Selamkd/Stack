@@ -1,11 +1,12 @@
 import logger from '../../../back/src/utils/logger';
 
 export class APIService {
-  static BASE_URL = 'http://localhost:3226/api';
+  static BASE_URL = 'http://localhost:3000/api';
 
   static async request(endpoint: string, options: RequestInit) {
     const url = `${this.BASE_URL}/${endpoint}`;
-
+    console.log(url);
+    logger.debug(url);
     if (!options.headers) {
       options.headers = {
         'Content-Type': 'application/json',
@@ -41,7 +42,7 @@ export class APIService {
 
   static async get(endpoint: string, params?: Record<string, string>) {
     let url = endpoint;
-
+    logger.debug(url);
     if (params && Object.keys(params).length > 0) {
       const queryParams = new URLSearchParams();
       Object.entries(params).forEach(([key, value]) => {

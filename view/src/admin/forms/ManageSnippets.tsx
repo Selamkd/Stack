@@ -46,6 +46,7 @@ export default function ManageSnippets(props: { id?: string }) {
   }, [id, navigate]);
 
   async function handleSubmit(event: React.FormEvent) {
+    console.log(snippet.category);
     event.preventDefault();
 
     if (!snippet.title?.trim()) {

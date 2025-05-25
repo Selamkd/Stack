@@ -17,7 +17,7 @@ export const getAllLookUps = async (req: Request, res: Response) => {
     }
 
     const lookups = await QuickLookup.find(query)
-      .populate('tags')
+
       .populate('category')
       .sort({ updatedAt: -1 });
 
@@ -32,7 +32,7 @@ export const getLookupById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const quickLookup = await QuickLookup.findById(id).populate('tags');
+    const quickLookup = await QuickLookup.findById(id);
 
     if (!quickLookup) {
       logger.warn('Quick lookup not found with ID:', id);
@@ -60,9 +60,7 @@ export const upsertLookUp = async (req: Request, res: Response) => {
         _id,
         { $set: req.body },
         { new: true, runValidators: true }
-      )
-        .populate('tags')
-        .populate('category');
+      ).populate('category');
 
       if (!updatedLookup) {
         logger.warn('Quick lookup not found for update with ID:', _id);
@@ -90,9 +88,7 @@ export const upsertLookUp = async (req: Request, res: Response) => {
       const savedLookup = await newLookup.save();
       logger.info('New quick lookup created with ID:', savedLookup._id);
 
-      const populatedLookup = await QuickLookup.findById(
-        savedLookup._id
-      ).populate('tags');
+      const populatedLookup = await QuickLookup.findById(savedLookup._id);
 
       await Category.findByIdAndUpdate(category._id, { $inc: { count: 1 } });
       res.status(201).json(populatedLookup);
@@ -125,9 +121,7 @@ export const searchLookups = async (req: Request, res: Response) => {
         { title: { $regex: searchTerm, $options: 'i' } },
         { answer: { $regex: searchTerm, $options: 'i' } },
       ],
-    })
-      .populate('tags')
-      .populate('category');
+    }).populate('category');
 
     res.status(200).json(results);
   } catch (error) {

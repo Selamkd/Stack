@@ -14,20 +14,18 @@ export const getAllSnippets = async (req: Request, res: Response) => {
       query.isStarred = req.query.isStarred === 'true';
     }
 
-    const snippets = await Snippet.find(query)
-      .populate('tags')
-      .populate('category')
-      .sort({ updatedAt: -1 });
+    const snippets = await Snippet.find(query).sort({ updatedAt: -1 });
 
     res.status(200).json(snippets);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error fetching snippets', error });
   }
 };
 
 export const getSnippetById = async (req: Request, res: Response) => {
   try {
-    const snippet = await Snippet.findById(req.params.id).populate('tags');
+    const snippet = await Snippet.findById(req.params.id);
 
     if (!snippet) {
       res.status(404).json({ message: 'Snippet not found' });
@@ -42,7 +40,11 @@ export const getSnippetById = async (req: Request, res: Response) => {
 
 export const upsertSnippet = async (req: Request, res: Response) => {
   try {
-    const { title, description, code, tags, isStarred, category } = req.body;
+    const { title, description, code, tags, isStarred, category, language } =
+      req.body;
+    const tagIds = Array.isArray(tags)
+      ? tags.map((tag: any) => (typeof tag === 'object' ? tag._id : tag))
+      : [];
 
     if (req.body._id) {
       const updatedSnippet = await Snippet.findByIdAndUpdate(
@@ -50,25 +52,27 @@ export const upsertSnippet = async (req: Request, res: Response) => {
         { $set: req.body },
         { new: true }
       )
-        .populate('tags')
-        .populate('category');
+      .populate('category');
 
       res.status(200).json(updatedSnippet);
     } else {
+      console.log(category);
+      console.log(tags);
+      console.log(typeof category);
+      console.log(tags);
       console.log('---test adding category count', req.body);
       const newSnippet = new Snippet({
         title,
         description,
         code,
-        category,
-        tags: tags || [],
+        language,
+        category: category._id,
+
         isStarred: isStarred || false,
       });
 
       const savedSnippet = await newSnippet.save();
-      const populatedSnippet = await Snippet.findById(
-        savedSnippet._id
-      ).populate('tags');
+      const populatedSnippet = await Snippet.findById(savedSnippet._id);
 
       await Category.findByIdAndUpdate(category._id, { $inc: { count: 1 } });
 
