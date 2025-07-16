@@ -11,6 +11,9 @@
     "start:back": "cd back && npm run dev",
     "build": "concurrently \"npm run build:front\" \"npm run build:back\"",
     "build:front": "cd view && npm run build",
-    "build:back": "cd back && npm run build"
+    "build:back": "cd back && npm run build",
+    "install:all": "npm install && concurrently \"npm run install:back\" \"npm run install:front\" ",
+    "install:front": "cd view && npm install",
+    "install:back": "cd back && npm install"
   }
 }
