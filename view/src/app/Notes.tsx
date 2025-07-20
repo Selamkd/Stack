@@ -110,8 +110,8 @@ export default function Notes() {
             </div>
           </div>
 
-          <div className="p-6 flex w-full border-custom-border">
-            <div className="relative">
+          <div className="p-6 justify-center flex w-full border-custom-border">
+            <div className="relative w-full">
               <input
                 type="text"
                 placeholder="Search notes..."

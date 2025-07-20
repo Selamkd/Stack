@@ -9,6 +9,7 @@ export default function Snippets() {
   const [snippets, setSnippets] = useState<ISnippet[]>([]);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [copiedMessage, setCopiedMessage] = useState<string | null>(null);
 
   useEffect(() => {
     async function getSnippets() {
@@ -26,6 +27,7 @@ export default function Snippets() {
     try {
       await navigator.clipboard.writeText(code);
       console.log('Copied to clipboard');
+      setCopiedMessage('Copied to clipboard!');
     } catch (err) {
       console.error('Error copying to clipboard');
     }
@@ -68,18 +70,29 @@ export default function Snippets() {
           className="px-4 py-3 bg-[#141414] border border-[#242424] rounded-lg flex items-center justify-between min-w-[140px] hover:border-[#303030] transition-colors group"
         >
           <option value="all">All Categories</option>
-          {categories.map((category) => (
+          {Array.from(new Set(categories)).map((category) => (
             <option key={category} value={category}>
               {category}
             </option>
           ))}
         </select>
       </div>
+      {copiedMessage !== null && (
+        <div className="flex items-center gap-6 mb-5 ml-2">
+          <span
+            onClick={() => setCopiedMessage(null)}
+            className="text-xs text-lime-200/80 cursor-pointer"
+          >
+            {copiedMessage}
+          </span>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filtered.map((snippet) => (
           <SnippetCard
             snippet={snippet}
             handleCopySnippet={handleCopySnippet}
+            copiedMessage={copiedMessage}
           />
         ))}
       </div>
@@ -90,10 +103,22 @@ export default function Snippets() {
 interface ISnippetCard {
   snippet: ISnippet;
   handleCopySnippet: (code: string) => void;
+  copiedMessage: string | null;
 }
 
 export function SnippetCard(props: ISnippetCard) {
-  const { snippet, handleCopySnippet } = props;
+  const { snippet, handleCopySnippet, copiedMessage } = props;
+
+  function bookmarkSnippet() {
+    try {
+      APIService.post(`snippets`, {
+        ...snippet,
+        isStarred: !snippet.isStarred,
+      });
+    } catch (err) {
+      console.error('Bookmark toggle error', err);
+    }
+  }
 
   return (
     <section className="group border border-custom-border bg-[#161616] rounded-lg overflow-hidden hover:border-custom-hover transition-all">
@@ -105,11 +130,21 @@ export function SnippetCard(props: ISnippetCard) {
             </h3>
             <p className="text-sm text-zinc-400">{snippet.description}</p>
           </div>
-          <button className="p-2 rounded-lg text-custom-text hover:text-white hover:bg-custom-hover">
-            <Bookmark className="w-4 h-4" />
+          <button
+            onClick={() => bookmarkSnippet()}
+            className={`p-2 rounded-lg transition-all duration-200 ${
+              snippet.isStarred
+                ? 'text-lime-300/60 hover:text-lime-200  hover:bg-lime-400/20 border border-lime-400/20 shadow-lg '
+                : 'text-custom-text hover:text-white hover:bg-custom-hover border border-transparent'
+            }`}
+          >
+            <Bookmark
+              className={`w-4 h-4 transition-all duration-200 ${
+                snippet.isStarred ? 'fill-current drop-shadow-sm' : ''
+              }`}
+            />
           </button>
         </div>
-
         <div className="relative">
           <div className="bg-custom-base rounded-lg overflow-hidden">
             <pre className="p-4 overflow-x-auto">

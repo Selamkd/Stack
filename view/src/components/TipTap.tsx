@@ -2,8 +2,9 @@ import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Highlight from '@tiptap/extension-highlight';
 import { InnerEditorUI } from './InnerEditor';
+import { BulletList, ListItem } from '@tiptap/extension-list';
 
-const extensions = [StarterKit, Highlight];
+const extensions = [StarterKit, Highlight, BulletList, ListItem];
 const content = '<p>Type here....</p>';
 
 interface ITipTap {
@@ -19,7 +20,6 @@ export function TipTap(props: ITipTap) {
         extensions={extensions}
         content={initialContent}
         onUpdate={({ editor, transaction }) => {
-          // This should handle all changes including paste
           if (onUpdate && transaction.docChanged) {
             const html = editor.getHTML();
             console.log('Content updated:', html);
