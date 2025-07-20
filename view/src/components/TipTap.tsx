@@ -18,9 +18,34 @@ export function TipTap(props: ITipTap) {
       <EditorProvider
         extensions={extensions}
         content={initialContent}
-        onUpdate={
-          onUpdate ? ({ editor }) => onUpdate(editor.getHTML()) : undefined
-        }
+        onUpdate={({ editor, transaction }) => {
+          // This should handle all changes including paste
+          if (onUpdate && transaction.docChanged) {
+            const html = editor.getHTML();
+            console.log('Content updated:', html);
+            onUpdate(html);
+          }
+        }}
+        onContentError={({ error }) => {
+          console.error('TipTap content error:', error);
+        }}
+        editorProps={{
+          attributes: {
+            class: 'prose prose-lg max-w-none mx-5 focus:outline-none',
+          },
+
+          handlePaste: (view, event) => {
+            setTimeout(() => {
+              if (onUpdate) {
+                const html = view.dom.innerHTML;
+
+                console.log(html);
+                onUpdate(html);
+              }
+            }, 0);
+            return false;
+          },
+        }}
         autofocus={'start'}
         injectCSS={false}
       >
