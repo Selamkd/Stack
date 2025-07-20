@@ -1,12 +1,25 @@
-import { EditorProvider } from '@tiptap/react';
+import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
-const extensions = [StarterKit];
+import { InnerEditorUI } from './InnerEditor';
 
+const extensions = [StarterKit];
 const content = '<p>Type here....</p>';
 
-export function TipTap() {
+interface ITipTap {
+  initialContent?: string;
+
+  onUpdate?: (content: string) => void;
+
+  className?: string;
+}
+export function TipTap(props: ITipTap) {
+  const { className, onUpdate, initialContent } = props;
   return (
-    <EditorProvider extensions={extensions} content={content}></EditorProvider>
+    <div className={`${className}`}>
+      <EditorProvider extensions={extensions} content={content}>
+        <InnerEditorUI />
+      </EditorProvider>
+    </div>
   );
 }

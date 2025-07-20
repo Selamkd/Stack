@@ -15,15 +15,7 @@ module.exports = {
           900: '#18181b',
           950: '#0a0a0a',
         },
-        indigo: {
-          200: '#c7d2fe',
-          500: '#6366f1',
-          600: '#4f46e5',
-        },
-        violet: {
-          500: '#8b5cf6',
-          600: '#7c3aed',
-        },
+
         custom: {
           base: '#0A0A0A',
           surface: '#111111',

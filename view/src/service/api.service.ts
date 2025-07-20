@@ -1,8 +1,7 @@
 import logger from '../../../back/src/utils/logger';
 
 export class APIService {
-  static BASE_URL =
-    (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3000/api';
+  static BASE_URL = 'http://localhost:3000/api';
 
   static async request(endpoint: string, options: RequestInit) {
     const url = `${this.BASE_URL}/${endpoint}`;
