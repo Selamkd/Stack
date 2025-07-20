@@ -17,7 +17,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
     }
 
     const notes = await Note.find(query)
-      .populate('tags')
+
       .populate('category')
       .sort({ updatedAt: -1 });
 
@@ -32,7 +32,7 @@ export const getNoteById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const note = await Note.findById(id).populate('tags');
+    const note = await Note.findById(id);
 
     if (!note) {
       logger.warn('Note not found with ID:', id);
@@ -56,7 +56,7 @@ export const upsertNote = async (req: Request, res: Response) => {
         _id,
         { $set: req.body },
         { new: true, runValidators: true }
-      ).populate('tags');
+      );
 
       if (!updatedNote) {
         logger.warn('Note not found for update with ID:', _id);
@@ -80,7 +80,9 @@ export const upsertNote = async (req: Request, res: Response) => {
 
       const savedNote = await newNote.save();
 
+
       res.status(201).json(savedNote);
+
     }
   } catch (error) {
     logger.error('Error creating/updating note:', error);
