@@ -10,6 +10,7 @@
     "react-markdown": "^8.0.6",
     "react-router-dom": "^6.30.0",
     "react-syntax-highlighter": "^15.6.1",
+    "vite-plugin-dts": "^4.5.4",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
