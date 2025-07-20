@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { INote } from '../../../back/src/models/note.model';
 import { TipTap } from '../components/TipTap';
 import APIService from '../service/api.service';
-import { Edit3 } from 'lucide-react';
+import { Edit3, FileText, Search, Trash2 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 
 export default function Notes() {
@@ -32,6 +32,32 @@ export default function Notes() {
     setSelectedNote(note);
   };
 
+  function debounce(pr: (...args: any[]) => void, timeout = 300) {
+    let timer: string | number | NodeJS.Timeout | undefined;
+    return (...args: any[]) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        pr(...args);
+      }, timeout);
+    };
+  }
+
+  function saveNote() {
+    try {
+      APIService.post('notes', {
+        _id: selectedNote?._id,
+        title: selectedNote?.title,
+        content: selectedNote?.content,
+      });
+    } catch (err) {
+      console.error('Error posting note');
+    }
+  }
+
+  const debouncedSave = useCallback(
+    debounce(() => saveNote(), 300),
+    [selectedNote]
+  );
   async function createNewNote() {
     try {
       const newNote = await APIService.post('notes', {
@@ -57,15 +83,7 @@ export default function Notes() {
                 placeholder="Search notes..."
                 className="w-full px-3 py-2 bg-custom-base border border-custom-border rounded-md text-zinc-300 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 text-sm"
               />
-              <svg
-                className="absolute right-3 top-2.5 w-4 h-4 text-zinc-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
+              <Search className="absolute right-3 top-2.5 w-4 h-4 text-zinc-500" />
             </div>
           </div>
 
@@ -89,7 +107,7 @@ export default function Notes() {
                       onClick={() => handleNoteSelect(note)}
                       className={`w-full text-left p-3 rounded-lg transition-colors group ${
                         isSelected(note._id)
-                          ? 'bg-custom-active border border-custom-border'
+                          ? 'bg-custom-surface border border-custom-border'
                           : 'hover:bg-custom-hover'
                       }`}
                     >
@@ -115,7 +133,7 @@ export default function Notes() {
                             {note.content
                               ? note.content
                                   .replace(/<[^>]*>/g, '')
-                                  .substring(0, 80) + '...'
+                                  .substring(0, 30) + '...'
                               : 'No content'}
                           </p>
 
@@ -128,10 +146,7 @@ export default function Notes() {
                           >
                             {note.createdAt && note.createdAt
                               ? selectedNote?.createdAt
-                                ? `${format(
-                                    new Date(selectedNote.createdAt),
-                                    'PPPp'
-                                  )}`
+                                ? `${format(new Date(note.createdAt), 'PPPp')}`
                                 : 'No date'
                               : 'No date'}
                           </p>
@@ -144,17 +159,7 @@ export default function Notes() {
                             }}
                             className="p-1 rounded hover:bg-custom-border text-zinc-500 hover:text-red-400"
                           >
-                            <svg
-                              width="12"
-                              height="12"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                            >
-                              <polyline points="3,6 5,6 21,6"></polyline>
-                              <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
-                            </svg>
+                            <Trash2 className="w-3 h-3" />
                           </button>
                         </div>
                       </div>
@@ -165,19 +170,7 @@ export default function Notes() {
             ) : (
               <div className="p-6 text-center">
                 <div className="text-zinc-500 mb-4">
-                  <svg
-                    className="w-12 h-12 mx-auto mb-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
+                  <FileText className="w-12 h-12 mx-auto mb-3" />
                   <p className="text-sm">No notes yet</p>
                 </div>
               </div>
@@ -185,10 +178,10 @@ export default function Notes() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col mt-5">
+        <div className="flex-1 flex flex-col mt-9">
           {selectedNote ? (
             <>
-              <div className="bg-custom-surface  border-custom-border p-6 max-w-7x mx-12">
+              <div className="bg-custom-surface  border-custom-border p-6 max-w-7xl mx-auto w-full rounded-md">
                 <input
                   type="text"
                   value={selectedNote.title || ''}
@@ -196,6 +189,7 @@ export default function Notes() {
                     setSelectedNote((prev) =>
                       prev ? { ...prev, title: e.target.value } : null
                     );
+                    debouncedSave();
                   }}
                   className="text-2xl font-bold bg-transparent text-white placeholder-zinc-500 focus:outline-none w-full"
                   placeholder="Note title..."
@@ -224,9 +218,10 @@ export default function Notes() {
                     setSelectedNote((prev) =>
                       prev ? { ...prev, content } : null
                     );
-                    // debounce save
+
+                    debouncedSave();
                   }}
-                  className="max-w-7x mx-12 bg-custom-surface overflow-hidden shadow-xl "
+                  className="max-w-7xl mx-auto bg-custom-surface overflow-hidden shadow-xl "
                 />
               </div>
             </>
