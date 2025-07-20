@@ -10,16 +10,15 @@ export default function Snippets() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [copiedMessage, setCopiedMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function getSnippets() {
-      try {
-        const snippetsRes = await APIService.get('snippets');
-        setSnippets(snippetsRes);
-      } catch (e) {
-        console.error('Error fetching snippets', e);
-      }
+  async function getSnippets() {
+    try {
+      const snippetsRes = await APIService.get('snippets');
+      setSnippets(snippetsRes);
+    } catch (e) {
+      console.error('Error fetching snippets', e);
     }
+  }
+  useEffect(() => {
     getSnippets();
   }, []);
 
@@ -92,7 +91,7 @@ export default function Snippets() {
           <SnippetCard
             snippet={snippet}
             handleCopySnippet={handleCopySnippet}
-            copiedMessage={copiedMessage}
+            refresh={getSnippets}
           />
         ))}
       </div>
@@ -103,17 +102,20 @@ export default function Snippets() {
 interface ISnippetCard {
   snippet: ISnippet;
   handleCopySnippet: (code: string) => void;
-  copiedMessage: string | null;
+
+  refresh: () => void;
 }
 
 export function SnippetCard(props: ISnippetCard) {
-  const { snippet, handleCopySnippet, copiedMessage } = props;
+  const { snippet, handleCopySnippet, refresh } = props;
 
   function bookmarkSnippet() {
     try {
       APIService.post(`snippets`, {
         ...snippet,
         isStarred: !snippet.isStarred,
+      }).then(() => {
+        refresh();
       });
     } catch (err) {
       console.error('Bookmark toggle error', err);
@@ -134,7 +136,7 @@ export function SnippetCard(props: ISnippetCard) {
             onClick={() => bookmarkSnippet()}
             className={`p-2 rounded-lg transition-all duration-200 ${
               snippet.isStarred
-                ? 'text-lime-300/60 hover:text-lime-200  hover:bg-lime-400/20 border border-lime-400/20 shadow-lg '
+                ? 'text-lime-300/40 hover:text-lime-200  hover:bg-lime-400/20 border border-lime-400/20  '
                 : 'text-custom-text hover:text-white hover:bg-custom-hover border border-transparent'
             }`}
           >
