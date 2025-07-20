@@ -12,23 +12,23 @@ export default function Notes() {
 
   const isSelected = (id: string) => selectedNote?._id === id;
 
-  useEffect(() => {
-    async function fetchNotes() {
-      try {
-        setIsLoading(true);
-        const notesRes = await APIService.get('notes');
-        setNotes(notesRes);
+  async function fetchNotes() {
+    try {
+      setIsLoading(true);
+      const notesRes = await APIService.get('notes');
+      setNotes(notesRes);
 
-        if (notes === null || notes.length <= 0) {
-          setSelectedNote(notesRes[0]);
-        }
-      } catch (error) {
-        console.error('Error loading notes:', error);
-      } finally {
-        setIsLoading(false);
+      if (notes === null || notes.length <= 0) {
+        setSelectedNote(notesRes[0]);
       }
+    } catch (error) {
+      console.error('Error loading notes:', error);
+    } finally {
+      setIsLoading(false);
     }
+  }
 
+  useEffect(() => {
     fetchNotes();
   }, []);
 
@@ -65,14 +65,22 @@ export default function Notes() {
   async function createNewNote() {
     try {
       const newNote = await APIService.post('notes', {
+        _id: 'new',
         title: 'Untitled Note',
         content: '<p>Type here...</p>',
-        createdAt: new Date().toISOString(),
       });
       setNotes((prev) => (prev ? [newNote, ...prev] : [newNote]));
       setSelectedNote(newNote);
     } catch (error) {
       console.error('Error creating note:', error);
+    }
+  }
+
+  function handleDelete(id: string) {
+    try {
+      APIService.delete(`notes/${id}`);
+    } catch (err) {
+      console.error('Error deleting a note');
     }
   }
 
@@ -102,7 +110,7 @@ export default function Notes() {
             </div>
           </div>
 
-          <div className="p-6 flex w-full justify-between border-custom-border">
+          <div className="p-6 flex w-full border-custom-border">
             <div className="relative">
               <input
                 type="text"
@@ -182,6 +190,8 @@ export default function Notes() {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
+                              handleDelete(note._id);
+                              fetchNotes();
                             }}
                             className="p-1 rounded hover:bg-custom-border text-zinc-500 hover:text-red-400"
                           >
