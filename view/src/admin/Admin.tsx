@@ -56,7 +56,7 @@ function AdminPage() {
         setNotes(notesRes);
         setSnippets(snippetsRes);
         setLookups(lookupsRes);
-
+        setShowPasswordModal(true);
         setCategories(categoriesRes);
         setTags(tagsRes);
       } catch (error) {

@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 export default function AppLayout(props: { children: ReactNode }) {
   const [scrolled, setScrolled] = useState(false);
-  const [sidebarMode, setSidebarMode] = useState<ISideBarMode>('expanded');
+  const [sidebarMode, setSidebarMode] = useState<ISideBarMode>('compact');
   const location = useLocation();
 
   function getActivePage() {

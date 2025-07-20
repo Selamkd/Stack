@@ -51,7 +51,7 @@ export const upsertNote = async (req: Request, res: Response) => {
   try {
     const { _id, title, content, tags, isStarred, category } = req.body;
 
-    if (_id) {
+    if (_id !== 'new') {
       const updatedNote = await Note.findByIdAndUpdate(
         _id,
         { $set: req.body },
@@ -76,18 +76,13 @@ export const upsertNote = async (req: Request, res: Response) => {
       const newNote = new Note({
         title,
         content,
-        category,
-        tags: tags || [],
-        isStarred: isStarred || false,
       });
 
       const savedNote = await newNote.save();
 
-      const populatedNote = await Note.findById(savedNote._id)
-      .populate('category');
 
-      await Category.findByIdAndUpdate(category._id, { $inc: { count: 1 } });
-      res.status(201).json(populatedNote);
+      res.status(201).json(savedNote);
+
     }
   } catch (error) {
     logger.error('Error creating/updating note:', error);
