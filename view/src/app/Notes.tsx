@@ -1,3 +1,9 @@
+import { TipTap } from '../components/TipTap';
+
 export default function Notes() {
-  return <h1>Notes List</h1>;
+  return (
+    <h1>
+      <TipTap />
+    </h1>
+  );
 }
