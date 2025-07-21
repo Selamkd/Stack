@@ -19,6 +19,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
     const notes = await Note.find(query)
 
       .populate('category')
+      .populate('tags')
       .sort({ updatedAt: -1 });
 
     res.status(200).json(notes);
@@ -80,9 +81,7 @@ export const upsertNote = async (req: Request, res: Response) => {
 
       const savedNote = await newNote.save();
 
-
       res.status(201).json(savedNote);
-
     }
   } catch (error) {
     logger.error('Error creating/updating note:', error);

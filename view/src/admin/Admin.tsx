@@ -38,7 +38,7 @@ function AdminPage() {
   const [lookups, setLookups] = useState<IQuickLookup[]>();
   const [categories, setCategories] = useState<ICategory[]>();
   const [tags, setTags] = useState<ITag[]>();
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,7 +56,7 @@ function AdminPage() {
         setNotes(notesRes);
         setSnippets(snippetsRes);
         setLookups(lookupsRes);
-        setShowPasswordModal(true);
+
         setCategories(categoriesRes);
         setTags(tagsRes);
       } catch (error) {
@@ -131,7 +131,7 @@ function AdminPage() {
             {activeTab === 'tags' && 'Tags'}
           </h3>
           <button
-            onClick={() => setShowPasswordModal(true)}
+            onClick={() => navigate(`${activeTab}/new`)}
             className="px-4 py-2 rounded-lg bg-lime-200/70 hover:bg-lime-300 text-zinc-900 font-medium transition-colors flex items-center"
           >
             <Plus size={18} />
@@ -144,12 +144,6 @@ function AdminPage() {
           ))}
         </div>
       </div>
-      {showPasswordModal && (
-        <PasswordModal
-          onSuccess={() => navigate(`${activeTab}/new`)}
-          onClose={() => setShowPasswordModal(false)}
-        />
-      )}
     </div>
   );
 }

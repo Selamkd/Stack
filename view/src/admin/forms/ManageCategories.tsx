@@ -1,13 +1,8 @@
-import { Bookmark, Code, Eye, EyeOff, Save, X } from 'lucide-react';
+import { Save, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { ISnippet } from '../../../../back/src/models/snippet.model';
 import { useNavigate, useParams } from 'react-router-dom';
-import APIService from '../../service/api.service';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import ReactMarkdown from 'react-markdown';
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { IQuickLookup } from '../../../../back/src/models/quicklookup.model';
 import { ICategory } from '../../../../back/src/models/category.model';
+import APIService from '../../service/api.service';
 export default function ManageCategories(props: { id?: string }) {
   const [showPreview, setShowPreview] = useState<boolean>(false);
 

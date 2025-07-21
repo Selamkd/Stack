@@ -14,7 +14,10 @@ export const getAllSnippets = async (req: Request, res: Response) => {
       query.isStarred = req.query.isStarred === 'true';
     }
 
-    const snippets = await Snippet.find(query).sort({ updatedAt: -1 });
+    const snippets = await Snippet.find(query)
+      .sort({ updatedAt: -1 })
+      .populate('category')
+      .populate('tags');
 
     res.status(200).json(snippets);
   } catch (error) {
@@ -51,8 +54,7 @@ export const upsertSnippet = async (req: Request, res: Response) => {
         req.body._id,
         { $set: req.body },
         { new: true }
-      )
-      .populate('category');
+      ).populate('category');
 
       res.status(200).json(updatedSnippet);
     } else {
