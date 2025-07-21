@@ -214,10 +214,10 @@ export default function Notes() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col mt-9">
+        <div className="flex-1 flex flex-col ">
           {selectedNote ? (
             <>
-              <div className="bg-custom-surface px-10 pt-10 border-custom-border p-6 max-w-7xl mx-auto w-full rounded-md">
+              <div className="bg-custom-surface px-10 pt-10 border-custom-border p-6 w-full rounded-md h-screen">
                 <input
                   type="text"
                   value={selectedNote.title || ''}
@@ -246,7 +246,7 @@ export default function Notes() {
                 </div>
               </div>
 
-              <div className="flex-1 ">
+              <div className="flex-1">
                 <TipTap
                   key={selectedNote._id || selectedNote._id}
                   initialContent={selectedNote.content}
@@ -257,7 +257,7 @@ export default function Notes() {
 
                     debouncedSave();
                   }}
-                  className="max-w-7xl mx-auto bg-custom-surface overflow-hidden shadow-xl "
+                  className=" bg-custom-surface overflow-hidden shadow-xl w-full "
                 />
               </div>
             </>

@@ -7,6 +7,7 @@ import {
   Home,
   Wrench,
   ChevronLeft,
+  Settings,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ICategory } from '../../../../back/src/models/category.model';
@@ -84,6 +85,14 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
             label="Tools"
             link="/tools"
             isActive={location.pathname === '/tools'}
+            mode={sidebarMode}
+          />
+
+          <NavButton
+            icon={<Settings size={18} />}
+            label="Config"
+            link="/admin"
+            isActive={location.pathname === '/admin'}
             mode={sidebarMode}
           />
         </nav>
