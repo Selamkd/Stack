@@ -4,8 +4,6 @@ export interface ICategory {
   _id: string;
   name: string;
   count: number;
-  createdAt?: Date;
-  lastEdited?: Date;
 }
 
 const categorySchema = new Schema<ICategory>(
