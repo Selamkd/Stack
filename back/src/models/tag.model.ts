@@ -3,8 +3,6 @@ import { model, Schema } from 'mongoose';
 export interface ITag {
   _id: string;
   name: string;
-  createdAt?: Date;
-  lastEdited?: Date;
 }
 
 const tagSchema = new Schema<ITag>(

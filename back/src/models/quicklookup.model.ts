@@ -9,8 +9,6 @@ export interface IQuickLookup {
   answer: string;
   tags: ITag[];
   isStarred: boolean;
-  createdAt: Date;
-  lastEdited: Date;
 }
 
 const quickLookupSchema = new Schema<IQuickLookup>(

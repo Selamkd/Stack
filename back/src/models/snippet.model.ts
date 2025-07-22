@@ -11,8 +11,6 @@ export interface ISnippet {
   code: string;
   tags?: ITag[];
   isStarred?: boolean;
-  createdAt: Date;
-  lastEdited: Date;
 }
 
 const snippetSchema = new Schema<ISnippet>(
