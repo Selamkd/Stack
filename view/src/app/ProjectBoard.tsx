@@ -1,8 +1,5 @@
-import { Bookmark, Copy, Search, Trash2 } from 'lucide-react';
+import { Search, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { ISnippet } from '../../../back/src/models/snippet.model';
 import APIService from '../service/api.service';
 
 //placeholder ticket interface till model setup
@@ -17,7 +14,7 @@ export default function ProjectBoard() {
   const [tickets, setTickets] = useState<ITicket[]>([]);
   const [search, setSearch] = useState('');
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
-
+  const STAGES = ['Parked', 'Backlog', 'In Development', 'Done'];
   async function getTickets() {
     try {
       //   const ticketRes = await APIService.get('ticket');
@@ -53,7 +50,7 @@ export default function ProjectBoard() {
   });
 
   return (
-    <main className="max-w-7xl mx-auto min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
+    <main className="max-w-9xl mx-auto min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
       <div className="flex flex-col mb-4">
         <h1 className="text-3xl">Project Tracker Board</h1>
       </div>
@@ -63,7 +60,7 @@ export default function ProjectBoard() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#404040]" />
           <input
             type="text"
-            placeholder="Search snippets..."
+            placeholder="Search tickets..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-11 pr-4 py-3 bg-[#141414] border border-[#242424] rounded-lg text-white placeholder-[#404040] focus:outline-none focus:border-[#303030]"
@@ -83,15 +80,27 @@ export default function ProjectBoard() {
           )}
         </div>
       )}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {' '}
+        {STAGES.map((stage) => (
+          <div className="flex flex-col">
+            <header className="px-4 py-3 border border-custom-border bg-custom-hover/80 rounded-t-lg">
+              <p className="text-center font-medium">{stage}</p>
+            </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filtered.map((ticket) => (
-          <TicketCard
-            key={ticket._id}
-            ticket={ticket}
-            handleDeleteTicket={() => handleDeleteTicket(ticket._id)}
-            refresh={getTickets}
-          />
+            <div className="flex-1 border-l border-r border-b border-custom-border/80 rounded-b-lg bg-custom-hover/20 p-2 min-h-[400px]">
+              <div className="space-y-3">
+                {filtered.map((ticket) => (
+                  <TicketCard
+                    key={ticket._id}
+                    ticket={ticket}
+                    handleDeleteTicket={() => handleDeleteTicket(ticket._id)}
+                    refresh={getTickets}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         ))}
       </div>
     </main>
@@ -107,7 +116,7 @@ export function TicketCard(props: ITicketCard) {
   const { ticket, handleDeleteTicket, refresh } = props;
 
   return (
-    <section className="group border border-custom-border bg-[#161616] rounded-lg overflow-hidden hover:border-custom-hover transition-all">
+    <section className="group border bg-[#161616] rounded-lg overflow-hidden border-custom-hover transition-all">
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1 min-w-0">
