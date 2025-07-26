@@ -82,6 +82,13 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
             mode={sidebarMode}
           />
           <NavButton
+            icon={<Trello size={18} />}
+            label="Project Tracker"
+            link="/project-board"
+            isActive={isActive('/project-board')}
+            mode={sidebarMode}
+          />
+          <NavButton
             icon={<SearchCode size={18} />}
             label="Quick Lookups"
             link="/lookups"
@@ -93,14 +100,6 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
             label="Tools"
             link="/tools"
             isActive={location.pathname === '/tools'}
-            mode={sidebarMode}
-          />
-
-          <NavButton
-            icon={<Trello size={18} />}
-            label="Project Tracker"
-            link="/project-board"
-            isActive={isActive('/project-board')}
             mode={sidebarMode}
           />
 

@@ -18,11 +18,6 @@ export default function ProjectBoard() {
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
   const STAGES = ['Parked', 'Backlog', 'In Development', 'Done'];
 
-  function Draggable() {
-    const { attributes, listeners, setNodeRef } = useDraggable({
-      id: 'unique-id',
-    });
-  }
   async function getTickets() {
     try {
       //   const ticketRes = await APIService.get('ticket');
