@@ -8,6 +8,11 @@ import {
   Wrench,
   ChevronLeft,
   Settings,
+  PocketKnife,
+  Trello,
+  SwatchBook,
+  SearchCode,
+  SquareChevronRight,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ICategory } from '../../../../back/src/models/category.model';
@@ -24,6 +29,9 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
   const location = useLocation();
   const [categories, setCategories] = useState<ICategory[]>();
 
+  function isActive(path: string) {
+    return location.pathname === path;
+  }
   useEffect(() => {
     async function getSnippets() {
       try {
@@ -56,32 +64,32 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
             icon={<Home size={18} />}
             label="Search"
             link="/search"
-            isActive={location.pathname === '/search'}
+            isActive={isActive('/search')}
             mode={sidebarMode}
           />
           <NavButton
             icon={<FileText size={18} />}
             label="Notes"
             link="/notes"
-            isActive={location.pathname === '/notes'}
+            isActive={isActive('/notes')}
             mode={sidebarMode}
           />
           <NavButton
-            icon={<Code size={18} />}
+            icon={<SquareChevronRight size={18} />}
             label="Snippets"
             link="/snippets"
-            isActive={location.pathname === '/snippets'}
+            isActive={isActive('/snippets')}
             mode={sidebarMode}
           />
           <NavButton
-            icon={<Bookmark size={18} />}
-            label="Lookups"
+            icon={<SearchCode size={18} />}
+            label="Quick Lookups"
             link="/lookups"
-            isActive={location.pathname === '/lookups'}
+            isActive={isActive('/lookups')}
             mode={sidebarMode}
           />
           <NavButton
-            icon={<Wrench size={18} />}
+            icon={<SwatchBook size={18} />}
             label="Tools"
             link="/tools"
             isActive={location.pathname === '/tools'}
@@ -89,10 +97,18 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
           />
 
           <NavButton
+            icon={<Trello size={18} />}
+            label="Project Tracker"
+            link="/project-board"
+            isActive={isActive('/project-board')}
+            mode={sidebarMode}
+          />
+
+          <NavButton
             icon={<Settings size={18} />}
             label="Config"
             link="/admin"
-            isActive={location.pathname === '/admin'}
+            isActive={isActive('/admin')}
             mode={sidebarMode}
           />
         </nav>

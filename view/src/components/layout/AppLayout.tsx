@@ -8,16 +8,18 @@ export default function AppLayout(props: { children: ReactNode }) {
   const [sidebarMode, setSidebarMode] = useState<ISideBarMode>('compact');
   const location = useLocation();
 
+  const pathname = location.pathname;
+
   function getActivePage() {
-    if (location.pathname.endsWith('/')) return 'Search';
-    if (location.pathname.endsWith('/search/notes')) return 'Notes';
-    if (location.pathname.endsWith('/search/snippets')) return 'Snippets';
-    if (location.pathname.endsWith('/search/lookups')) return 'Lookups';
-    if (location.pathname.endsWith('/notes')) return 'Notes';
-    if (location.pathname.endsWith('/snippets')) return 'Snippets';
-    if (location.pathname.endsWith('/search-lookup')) return 'Lookups';
-    if (location.pathname.endsWith('/tools')) return 'Tools';
-    if (location.pathname.endsWith('/admin')) return 'Admin';
+    if (pathname.endsWith('/')) return 'Search';
+    if (pathname.endsWith('/search/notes')) return 'Notes';
+    if (pathname.endsWith('/search/snippets')) return 'Snippets';
+    if (pathname.endsWith('/search/lookups')) return 'Lookups';
+    if (pathname.endsWith('/notes')) return 'Notes';
+    if (pathname.endsWith('/snippets')) return 'Snippets';
+    if (pathname.endsWith('/search-lookup')) return 'Lookups';
+    if (pathname.endsWith('/tools')) return 'Tools';
+    if (pathname.endsWith('/admin')) return 'Admin';
     return 'Page';
   }
 
