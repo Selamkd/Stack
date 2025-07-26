@@ -15,6 +15,7 @@ import Snippets from './app/Snippets';
 import ViewNote from './app/ViewNote';
 
 import Home from './app/Home';
+import ProjectBoard from './app/ProjectBoard';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -31,6 +32,8 @@ root.render(
           <Route path="snippets" element={<Snippets />} />
 
           <Route path="lookups" element={<Lookups />} />
+
+          <Route path="project-board" element={<ProjectBoard />} />
 
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/notes/new" element={<ManageNote />} />
