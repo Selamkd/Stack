@@ -1,18 +1,7 @@
 import { Bookmark, Copy, Search, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import {
-  vscDarkPlus,
-  oneDark,
-  atomDark,
-  materialDark,
-  nord,
-  dracula,
-  nightOwl,
-  coldarkDark,
-  duotoneDark,
-  synthwave84,
-} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ISnippet } from '../../../back/src/models/snippet.model';
 import APIService from '../service/api.service';
 
@@ -72,7 +61,7 @@ export default function Snippets() {
   });
 
   return (
-    <main className="max-w-7xl mx-auto min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
+    <main className="max-w-8xl mx-auto min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
       <div className="flex flex-col mb-4">
         <h1 className="text-3xl">Code Snippets</h1>
         <p className="text-custom-text py-2">
