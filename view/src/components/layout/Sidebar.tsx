@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from 'react';
 import {
-  Bookmark,
-  Code,
+  ChevronLeft,
   FileText,
   Hash,
   Home,
-  Wrench,
-  ChevronLeft,
-  Settings,
-  PocketKnife,
-  Trello,
-  SwatchBook,
   SearchCode,
+  Settings,
   SquareChevronRight,
+  SwatchBook,
+  Trello,
 } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ICategory } from '../../../../back/src/models/category.model';
 import APIService from '../../service/api.service';
 

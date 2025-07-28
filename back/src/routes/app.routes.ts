@@ -7,6 +7,7 @@ import quickLookupRoutes from './lookups.routes';
 import adminRoutes from './admin.routes';
 import categoryRoutes from './categories.routes';
 import logger from '../utils/logger';
+import ticketRoutes from './ticket.routes';
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.use('/snippets', snippetRoutes);
 router.use('/check-pass', adminRoutes);
 router.use('/quicklookups', quickLookupRoutes);
 router.use('/categories', categoryRoutes);
+router.use('/ticket', ticketRoutes);
 
 router.get('/ping', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
