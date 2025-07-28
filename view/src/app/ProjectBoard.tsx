@@ -16,7 +16,11 @@ export default function ProjectBoard() {
   const [tickets, setTickets] = useState<ITicket[]>([]);
   const [search, setSearch] = useState('');
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
-  const STAGES = ['Parked', 'Backlog', 'In Development', 'Done'];
+  const STAGES = ['parked', 'backlog', 'development', 'done'];
+
+  const [ticketsWithStages, setTicketsWithStages] = useState<
+    Record<string, ITicket[]>
+  >({});
 
   async function getTickets() {
     try {
@@ -51,6 +55,26 @@ export default function ProjectBoard() {
 
     return matchesSearch;
   });
+
+  useEffect(() => {
+    if (filtered.length > 0) {
+      const mapTickets: Record<string, ITicket[]> = {};
+      setTicketsWithStages(() => {
+        STAGES.forEach((stage) => {
+          mapTickets[stage] = [];
+        });
+
+        filtered.forEach((ticket) => {
+          const key = ticket.stage;
+          if (mapTickets[key]) {
+            mapTickets[key].push(ticket);
+          }
+        });
+
+        return mapTickets;
+      });
+    }
+  }, [tickets]);
 
   return (
     <DndContext>
@@ -93,7 +117,7 @@ export default function ProjectBoard() {
               </header>
 
               <TicketDroppable
-                tickets={filtered}
+                tickets={ticketsWithStages[stage] || []}
                 handleDeleteTicket={handleDeleteTicket}
                 refresh={getTickets}
               />
