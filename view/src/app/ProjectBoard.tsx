@@ -21,6 +21,7 @@ export default function ProjectBoard() {
     const { active, over } = event;
 
     if (over && active.data.current.supports.includes(over.data.current.type)) {
+      APIService.post('ticket', {});
     }
   }
 
