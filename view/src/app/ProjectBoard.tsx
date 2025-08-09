@@ -17,6 +17,13 @@ export default function ProjectBoard() {
     Record<string, ITicket[]>
   >({});
 
+  function handleDragEnd(event: any) {
+    const { active, over } = event;
+
+    if (over && active.data.current.supports.includes(over.data.current.type)) {
+    }
+  }
+
   async function getTickets() {
     try {
       const ticketRes = await APIService.get('ticket');
@@ -72,7 +79,7 @@ export default function ProjectBoard() {
   }, [tickets]);
 
   return (
-    <DndContext>
+    <DndContext onDragEnd={handleDragEnd}>
       <main className="max-w-9xl mx-auto min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
         <div className="flex flex-col mb-4">
           <h1 className="text-3xl">Project Tracker Board</h1>

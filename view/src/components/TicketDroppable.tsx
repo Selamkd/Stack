@@ -45,7 +45,7 @@ export function TicketCard(props: ITicketCard) {
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await handleDeleteTicket(ticket._id);
+      handleDeleteTicket(ticket._id);
     } finally {
       setIsDeleting(false);
     }
@@ -68,7 +68,7 @@ export function TicketCard(props: ITicketCard) {
 
   return (
     <TicketDraggable id={ticket._id}>
-      <section className="group min-w-[340px] relative bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded-xl overflow-hidden transition-all duration-300 hover:border-[#3a3a3a] hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
+      <button className="group min-w-[340px] relative bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded-xl overflow-hidden transition-all duration-300 hover:border-[#3a3a3a] hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
         <div
           className={`h-1 w-full ${
             ticket.stage === 'parked'
@@ -141,7 +141,7 @@ export function TicketCard(props: ITicketCard) {
             </div>
           </div>
         </div>
-      </section>
+      </button>
     </TicketDraggable>
   );
 }
