@@ -9,12 +9,12 @@ import AddTicketModal from './AddTicketModal';
 interface ITicketDroppable {
   tickets: ITicket[];
   column: string;
-  handleDeleteTicket: (id: string) => void;
+
   refresh: () => void;
   handleEdit: () => void;
 }
 export default function TicketDroppable(props: ITicketDroppable) {
-  const { tickets, handleDeleteTicket, refresh, handleEdit } = props;
+  const { tickets, refresh, handleEdit } = props;
   const { setNodeRef } = useDroppable({
     id: `ticket-droppable${props.column}`,
     data: {
@@ -30,7 +30,6 @@ export default function TicketDroppable(props: ITicketDroppable) {
             <TicketCard
               key={ticket._id}
               ticket={ticket}
-              handleDeleteTicket={() => handleDeleteTicket(ticket._id)}
               refresh={refresh}
               handleEdit={handleEdit}
             />
@@ -42,13 +41,13 @@ export default function TicketDroppable(props: ITicketDroppable) {
 }
 interface ITicketCard {
   ticket: ITicket;
-  handleDeleteTicket: (ticketId: string) => void;
+
   refresh?: () => void;
   handleEdit: () => void;
 }
 
 export function TicketCard(props: ITicketCard) {
-  const { ticket, handleDeleteTicket, refresh, handleEdit } = props;
+  const { ticket, refresh, handleEdit } = props;
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {

@@ -18,23 +18,21 @@ export default function ProjectBoard() {
   >({});
 
   useEffect(() => {
-    if (filtered.length > 0) {
-      const mapTickets: Record<string, ITicket[]> = {};
-      setTicketsWithStages(() => {
-        STAGES.forEach((stage) => {
-          mapTickets[stage] = [];
-        });
-
-        filtered.forEach((ticket) => {
-          const key = ticket.stage;
-          if (mapTickets[key]) {
-            mapTickets[key].push(ticket);
-          }
-        });
-
-        return mapTickets;
+    const mapTickets: Record<string, ITicket[]> = {};
+    setTicketsWithStages(() => {
+      STAGES.forEach((stage) => {
+        mapTickets[stage] = [];
       });
-    }
+
+      filtered.forEach((ticket) => {
+        const key = ticket.stage;
+        if (mapTickets[key]) {
+          mapTickets[key].push(ticket);
+        }
+      });
+
+      return mapTickets;
+    });
   }, [tickets]);
 
   useEffect(() => {
@@ -72,19 +70,6 @@ export default function ProjectBoard() {
           getTickets();
         });
       }
-    }
-  }
-
-  async function handleDeleteTicket(ticketId: string) {
-    try {
-      await APIService.delete(`snippets/${ticketId}`);
-      setDeleteMessage('Ticket deleted successfully!');
-      setTimeout(() => setDeleteMessage(null), 3000);
-      getTickets();
-    } catch (err) {
-      console.error('Error deleting ticket', err);
-      setDeleteMessage('Error deleting ticket');
-      setTimeout(() => setDeleteMessage(null), 3000);
     }
   }
 
@@ -154,7 +139,6 @@ export default function ProjectBoard() {
 
               <TicketDroppable
                 tickets={ticketsWithStages[stage] || []}
-                handleDeleteTicket={handleDeleteTicket}
                 refresh={getTickets}
                 column={stage}
                 handleEdit={handleEdit}
