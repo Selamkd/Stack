@@ -17,13 +17,29 @@ export default function ProjectBoard() {
     Record<string, ITicket[]>
   >({});
 
-  function handleDragEnd(event: any) {
-    const { active, over } = event;
+  useEffect(() => {
+    if (filtered.length > 0) {
+      const mapTickets: Record<string, ITicket[]> = {};
+      setTicketsWithStages(() => {
+        STAGES.forEach((stage) => {
+          mapTickets[stage] = [];
+        });
 
-    if (over && active.data.current.supports.includes(over.data.current.type)) {
-      APIService.post('ticket', {});
+        filtered.forEach((ticket) => {
+          const key = ticket.stage;
+          if (mapTickets[key]) {
+            mapTickets[key].push(ticket);
+          }
+        });
+
+        return mapTickets;
+      });
     }
-  }
+  }, [tickets]);
+
+  useEffect(() => {
+    getTickets();
+  }, []);
 
   async function getTickets() {
     try {
@@ -33,10 +49,31 @@ export default function ProjectBoard() {
       console.error('Error fetching tickets', e);
     }
   }
+  function handleDragEnd(event: any) {
+    const { active, over } = event;
 
-  useEffect(() => {
-    getTickets();
-  }, []);
+    const activeData = active?.data?.current;
+    const overData = over?.data?.current;
+
+    if (
+      activeData &&
+      overData &&
+      activeData.supports?.includes(overData.type)
+    ) {
+      const ticketId = activeData.ticketId;
+
+      const ticket = tickets.find((t) => t?._id === ticketId);
+
+      if (ticket) {
+        const res = APIService.post(`ticket`, {
+          ...ticket,
+          stage: overData.type,
+        }).then(() => {
+          getTickets();
+        });
+      }
+    }
+  }
 
   async function handleDeleteTicket(ticketId: string) {
     try {
@@ -59,29 +96,17 @@ export default function ProjectBoard() {
     return matchesSearch;
   });
 
-  useEffect(() => {
-    if (filtered.length > 0) {
-      const mapTickets: Record<string, ITicket[]> = {};
-      setTicketsWithStages(() => {
-        STAGES.forEach((stage) => {
-          mapTickets[stage] = [];
-        });
-
-        filtered.forEach((ticket) => {
-          const key = ticket.stage;
-          if (mapTickets[key]) {
-            mapTickets[key].push(ticket);
-          }
-        });
-
-        return mapTickets;
-      });
-    }
-  }, [tickets]);
+  function handleAddnrefresh() {
+    getTickets();
+    setTicketModalOpen(false);
+  }
+  function handleEdit() {
+    setTicketModalOpen(true);
+  }
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <main className="max-w-9xl mx-auto min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
+      <main className=" mx-5 min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
         <div className="flex flex-col mb-4">
           <h1 className="text-3xl">Project Tracker Board</h1>
         </div>
@@ -131,14 +156,13 @@ export default function ProjectBoard() {
                 tickets={ticketsWithStages[stage] || []}
                 handleDeleteTicket={handleDeleteTicket}
                 refresh={getTickets}
+                column={stage}
+                handleEdit={handleEdit}
               />
             </div>
           ))}
         </div>
-        <AddTicketModal
-          isOpen={ticketModalOpen}
-          onClose={() => setTicketModalOpen(false)}
-        />
+        <AddTicketModal isOpen={ticketModalOpen} onClose={handleAddnrefresh} />
       </main>
     </DndContext>
   );
