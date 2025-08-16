@@ -11,6 +11,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
   const [stage, setStage] = useState<
     'backlog' | 'development' | 'done' | 'parked'
   >('backlog');
@@ -21,6 +22,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
       const res = await APIService.post('ticket', {
         title: title.trim(),
         description: description.trim(),
+        category: category.trim(),
         stage,
       });
 
@@ -29,6 +31,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
       setTitle('');
       setDescription('');
       setStage('backlog');
+      setCategory('');
       onClose();
     } catch (err) {
       console.error('Error creating ticket:', err);
@@ -68,7 +71,21 @@ export default function AddTicketModal(props: ITicketFormModal) {
               required
             />
           </div>
-
+          <div>
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-white mb-2"
+            >
+              Category
+            </label>
+            <input
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder="Enter ticket category"
+              className="w-full px-4 py-3 bg-[#141414] border border-[#242424] rounded-lg text-white placeholder-[#404040] focus:outline-none focus:border-[#303030] resize-none"
+            />
+          </div>
           <div>
             <label
               htmlFor="description"

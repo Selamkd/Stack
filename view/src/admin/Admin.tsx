@@ -202,12 +202,6 @@ function ContentItem({ item, type }: IContentItem) {
         <div>
           <h4 className="text-white font-medium">{getItemTitle()}</h4>
           <div className="flex items-center mt-1 text-sm text-zinc-500">
-            <span className="mr-3">
-              {item?.createdAt
-                ? format(new Date(item.createdAt), 'PPP')
-                : 'No date'}
-            </span>
-
             {type !== 'categories' && 'category' in item && item.category && (
               <span className="flex items-center mr-3 text-zinc-400">
                 <Folder size={14} className="mr-1" />
