@@ -95,7 +95,7 @@ export default function Notes() {
     }) || [];
 
   return (
-    <div className="min-h-screen bg-custom-base">
+    <div className="min-h-screen">
       <div className="flex h-screen border-r border-custom-border">
         <div className="w-80 border-r border-custom-border flex flex-col">
           <div className="mx-3 min-h-screen p-4 md:p-2 my-2 md:my-6">
