@@ -1,6 +1,6 @@
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { ITicket } from '../../../back/src/models/ticket.model';
-import { Clock, Edit3, Trash2 } from 'lucide-react';
+import { Clock, Edit3, GitBranch, Trash2 } from 'lucide-react';
 import { CSS } from '@dnd-kit/utilities';
 import { ReactNode } from 'react-markdown/lib/react-markdown';
 import { useState } from 'react';
@@ -122,7 +122,7 @@ export function TicketCard(props: ITicketCard) {
           <div className="flex items-center justify-between pt-3 border-t border-[#2a2a2a]">
             <div className="flex items-center gap-3 text-xs text-zinc-500">
               <div className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />
+                <GitBranch className="w-3 h-3" />
                 <span> {ticket.category}</span>
               </div>
             </div>
