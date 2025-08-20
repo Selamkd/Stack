@@ -41,7 +41,7 @@ export default function ProjectBoard() {
 
   async function getTickets() {
     try {
-      const ticketRes = await APIService.get('ticket');
+      const ticketRes = await APIService.get('tickets');
       setTickets(ticketRes);
     } catch (e) {
       console.error('Error fetching tickets', e);
@@ -63,7 +63,7 @@ export default function ProjectBoard() {
       const ticket = tickets.find((t) => t?._id === ticketId);
 
       if (ticket) {
-        const res = APIService.post(`ticket`, {
+        const res = APIService.post(`tickets`, {
           ...ticket,
           stage: overData.type,
         }).then(() => {

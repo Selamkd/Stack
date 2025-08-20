@@ -35,7 +35,7 @@ export default function Dashboard() {
       const [notes, snippets, tickets, lookups] = await Promise.all([
         APIService.get('notes'),
         APIService.get('snippets'),
-        APIService.get('ticket'),
+        APIService.get('tickets'),
         APIService.get('quicklookups'),
       ]);
 

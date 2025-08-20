@@ -1,25 +1,7 @@
-import {
-  Bookmark,
-  Copy,
-  Search,
-  Trash2,
-  PlusSquareIcon,
-  FolderHeart,
-  HeartPulse,
-} from 'lucide-react';
+import { Copy, HeartPulse, PlusSquareIcon, Search, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import {
-  atomDark,
-  coldarkDark,
-  darcula,
-  duotoneDark,
-  materialDark,
-  nightOwl,
-  nord,
-  tomorrow,
-  vscDarkPlus,
-} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ISnippet } from '../../../back/src/models/snippet.model';
 import APIService from '../service/api.service';
 
@@ -160,57 +142,7 @@ interface ISnippetCard {
 
 export function SnippetCard(props: ISnippetCard) {
   const { snippet, handleCopySnippet, handleDeleteSnippet, refresh } = props;
-  const customMinimalStyle = {
-    'pre[class*="language-"]': {
-      background: 'transparent',
-      padding: 0,
-      margin: 0,
-      overflow: 'visible',
-      textShadow: 'none',
-      fontSize: 'inherit',
-      lineHeight: 'inherit',
-      fontFamily: 'inherit',
-    },
-    'code[class*="language-"]': {
-      background: 'transparent',
-      color: '#d4d4d8', // zinc-300
-      textShadow: 'none',
-      fontSize: 'inherit',
-      lineHeight: 'inherit',
-      fontFamily: 'inherit',
-    },
-    '.token.comment': { color: '#71717a' }, // zinc-500
-    '.token.prolog': { color: '#71717a' },
-    '.token.doctype': { color: '#71717a' },
-    '.token.cdata': { color: '#71717a' },
-    '.token.string': { color: '#a1a1aa' }, // zinc-400
-    '.token.attr-value': { color: '#a1a1aa' },
-    '.token.keyword': { color: '#d4d4d8' }, // zinc-300
-    '.token.control': { color: '#d4d4d8' },
-    '.token.directive': { color: '#d4d4d8' },
-    '.token.unit': { color: '#d4d4d8' },
-    '.token.statement': { color: '#d4d4d8' },
-    '.token.regex': { color: '#d4d4d8' },
-    '.token.atrule': { color: '#d4d4d8' },
-    '.token.number': { color: '#a1a1aa' }, // zinc-400
-    '.token.boolean': { color: '#a1a1aa' },
-    '.token.function': { color: '#d4d4d8' }, // zinc-300
-    '.token.class-name': { color: '#d4d4d8' },
-    '.token.constant': { color: '#d4d4d8' },
-    '.token.symbol': { color: '#d4d4d8' },
-    '.token.property': { color: '#a1a1aa' }, // zinc-400
-    '.token.tag': { color: '#d4d4d8' },
-    '.token.operator': { color: '#71717a' }, // zinc-500
-    '.token.punctuation': { color: '#71717a' },
-    '.token.attr-name': { color: '#a1a1aa' },
-    '.token.variable': { color: '#d4d4d8' },
-    '.token.deleted': { color: '#ef4444' }, // red-500
-    '.token.inserted': { color: '#22c55e' }, // green-500
-    '.token.selector': { color: '#d4d4d8' },
-    '.token.important': { color: '#d4d4d8', fontWeight: 'bold' },
-    '.token.bold': { fontWeight: 'bold' },
-    '.token.italic': { fontStyle: 'italic' },
-  };
+
   function bookmarkSnippet() {
     try {
       APIService.post(`snippets`, {

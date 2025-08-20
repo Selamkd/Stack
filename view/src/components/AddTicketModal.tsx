@@ -19,7 +19,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const res = await APIService.post('ticket', {
+      const res = await APIService.post('tickets', {
         title: title.trim(),
         description: description.trim(),
         category: category.trim(),

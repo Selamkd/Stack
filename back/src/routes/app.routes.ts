@@ -19,7 +19,7 @@ router.use('/snippets', snippetRoutes);
 router.use('/check-pass', adminRoutes);
 router.use('/quicklookups', quickLookupRoutes);
 router.use('/categories', categoryRoutes);
-router.use('/ticket', ticketRoutes);
+router.use('/tickets', ticketRoutes);
 
 router.get('/ping', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
