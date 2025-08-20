@@ -1,11 +1,4 @@
-import {
-  Bookmark,
-  Search,
-  Trash2,
-  PlusSquareIcon,
-  Copy,
-  X,
-} from 'lucide-react';
+import { Search, Copy, X, FileText, Code, Ticket } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { IQuickLookup } from '../../../back/src/models/quicklookup.model';
 import APIService from '../service/api.service';
@@ -17,12 +10,23 @@ export default function QuickLookup() {
     null
   );
   const [copiedMessage, setCopiedMessage] = useState<string | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const categories: string[] = [
+    'all',
+    ...Array.from(
+      new Set(lookups.map((lookup) => lookup.category?.name || ''))
+    ).filter(Boolean),
+  ];
+  const filtered =
+    selectedFilter === 'all'
+      ? lookups
+      : lookups.filter((lookup) => lookup.category?.name === selectedFilter);
 
   async function getLookups() {
     try {
       const lookupsRes = await APIService.get('quicklookups');
       setLookups(lookupsRes);
-      console.log(lookupsRes);
     } catch (e) {
       console.error('Error fetching quick lookups', e);
     }
@@ -33,18 +37,18 @@ export default function QuickLookup() {
   }, []);
 
   useEffect(() => {
-    if (search && lookups.length > 0) {
-      const exactMatch = lookups.find(
+    if (search && filtered.length > 0) {
+      const exactMatch = filtered.find(
         (lookup) => lookup.title.toLowerCase() === search.toLowerCase()
       );
       if (exactMatch) {
         setSelectedLookup(exactMatch);
       } else {
-        const filtered = lookups.filter((lookup) =>
+        const filteredSearch = filtered.filter((lookup) =>
           lookup.title.toLowerCase().includes(search.toLowerCase())
         );
-        if (filtered.length > 0) {
-          setSelectedLookup(filtered[0]);
+        if (filteredSearch.length > 0) {
+          setSelectedLookup(filteredSearch[0]);
         } else {
           setSelectedLookup(null);
         }
@@ -52,7 +56,12 @@ export default function QuickLookup() {
     } else {
       setSelectedLookup(null);
     }
-  }, [search, lookups]);
+  }, [search, filtered]);
+
+  useEffect(() => {
+    setSearch('');
+    setSelectedLookup(null);
+  }, [selectedFilter]);
 
   async function handleCopyAnswer(answer: string) {
     try {
@@ -64,13 +73,10 @@ export default function QuickLookup() {
     }
   }
 
-  const commonOperators = lookups
-    .slice(-25)
-    .reverse()
-    .map((lookup) => ({
-      symbol: lookup.title,
-      name: lookup.title,
-    }));
+  const commonOperators = filtered.reverse().map((lookup) => ({
+    symbol: lookup.title,
+    name: lookup.title,
+  }));
   function handleOperatorClick(operator: string) {
     setSearch(operator);
   }
@@ -78,6 +84,9 @@ export default function QuickLookup() {
   function clearSearch() {
     setSearch('');
     setSelectedLookup(null);
+  }
+  function handleFilterChange(category: string) {
+    setSelectedFilter(category);
   }
 
   return (
@@ -91,6 +100,21 @@ export default function QuickLookup() {
             </p>
           </div>
 
+          <div className="flex w-full justify-center mb-5 gap-2 flex-wrap">
+            {categories.map((category, i) => (
+              <button
+                key={i}
+                onClick={() => handleFilterChange(category)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
+                  selectedFilter === category
+                    ? `bg-blue-400/5 border border-lime-200/30 text-lime-200 `
+                    : 'bg-custom-base text-zinc-300 border border-custom-border hover:bg-custom-hover hover:border-zinc-600'
+                }`}
+              >
+                {category === 'all' ? 'All' : category}
+              </button>
+            ))}
+          </div>
           <div className="relative mb-8">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#404040]" />

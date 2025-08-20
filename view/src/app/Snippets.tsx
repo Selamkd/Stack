@@ -118,7 +118,7 @@ export default function Snippets() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 xl:grid-cols-3">
         {filtered.map((snippet) => (
           <SnippetCard
             key={snippet._id}
