@@ -26,7 +26,7 @@ root.render(
     <BrowserRouter>
       <AppLayout>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Home />} />
           <Route path="notes" element={<Notes />} />
           <Route path="note/:id" element={<ViewNote />} />
           <Route path="snippets" element={<Snippets />} />

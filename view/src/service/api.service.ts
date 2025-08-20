@@ -6,8 +6,7 @@ export class APIService {
 
   static async request(endpoint: string, options: RequestInit) {
     const url = `${this.BASE_URL}/${endpoint}`;
-    console.log(url);
-    logger.debug(url);
+
     if (!options.headers) {
       options.headers = {
         'Content-Type': 'application/json',
@@ -43,7 +42,7 @@ export class APIService {
 
   static async get(endpoint: string, params?: Record<string, string>) {
     let url = endpoint;
-    logger.debug(url);
+
     if (params && Object.keys(params).length > 0) {
       const queryParams = new URLSearchParams();
       Object.entries(params).forEach(([key, value]) => {
@@ -52,7 +51,6 @@ export class APIService {
         }
       });
       url = `${url}?${queryParams.toString()}`;
-      logger.debug('APIService GET Request with params:', params);
     }
 
     return this.request(url, { method: 'GET' });
@@ -73,7 +71,6 @@ export class APIService {
   }
 
   static async delete(endpoint: string): Promise<any> {
-    logger.debug('APIService DELETE Request:', endpoint);
     return this.request(endpoint, { method: 'DELETE' });
   }
 }

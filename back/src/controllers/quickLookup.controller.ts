@@ -17,6 +17,7 @@ export const getAllLookUps = async (req: Request, res: Response) => {
     }
 
     const lookups = await QuickLookup.find(query)
+      .populate('tags')
 
       .populate('category')
       .sort({ updatedAt: -1 });

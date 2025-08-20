@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { INote } from '../../../back/src/models/note.model';
 import { TipTap } from '../components/TipTap';
 import APIService from '../service/api.service';
-import { Edit3, FileText, PlusIcon, Search, Trash2 } from 'lucide-react';
+import { Edit3, FileText, PlusSquareIcon, Search, Trash2 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 
 export default function Notes() {
   const [notes, setNotes] = useState<INote[] | null>(null);
   const [selectedNote, setSelectedNote] = useState<INote | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   const isSelected = (id: string) => selectedNote?._id === id;
 
@@ -62,6 +63,7 @@ export default function Notes() {
     debounce(() => saveNote(), 1000),
     [selectedNote]
   );
+
   async function createNewNote() {
     try {
       const newNote = await APIService.post('notes', {
@@ -84,140 +86,135 @@ export default function Notes() {
     }
   }
 
+  const filteredNotes =
+    notes?.filter((note) => {
+      const matchesSearch =
+        note.title?.toLowerCase().includes(search.toLowerCase()) ||
+        note.content?.toLowerCase().includes(search.toLowerCase());
+      return matchesSearch;
+    }) || [];
+
   return (
-    <div className="min-h-screen bg-custom-base">
+    <div className="min-h-screen">
       <div className="flex h-screen border-r border-custom-border">
-        <div className="w-80  border-r border-custom-border flex flex-col">
-          <div className="p-6 border-b border-custom-border">
-            <div className="flex items-center justify-start mb-4">
+        <div className="w-80 border-r border-custom-border flex flex-col">
+          <div className="mx-3 min-h-screen p-4 md:p-2 my-2 md:my-6">
+            <div className="flex flex-col mb-4">
+              <h1 className="text-3xl">Notes</h1>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#404040]" />
+                <input
+                  type="text"
+                  placeholder="Search notes..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-11 pr-4 py-2 bg-[#141414] border border-[#242424] rounded-lg text-white placeholder-[#404040] focus:outline-none focus:border-[#303030]"
+                />
+              </div>
+            </div>
+
+            <div className="flex w-full justify-end py-2">
               <button
                 onClick={createNewNote}
-                className="px-3 py-2 border border-custom-border w-full  bg-custom-active/20 hover:bg-custom-hover text-white text-sm rounded-md transition-colors flex justify-center items-center gap-2"
+                className="flex items-center gap-2 px-4 py-2 bg-custom-surface hover:bg-custom-hover/20 hover:text-zinc- text-custom-text-400 rounded-lg transition-colors"
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                New Note
+                <PlusSquareIcon className="w-4 h-4" />
               </button>
             </div>
-          </div>
 
-          <div className="p-6 justify-center flex w-full border-custom-border">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Search notes..."
-                className="w-full px-3 py-2 bg-custom-base border border-custom-border rounded-md text-zinc-300 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 text-sm"
-              />
-              <Search className="absolute right-3 top-2.5 w-4 h-4 text-zinc-500" />
-            </div>
-          </div>
-
-          <div className="flex-1 overflow-y-auto">
-            {isLoading ? (
-              <div className="p-6">
+            <div className="flex-1 overflow-y-auto py-1">
+              {isLoading ? (
                 <div className="space-y-3">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="animate-pulse">
+                    <div
+                      key={i}
+                      className="animate-pulse border border-custom-border bg-custom-surface rounded-lg p-4"
+                    >
                       <div className="h-4 bg-custom-border rounded w-3/4 mb-2"></div>
                       <div className="h-3 bg-custom-border rounded w-1/2"></div>
                     </div>
                   ))}
                 </div>
-              </div>
-            ) : notes && notes.length > 0 ? (
-              <ul className="p-4 space-y-2">
-                {notes.map((note) => (
-                  <li key={note._id || note._id}>
-                    <button
-                      onClick={() => handleNoteSelect(note)}
-                      className={`w-full text-left p-3 rounded-lg transition-colors group ${
-                        isSelected(note._id)
-                          ? 'bg-custom-surface border border-custom-border'
-                          : 'hover:bg-custom-hover'
+              ) : filteredNotes && filteredNotes.length > 0 ? (
+                <div className="space-y-3">
+                  {filteredNotes.map((note) => (
+                    <div
+                      key={note._id}
+                      className={`border border-custom-border bg-custom-surface rounded-lg overflow-hidden hover:border-custom-hover transition-all cursor-pointer ${
+                        isSelected(note._id) ? 'border-[#242424] ' : ''
                       }`}
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
-                          <h3
-                            className={`font-medium text-sm truncate ${
-                              isSelected(note._id)
-                                ? 'text-white'
-                                : 'text-zinc-300 group-hover:text-white'
-                            }`}
-                          >
-                            {note.title || 'Untitled'}
-                          </h3>
+                      <div className="p-4">
+                        <button
+                          onClick={() => handleNoteSelect(note)}
+                          className="w-full text-left"
+                        >
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="text-lg font-medium text-white mb-1 break-words truncate">
+                                {note.title || 'Untitled'}
+                              </h3>
+                              <p className="text-sm text-zinc-400 break-words line-clamp-2">
+                                {note.content
+                                  ? note.content
+                                      .replace(/<[^>]*>/g, '')
+                                      .substring(0, 100) + '...'
+                                  : 'No content'}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2 ml-4 flex-shrink-0">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(note._id);
+                                  fetchNotes();
+                                }}
+                                className="p-2 rounded-lg transition-all duration-200 text-custom-text hover:text-red-400 hover:bg-red-400/20 border border-transparent hover:border-red-400/20"
+                                title="Delete note"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </button>
 
-                          <p
-                            className={`text-xs mt-1 line-clamp-2 ${
-                              isSelected(note._id)
-                                ? 'text-zinc-400'
-                                : 'text-zinc-500 group-hover:text-zinc-400'
-                            }`}
-                          >
-                            {note.content
-                              ? note.content
-                                  .replace(/<[^>]*>/g, '')
-                                  .substring(0, 30) + '...'
-                              : 'No content'}
-                          </p>
-
-                          <p
-                            className={`text-xs mt-2 ${
-                              isSelected(note._id)
-                                ? 'text-zinc-500'
-                                : 'text-zinc-600 group-hover:text-zinc-500'
-                            }`}
-                          >
-                            {note.createdAt && note.createdAt
-                              ? selectedNote?.createdAt
-                                ? `${format(new Date(note.createdAt), 'PPPp')}`
-                                : 'No date'
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-zinc-500 bg-custom-surface/50 px-2 py-1 rounded">
+                            {note.createdAt
+                              ? format(new Date(note.createdAt), 'PP')
                               : 'No date'}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDelete(note._id);
-                              fetchNotes();
-                            }}
-                            className="p-1 rounded hover:bg-custom-border text-zinc-500 hover:text-red-400"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
+                          </span>
+                          {note.category && (
+                            <span className="text-xs text-zinc-500 bg-custom-surface/50 px-2 py-1 rounded">
+                              {note.category.name}
+                            </span>
+                          )}
                         </div>
                       </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="p-6 text-center">
-                <div className="text-zinc-500 mb-4">
-                  <FileText className="w-12 h-12 mx-auto mb-3" />
-                  <p className="text-sm">No notes yet</p>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="text-center border border-custom-border bg-custom-surface rounded-lg p-8">
+                  <div className="text-zinc-500 mb-4">
+                    <FileText className="w-12 h-12 mx-auto mb-3" />
+                    <p className="text-sm">No notes found</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col ">
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
           {selectedNote ? (
             <>
-              <div className="bg-custom-surface px-10 pt-10 border-custom-border p-6 w-full rounded-md h-screen">
+              {/* Note Header */}
+              <div className="bg-custom-surface px-10 pt-10 border-custom-border p-6 w-full">
                 <input
                   type="text"
                   value={selectedNote.title || ''}
@@ -234,36 +231,36 @@ export default function Notes() {
                   <span>
                     Created{' '}
                     {selectedNote.createdAt
-                      ? `${format(new Date(selectedNote.createdAt), 'PP')}`
-                      : null}
+                      ? format(new Date(selectedNote.createdAt), 'PP')
+                      : 'Unknown date'}
                   </span>
-                  <span>•</span>
-                  <span>
-                    {selectedNote.category
-                      ? `${selectedNote.category.name}`
-                      : ''}
-                  </span>
+                  {selectedNote.category && (
+                    <>
+                      <span>•</span>
+                      <span>{selectedNote.category.name}</span>
+                    </>
+                  )}
                 </div>
               </div>
 
+              {/* Note Editor */}
               <div className="flex-1">
                 <TipTap
-                  key={selectedNote._id || selectedNote._id}
+                  key={selectedNote._id}
                   initialContent={selectedNote.content}
                   onUpdate={(content) => {
                     setSelectedNote((prev) =>
                       prev ? { ...prev, content } : null
                     );
-
                     debouncedSave();
                   }}
-                  className=" bg-custom-surface overflow-hidden shadow-xl w-full "
+                  className="bg-custom-surface overflow-hidden shadow-xl w-full"
                 />
               </div>
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center bg-custom-base">
-              <div className="text-center text-zinc-500">
+              <div className="text-center text-zinc-500 border border-custom-border bg-custom-surface rounded-lg p-12">
                 <Edit3 className="w-16 h-16 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-zinc-400 mb-2">
                   Select a note to edit

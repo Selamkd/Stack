@@ -1,18 +1,25 @@
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { ITicket } from '../../../back/src/models/ticket.model';
-import { Clock, Edit3, Trash2 } from 'lucide-react';
+import { Clock, Edit3, GitBranch, Trash2 } from 'lucide-react';
 import { CSS } from '@dnd-kit/utilities';
 import { ReactNode } from 'react-markdown/lib/react-markdown';
 import { useState } from 'react';
+import APIService from '../service/api.service';
+import AddTicketModal from './AddTicketModal';
 interface ITicketDroppable {
   tickets: ITicket[];
-  handleDeleteTicket: (id: string) => void;
+  column: string;
+
   refresh: () => void;
+  handleEdit: () => void;
 }
 export default function TicketDroppable(props: ITicketDroppable) {
-  const { tickets, handleDeleteTicket, refresh } = props;
+  const { tickets, refresh, handleEdit } = props;
   const { setNodeRef } = useDroppable({
-    id: 'ticket-droppable',
+    id: `ticket-droppable${props.column}`,
+    data: {
+      type: props.column,
+    },
   });
 
   return (
@@ -23,8 +30,8 @@ export default function TicketDroppable(props: ITicketDroppable) {
             <TicketCard
               key={ticket._id}
               ticket={ticket}
-              handleDeleteTicket={() => handleDeleteTicket(ticket._id)}
               refresh={refresh}
+              handleEdit={handleEdit}
             />
           ))}
         </div>
@@ -34,18 +41,24 @@ export default function TicketDroppable(props: ITicketDroppable) {
 }
 interface ITicketCard {
   ticket: ITicket;
-  handleDeleteTicket: (ticketId: string) => void;
+
   refresh?: () => void;
+  handleEdit: () => void;
 }
 
 export function TicketCard(props: ITicketCard) {
-  const { ticket, handleDeleteTicket, refresh } = props;
+  const { ticket, refresh, handleEdit } = props;
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
+    console.log('called');
     setIsDeleting(true);
     try {
-      await handleDeleteTicket(ticket._id);
+      APIService.delete(`ticket/${ticket?._id}`).then(() => {
+        if (refresh) {
+          refresh();
+        }
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -68,7 +81,7 @@ export function TicketCard(props: ITicketCard) {
 
   return (
     <TicketDraggable id={ticket._id}>
-      <section className="group min-w-[340px] relative bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded-xl overflow-hidden transition-all duration-300 hover:border-[#3a3a3a] hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
+      <div className="group min-w-[340px] relative bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded-xl overflow-hidden transition-all duration-300 hover:border-[#3a3a3a] hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
         <div
           className={`h-1 w-full ${
             ticket.stage === 'parked'
@@ -109,8 +122,8 @@ export function TicketCard(props: ITicketCard) {
           <div className="flex items-center justify-between pt-3 border-t border-[#2a2a2a]">
             <div className="flex items-center gap-3 text-xs text-zinc-500">
               <div className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />
-                <span>ID: {ticket._id.slice(-6)}</span>
+                <GitBranch className="w-3 h-3" />
+                <span> {ticket.category}</span>
               </div>
             </div>
 
@@ -118,6 +131,7 @@ export function TicketCard(props: ITicketCard) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  handleEdit();
                 }}
                 className="p-2 rounded-lg transition-all duration-200 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 border border-transparent hover:border-blue-400/20"
                 title="Edit ticket"
@@ -141,7 +155,7 @@ export function TicketCard(props: ITicketCard) {
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </TicketDraggable>
   );
 }
@@ -153,6 +167,11 @@ function TicketDraggable(props: ITicketDraggable) {
   const { id } = props;
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
+    data: {
+      type: 'ticket',
+      ticketId: id,
+      supports: ['backlog', 'development', 'done', 'parked'],
+    },
   });
 
   const style = {
@@ -160,8 +179,11 @@ function TicketDraggable(props: ITicketDraggable) {
   };
 
   return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {props.children}
-    </button>
+    <div ref={setNodeRef} style={style}>
+      <div {...listeners} {...attributes} className="cursor-move p-2">
+        <span className="text-xs text-zinc-500">:: Drag</span>
+      </div>
+      {props?.children}
+    </div>
   );
 }

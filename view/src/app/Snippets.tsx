@@ -1,7 +1,7 @@
-import { Bookmark, Copy, Search, Trash2 } from 'lucide-react';
+import { Copy, HeartPulse, PlusSquareIcon, Search, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ISnippet } from '../../../back/src/models/snippet.model';
 import APIService from '../service/api.service';
 
@@ -61,15 +61,12 @@ export default function Snippets() {
   });
 
   return (
-    <main className="max-w-8xl mx-auto min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
+    <main className="mx-5 min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
       <div className="flex flex-col mb-4">
         <h1 className="text-3xl">Code Snippets</h1>
-        <p className="text-custom-text py-2">
-          Reusable code blocks organized by categories and languages
-        </p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
+      <div className="flex flex-col md:flex-row gap-4 mb-4">
         <div className="flex-1 relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#404040]" />
           <input
@@ -85,13 +82,19 @@ export default function Snippets() {
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="px-4 py-3 bg-[#141414] border border-[#242424] rounded-lg flex items-center justify-between min-w-[140px] hover:border-[#303030] transition-colors group"
         >
-          <option value="all">All Categories</option>
+          <option value="all">All</option>
           {Array.from(new Set(categories)).map((category) => (
             <option key={category} value={category}>
               {category}
             </option>
           ))}
         </select>
+      </div>
+
+      <div className="flex w-full justify-end py-2">
+        <button className="flex items-center gap-2 px-4 py-2 bg-custom-surface hover:bg-lime-200 hover:text-gray-800 text-custom-text-400 rounded-lg transition-colors">
+          <PlusSquareIcon className="w-4 h-4" />
+        </button>
       </div>
 
       {(copiedMessage || deleteMessage) && (
@@ -115,7 +118,7 @@ export default function Snippets() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {filtered.map((snippet) => (
           <SnippetCard
             key={snippet._id}
@@ -193,31 +196,10 @@ export function SnippetCard(props: ISnippetCard) {
     return languageMap[language.toLowerCase()] || 'text';
   };
 
-  const customOneDarkStyle = {
-    ...oneDark,
-    'pre[class*="language-"]': {
-      ...oneDark['pre[class*="language-"]'],
-      background: 'transparent',
-      textShadow: 'none',
-    },
-    'code[class*="language-"]': {
-      ...oneDark['code[class*="language-"]'],
-      background: 'transparent',
-      textShadow: 'none',
-    },
-
-    ':not(pre) > code[class*="language-"], pre[class*="language-"]': {
-      ...oneDark[
-        ':not(pre) > code[class*="language-"], pre[class*="language-"]'
-      ],
-      background: 'transparent',
-    },
-  };
-
   return (
-    <section className="group border border-custom-border bg-[#161616] rounded-lg overflow-hidden hover:border-custom-hover transition-all">
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
+    <section className="border border-[#242424] bg-custom-surface rounded-md overflow-hidden hover:border-custom-hover transition-all">
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-3">
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-medium text-white mb-1 break-words">
               {snippet.title}
@@ -231,11 +213,11 @@ export function SnippetCard(props: ISnippetCard) {
               onClick={() => bookmarkSnippet()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 snippet.isStarred
-                  ? 'text-lime-300/40 hover:text-lime-200 hover:bg-lime-400/20 border border-lime-400/20'
-                  : 'text-custom-text hover:text-white hover:bg-custom-hover border border-transparent'
+                  ? 'text-lime-200/40 hover:text-lime-200 hover:bg-lime-400/20'
+                  : 'text-custom-text hover:text-white hover:bg-[#242424]border border-transparent'
               }`}
             >
-              <Bookmark
+              <HeartPulse
                 className={`w-4 h-4 transition-all duration-200 ${
                   snippet.isStarred ? 'fill-current drop-shadow-sm' : ''
                 }`}
@@ -251,13 +233,13 @@ export function SnippetCard(props: ISnippetCard) {
           </div>
         </div>
 
-        <div className="relative">
-          <div className="bg-custom-base rounded-lg overflow-hidden">
+        <div className="relative mb-3">
+          <div className="bg-[#141414] rounded-lg overflow-hidden border border-custom-border">
             <SyntaxHighlighter
               language={getLanguageForHighlighter(
                 snippet.language || 'TypeScript'
               )}
-              style={customOneDarkStyle}
+              style={tomorrow}
               customStyle={{
                 margin: 0,
                 padding: '1rem',
@@ -277,17 +259,13 @@ export function SnippetCard(props: ISnippetCard) {
           </div>
           <button
             onClick={() => handleCopySnippet(snippet?.code)}
-            className="absolute top-3 right-3 p-2 bg-custom-surface hover:bg-custom-hover border border-custom-border rounded-lg text-custom-text hover:text-white transition-all"
+            className="absolute top-3 right-3 p-1.5 bg-[#1a1a1a] hover:bg-[#242424] border border-custom-border rounded-lg text-custom-text hover:text-white transition-all"
             title="Copy code"
           >
             <Copy className="w-4 h-4" />
           </button>
         </div>
-      </div>
 
-      <div className="border mx-5 border-custom-border h-0"></div>
-
-      <div className="px-6 py-4">
         <div className="flex flex-wrap items-center gap-2 mb-3">
           {snippet.tags &&
             snippet.tags.map((tag) => {
@@ -301,6 +279,7 @@ export function SnippetCard(props: ISnippetCard) {
               );
             })}
         </div>
+
         <div className="flex items-center justify-end">
           <span className="text-xs text-zinc-500 bg-custom-surface/50 px-2 py-1 rounded">
             {snippet.language}

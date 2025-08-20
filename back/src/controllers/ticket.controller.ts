@@ -10,6 +10,7 @@ export const getAllTickets = async (req: Request, res: Response) => {
     res.status(200).json(tickets);
   } catch (error) {
     logger.error('Failed to fetch tickets:', error);
+
     res.status(500).json({ message: 'Error fetching tickets', error });
   }
 };

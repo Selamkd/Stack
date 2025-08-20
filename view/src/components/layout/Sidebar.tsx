@@ -78,19 +78,20 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
             mode={sidebarMode}
           />
           <NavButton
-            icon={<Trello size={18} />}
-            label="Project Tracker"
-            link="/project-board"
-            isActive={isActive('/project-board')}
-            mode={sidebarMode}
-          />
-          <NavButton
             icon={<SearchCode size={18} />}
             label="Quick Lookups"
             link="/lookups"
             isActive={isActive('/lookups')}
             mode={sidebarMode}
           />
+          <NavButton
+            icon={<Trello size={18} />}
+            label="Project Tracker"
+            link="/project-board"
+            isActive={isActive('/project-board')}
+            mode={sidebarMode}
+          />
+
           <NavButton
             icon={<SwatchBook size={18} />}
             label="Tools"
