@@ -24,7 +24,7 @@ export default function TicketDroppable(props: ITicketDroppable) {
 
   return (
     <div ref={setNodeRef}>
-      <div className="flex-1 min-h-screen border-l border-r border-b border-custom-border/80 rounded-b-lg bg-custom-hover/20 p-2">
+      <div className="flex-1 border-l overflow-y-scroll scrollbar-thin  max-h-screen min-h-screen border-r border-b border-custom-border/80 rounded-b-lg p-2">
         <div className="space-y-3">
           {tickets.map((ticket) => (
             <TicketCard

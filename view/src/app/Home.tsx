@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
 import APIService from '../service/api.service';
 import {
   FileText,
@@ -8,11 +8,14 @@ import {
   Clock,
   Activity,
   Command,
+  ComponentIcon,
 } from 'lucide-react';
 import QuickActions from '../components/QuickActions';
 import RecentActivity from '../components/RecentActivity';
 import { ITicket } from '../../../back/src/models/ticket.model';
 import { format } from 'date-fns';
+import CodewarsActivityCard from '../components/CodewarsActivity';
+import DailyTodos from '../components/DailyTodos';
 export interface IRecentActivity {
   id: string;
   type: 'note' | 'snippet' | 'ticket' | 'lookup';
@@ -129,11 +132,8 @@ export default function Dashboard() {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
               <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
-                <button
-                  onClick={handleSearch}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-custom-border hover:bg-lime-200 text-white hover:text-gray-800 rounded text-sm font-medium transition-colors"
-                >
-                  Search
+                <button onClick={handleSearch}>
+                  <Search />
                 </button>
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function Dashboard() {
                 {
                   key: 'all',
                   label: 'All',
-                  icon: Search,
+                  icon: ComponentIcon,
                 },
                 {
                   key: 'notes',
@@ -183,10 +183,12 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentActivity recents={recentActivity} />
+      <div className="grid grid-cols-1">
         <QuickActions />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <CodewarsActivityCard />
+        <DailyTodos />
       </div>
     </main>
   );

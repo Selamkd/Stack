@@ -6,8 +6,41 @@
   html {
     @apply bg-custom-base;
   }
-}
 
+  .glass-card {
+    @apply bg-gradient-to-br from-blue-200/5 to-transparent;
+  }
+
+  .btn-full {
+    @apply w-full mt-4 px-4 py-3 bg-gradient-to-r from-lime-500 to-gray-600 hover:from-lime-200 hover:to-lime-300 text-white hover:text-gray-800 text-sm font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl;
+  }
+  .hover-glass {
+    @apply bg-gradient-to-br from-transparent via-slate-800/10 to-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300;
+  }
+}
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 1px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.6);
+  }
+}
 body {
   margin: 0;
 

@@ -73,10 +73,13 @@ export default function QuickLookup() {
     }
   }
 
-  const commonOperators = filtered.reverse().map((lookup) => ({
-    symbol: lookup.title,
-    name: lookup.title,
-  }));
+  const commonOperators = filtered
+    .reverse()
+    .slice(0, 60)
+    .map((lookup) => ({
+      symbol: lookup.title,
+      name: lookup.title,
+    }));
   function handleOperatorClick(operator: string) {
     setSearch(operator);
   }

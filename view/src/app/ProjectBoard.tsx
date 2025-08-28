@@ -133,7 +133,7 @@ export default function ProjectBoard() {
           {' '}
           {STAGES.map((stage) => (
             <div className="flex flex-col">
-              <header className="px-4 py-3 border border-custom-border bg-custom-hover/80 rounded-t-lg">
+              <header className="px-4 py-3 border border-custom-border glass-card rounded-t-lg">
                 <p className="text-center font-medium">{stage}</p>
               </header>
 

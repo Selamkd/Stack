@@ -8,6 +8,8 @@ import adminRoutes from './admin.routes';
 import categoryRoutes from './categories.routes';
 import logger from '../utils/logger';
 import ticketRoutes from './ticket.routes';
+import codeWarsRoutes from './codewars.routes';
+import slugRoutes from './slug.routes';
 
 const router = Router();
 
@@ -20,6 +22,8 @@ router.use('/check-pass', adminRoutes);
 router.use('/quicklookups', quickLookupRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/tickets', ticketRoutes);
+router.use('/codewars', codeWarsRoutes);
+router.use('/slugs', slugRoutes);
 
 router.get('/ping', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
