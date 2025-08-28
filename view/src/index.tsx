@@ -22,32 +22,30 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AppLayout>
-        <Routes>
-          <Route path="/search" element={<Home />} />
-          <Route path="notes" element={<Notes />} />
-          <Route path="note/:id" element={<ViewNote />} />
-          <Route path="snippets" element={<Snippets />} />
+  <BrowserRouter>
+    <AppLayout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="notes" element={<Notes />} />
+        <Route path="note/:id" element={<ViewNote />} />
+        <Route path="snippets" element={<Snippets />} />
 
-          <Route path="lookups" element={<Lookups />} />
+        <Route path="lookups" element={<Lookups />} />
 
-          <Route path="project-board" element={<ProjectBoard />} />
+        <Route path="project-board" element={<ProjectBoard />} />
 
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/admin/notes/new" element={<ManageNote />} />
-          <Route path="/admin/notes/:id" element={<ManageNote />} />
-          <Route path="/admin/snippets/new" element={<ManageSnippets />} />
-          <Route path="/admin/snippets/:id" element={<ManageSnippets />} />
-          <Route path="/admin/lookups/new" element={<ManageQuickLookup />} />
-          <Route path="/admin/lookups/:id" element={<ManageQuickLookup />} />
-          <Route path="/admin/categories/new" element={<ManageCategories />} />
-          <Route path="/admin/categories/:id" element={<ManageCategories />} />
-          <Route path="/admin/tags/new" element={<ManageTags />} />
-          <Route path="/admin/tags/:id" element={<ManageTags />} />
-        </Routes>
-      </AppLayout>
-    </BrowserRouter>
-  </React.StrictMode>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/notes/new" element={<ManageNote />} />
+        <Route path="/admin/notes/:id" element={<ManageNote />} />
+        <Route path="/admin/snippets/new" element={<ManageSnippets />} />
+        <Route path="/admin/snippets/:id" element={<ManageSnippets />} />
+        <Route path="/admin/lookups/new" element={<ManageQuickLookup />} />
+        <Route path="/admin/lookups/:id" element={<ManageQuickLookup />} />
+        <Route path="/admin/categories/new" element={<ManageCategories />} />
+        <Route path="/admin/categories/:id" element={<ManageCategories />} />
+        <Route path="/admin/tags/new" element={<ManageTags />} />
+        <Route path="/admin/tags/:id" element={<ManageTags />} />
+      </Routes>
+    </AppLayout>
+  </BrowserRouter>
 );

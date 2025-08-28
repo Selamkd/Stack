@@ -58,9 +58,9 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
         <nav className="flex-1 py-6 px-4 space-y-1">
           <NavButton
             icon={<Home size={18} />}
-            label="Search"
-            link="/search"
-            isActive={isActive('/search')}
+            label="Dashboard"
+            link="/"
+            isActive={isActive('/')}
             mode={sidebarMode}
           />
           <NavButton

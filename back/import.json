@@ -1,177 +1,114 @@
 [
   {
-    "title": "insertOne()",
-    "answer": "Inserts a single document into a collection.\n\nSyntax: db.collection.insertOne(document, options)\n\nExample:\ndb.users.insertOne({\n  name: \"John Doe\",\n  email: \"john@email.com\",\n  age: 28\n})\n\nReturns: { acknowledged: true, insertedId: ObjectId(\"...\") }",
-    "category": "674a1b2c3d4e5f6789012345",
-    "tags": ["674a1b2c3d4e5f6789012346", "674a1b2c3d4e5f6789012347"],
+    "title": "new Map()",
+    "answer": "Creates a new Map object. Can be initialized with an iterable of key-value pairs.\n\nSyntax: new Map([iterable])\n\nExamples:\n// Empty Map\nconst map = new Map();\n\n// Initialize with array of arrays\nconst map1 = new Map([\n  ['key1', 'value1'],\n  ['key2', 'value2'],\n  [42, 'number key']\n]);\n\n// Initialize from Object.entries()\nconst obj = { a: 1, b: 2 };\nconst map2 = new Map(Object.entries(obj));\n\n// Initialize from another Map\nconst map3 = new Map(map1);\n\n// Any type can be a key\nconst objKey = {};\nconst funcKey = () => {};\nconst map4 = new Map([\n  [objKey, 'object key'],\n  [funcKey, 'function key']\n]);\n\nMaps maintain insertion order and allow any type as keys.",
+    "category": "68b00eab2def6eb6e3177e6c",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "insertMany()",
-    "answer": "Inserts multiple documents into a collection.\n\nSyntax: db.collection.insertMany([document1, document2, ...], options)\n\nExample:\ndb.products.insertMany([\n  { name: \"Laptop\", price: 999.99 },\n  { name: \"Mouse\", price: 29.99 }\n])\n\nReturns: { acknowledged: true, insertedIds: [ObjectId(\"...\"), ObjectId(\"...\")] }",
-    "category": "674a1b2c3d4e5f6789012345",
-    "tags": ["674a1b2c3d4e5f6789012346", "674a1b2c3d4e5f6789012347"],
-    "isStarred": false
-  },
-  {
-    "title": "find()",
-    "answer": "Retrieves multiple documents that match the query criteria.\n\nSyntax: db.collection.find(query, projection)\n\nExamples:\n// Find all documents\ndb.users.find()\n\n// Find with criteria\ndb.users.find({ age: { $gte: 25 } })\n\n// Find with projection\ndb.users.find({}, { name: 1, email: 1, _id: 0 })",
-    "category": "674a1b2c3d4e5f6789012348",
-    "tags": ["674a1b2c3d4e5f6789012349", "674a1b2c3d4e5f678901234a"],
+    "title": "map.set()",
+    "answer": "Sets the value for the specified key in the Map object. Returns the Map object.\n\nSyntax: map.set(key, value)\n\nExamples:\nconst map = new Map();\nmap.set('name', 'John');\nmap.set(42, 'number key');\nmap.set(true, 'boolean key');\n\n// Chaining (since set returns the map)\nmap.set('a', 1).set('b', 2).set('c', 3);\n\n// Any type as key\nconst objKey = { id: 1 };\nconst arrKey = [1, 2, 3];\nmap.set(objKey, 'object value');\nmap.set(arrKey, 'array value');\n\n// Overwrite existing key\nmap.set('name', 'Jane'); // Updates existing value\n\n// Using in constructor pattern\nfunction createUserMap(users) {\n  const userMap = new Map();\n  users.forEach(user => userMap.set(user.id, user));\n  return userMap;\n}\n\nReturns the Map itself, allowing method chaining.",
+    "category": "68b00eab2def6eb6e3177e6c",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "findOne()",
-    "answer": "Retrieves the first document that matches the query criteria.\n\nSyntax: db.collection.findOne(query, projection)\n\nExamples:\n// Find one user by email\ndb.users.findOne({ email: \"john@email.com\" })\n\n// Find cheapest product\ndb.products.findOne({}, { sort: { price: 1 } })",
-    "category": "674a1b2c3d4e5f6789012348",
-    "tags": ["674a1b2c3d4e5f6789012349", "674a1b2c3d4e5f678901234a"],
-    "isStarred": false
-  },
-  {
-    "title": "updateOne()",
-    "answer": "Updates the first document that matches the query criteria.\n\nSyntax: db.collection.updateOne(filter, update, options)\n\nExamples:\n// Update user's age\ndb.users.updateOne(\n  { email: \"john@email.com\" },\n  { $set: { age: 29 } }\n)\n\n// Add to array\ndb.users.updateOne(\n  { name: \"John\" },\n  { $push: { hobbies: \"photography\" } }\n)",
-    "category": "674a1b2c3d4e5f678901234b",
-    "tags": ["674a1b2c3d4e5f678901234c", "674a1b2c3d4e5f678901234d"],
+    "title": "map.get()",
+    "answer": "Returns the value associated with the key, or undefined if there is none.\n\nSyntax: map.get(key)\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  [42, 'number key'],\n  [true, 'boolean key']\n]);\n\nmap.get('name'); // 'John'\nmap.get(42); // 'number key'\nmap.get('nonexistent'); // undefined\n\n// Object keys require same reference\nconst objKey = { id: 1 };\nmap.set(objKey, 'value');\nmap.get(objKey); // 'value'\nmap.get({ id: 1 }); // undefined (different object reference)\n\n// Safe access pattern\nconst value = map.get('key');\nif (value !== undefined) {\n  console.log('Found:', value);\n}\n\n// Default value pattern\nconst result = map.get('key') ?? 'default value';\n\nReturns undefined for non-existent keys, not an error.",
+    "category": "68b00eab2def6eb6e3177e6c",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "updateMany()",
-    "answer": "Updates all documents that match the query criteria.\n\nSyntax: db.collection.updateMany(filter, update, options)\n\nExamples:\n// Increase all prices by 10%\ndb.products.updateMany(\n  {},\n  { $mul: { price: 1.1 } }\n)\n\n// Add discount to electronics\ndb.products.updateMany(\n  { category: \"Electronics\" },\n  { $set: { discount: 0.05 } }\n)",
-    "category": "674a1b2c3d4e5f678901234b",
-    "tags": ["674a1b2c3d4e5f678901234c", "674a1b2c3d4e5f678901234d"],
-    "isStarred": false
-  },
-  {
-    "title": "deleteOne()",
-    "answer": "Deletes the first document that matches the query criteria.\n\nSyntax: db.collection.deleteOne(filter)\n\nExamples:\n// Delete specific user\ndb.users.deleteOne({ email: \"john@email.com\" })\n\n// Delete oldest user\ndb.users.deleteOne({}, { sort: { age: -1 } })\n\nReturns: { acknowledged: true, deletedCount: 1 }",
-    "category": "674a1b2c3d4e5f678901234e",
-    "tags": ["674a1b2c3d4e5f678901234f", "674a1b2c3d4e5f6789012350"],
-    "isStarred": false
-  },
-  {
-    "title": "deleteMany()",
-    "answer": "Deletes all documents that match the query criteria.\n\nSyntax: db.collection.deleteMany(filter)\n\nExamples:\n// Delete all out-of-stock products\ndb.products.deleteMany({ stock: 0 })\n\n// Delete all users over 65\ndb.users.deleteMany({ age: { $gt: 65 } })\n\nWarning: db.collection.deleteMany({}) deletes ALL documents!",
-    "category": "674a1b2c3d4e5f678901234e",
-    "tags": ["674a1b2c3d4e5f678901234f", "674a1b2c3d4e5f6789012350"],
+    "title": "map.has()",
+    "answer": "Returns a boolean indicating whether an element with the specified key exists.\n\nSyntax: map.has(key)\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  [42, 'number key'],\n  [null, 'null key'],\n  [undefined, 'undefined key']\n]);\n\nmap.has('name'); // true\nmap.has(42); // true\nmap.has('age'); // false\nmap.has(null); // true\nmap.has(undefined); // true\n\n// Check before get to avoid undefined\nif (map.has('name')) {\n  const name = map.get('name');\n  console.log('Name found:', name);\n}\n\n// Object key checking\nconst objKey = { id: 1 };\nmap.set(objKey, 'value');\nmap.has(objKey); // true\nmap.has({ id: 1 }); // false (different reference)\n\n// Conditional operations\nif (!map.has('counter')) {\n  map.set('counter', 0);\n}\n\nMore reliable than checking if get() returns undefined.",
+    "category": "68b00eab2def6eb6e3177e6c",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "$set",
-    "answer": "Sets the value of a field in a document.\n\nSyntax: { $set: { field: value } }\n\nExamples:\n// Set single field\ndb.users.updateOne(\n  { _id: ObjectId(\"...\") },\n  { $set: { age: 30 } }\n)\n\n// Set multiple fields\ndb.users.updateOne(\n  { name: \"John\" },\n  { $set: { age: 30, city: \"New York\" } }\n)",
-    "category": "674a1b2c3d4e5f6789012351",
-    "tags": ["674a1b2c3d4e5f678901234c", "674a1b2c3d4e5f6789012352"],
+    "title": "map.delete()",
+    "answer": "Removes the specified element from the Map by key. Returns true if the element existed and was removed.\n\nSyntax: map.delete(key)\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  ['age', 30],\n  ['city', 'NYC']\n]);\n\nmap.delete('age'); // true (was removed)\nmap.delete('height'); // false (didn't exist)\n\nconsole.log(map.size); // 2 (name and city remain)\n\n// Conditional deletion\nif (map.has('name')) {\n  map.delete('name');\n}\n\n// Bulk deletion pattern\nconst keysToDelete = ['key1', 'key2', 'key3'];\nkeysToDelete.forEach(key => map.delete(key));\n\n// Object key deletion\nconst objKey = { id: 1 };\nmap.set(objKey, 'value');\nmap.delete(objKey); // true\nmap.delete({ id: 1 }); // false (different reference)\n\n// Return value usage\nconst wasDeleted = map.delete('someKey');\nif (wasDeleted) {\n  console.log('Key was successfully deleted');\n}\n\nReturns boolean indicating success, unlike delete operator on objects.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "$inc",
-    "answer": "Increments the value of a numeric field by a specified amount.\n\nSyntax: { $inc: { field: amount } }\n\nExamples:\n// Increment age by 1\ndb.users.updateOne(\n  { name: \"John\" },\n  { $inc: { age: 1 } }\n)\n\n// Decrease stock by 5\ndb.products.updateOne(\n  { name: \"Laptop\" },\n  { $inc: { stock: -5 } }\n)",
-    "category": "674a1b2c3d4e5f6789012351",
-    "tags": ["674a1b2c3d4e5f678901234c", "674a1b2c3d4e5f6789012353"],
+    "title": "map.clear()",
+    "answer": "Removes all elements from the Map object.\n\nSyntax: map.clear()\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  ['age', 30],\n  ['city', 'NYC']\n]);\n\nconsole.log(map.size); // 3\nmap.clear();\nconsole.log(map.size); // 0\n\n// Reset map for reuse\nfunction resetCache() {\n  cache.clear();\n  console.log('Cache cleared');\n}\n\n// Clear and repopulate pattern\nfunction updateMap(newData) {\n  map.clear();\n  newData.forEach(([key, value]) => map.set(key, value));\n}\n\n// Conditional clearing\nif (map.size > 1000) {\n  map.clear(); // Clear if too large\n}\n\nNo return value. Empties the Map completely.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": false
   },
   {
-    "title": "$push",
-    "answer": "Adds an element to an array field.\n\nSyntax: { $push: { arrayField: value } }\n\nExamples:\n// Add hobby to user\ndb.users.updateOne(\n  { name: \"John\" },\n  { $push: { hobbies: \"reading\" } }\n)\n\n// Add multiple items\ndb.users.updateOne(\n  { name: \"John\" },\n  { $push: { hobbies: { $each: [\"swimming\", \"coding\"] } } }\n)",
-    "category": "674a1b2c3d4e5f6789012351",
-    "tags": ["674a1b2c3d4e5f6789012354", "674a1b2c3d4e5f6789012355"],
+    "title": "map.size",
+    "answer": "Returns the number of key-value pairs in the Map object.\n\nSyntax: map.size\n\nExamples:\nconst map = new Map();\nconsole.log(map.size); // 0\n\nmap.set('a', 1);\nmap.set('b', 2);\nconsole.log(map.size); // 2\n\nmap.delete('a');\nconsole.log(map.size); // 1\n\nmap.clear();\nconsole.log(map.size); // 0\n\n// Check if empty\nif (map.size === 0) {\n  console.log('Map is empty');\n}\n\n// Size-based operations\nif (map.size > 100) {\n  console.log('Map is getting large');\n}\n\n// Compare with array length\nconst arr = Array.from(map);\nconsole.log(map.size === arr.length); // true\n\n// Performance monitoring\nfunction addToMap(key, value) {\n  map.set(key, value);\n  console.log(`Map size: ${map.size}`);\n}\n\nProperty, not a method. Always returns current count.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "$pull",
-    "answer": "Removes elements from an array that match a specified condition.\n\nSyntax: { $pull: { arrayField: condition } }\n\nExamples:\n// Remove specific hobby\ndb.users.updateOne(\n  { name: \"John\" },\n  { $pull: { hobbies: \"reading\" } }\n)\n\n// Remove based on condition\ndb.products.updateOne(\n  { name: \"Bundle\" },\n  { $pull: { items: { price: { $lt: 10 } } } }\n)",
-    "category": "674a1b2c3d4e5f6789012351",
-    "tags": ["674a1b2c3d4e5f6789012354", "674a1b2c3d4e5f6789012355"],
-    "isStarred": false
-  },
-  {
-    "title": "$gt",
-    "answer": "Matches values that are greater than a specified value.\n\nSyntax: { field: { $gt: value } }\n\nExamples:\n// Find users older than 25\ndb.users.find({ age: { $gt: 25 } })\n\n// Find expensive products\ndb.products.find({ price: { $gt: 100 } })\n\n// Works with dates too\ndb.orders.find({ createdAt: { $gt: new Date(\"2024-01-01\") } })",
-    "category": "674a1b2c3d4e5f6789012356",
-    "tags": ["674a1b2c3d4e5f6789012357", "674a1b2c3d4e5f6789012358"],
+    "title": "map.keys()",
+    "answer": "Returns a new Iterator object that contains the keys for each element in the Map in insertion order.\n\nSyntax: map.keys()\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  [42, 'number'],\n  [true, 'boolean']\n]);\n\n// Iterate over keys\nfor (const key of map.keys()) {\n  console.log(key); // 'name', 42, true\n}\n\n// Convert to array\nconst keysArray = [...map.keys()]; // ['name', 42, true]\nconst keysArray2 = Array.from(map.keys());\n\n// Find specific key\nconst hasStringKey = [...map.keys()].some(key => typeof key === 'string');\n\n// Filter keys by type\nconst stringKeys = [...map.keys()].filter(key => typeof key === 'string');\n\n// First/last key\nconst firstKey = map.keys().next().value;\nconst lastKey = [...map.keys()].pop();\n\n// Use with Array methods\nconst keyTypes = [...map.keys()].map(key => typeof key);\n\nReturns Iterator, not Array. Use spread or Array.from() to convert.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "$lt",
-    "answer": "Matches values that are less than a specified value.\n\nSyntax: { field: { $lt: value } }\n\nExamples:\n// Find young users\ndb.users.find({ age: { $lt: 30 } })\n\n// Find cheap products\ndb.products.find({ price: { $lt: 50 } })\n\n// Combine with other operators\ndb.products.find({ price: { $gt: 10, $lt: 100 } })",
-    "category": "674a1b2c3d4e5f6789012356",
-    "tags": ["674a1b2c3d4e5f6789012357", "674a1b2c3d4e5f6789012358"],
-    "isStarred": false
-  },
-  {
-    "title": "$in",
-    "answer": "Matches any of the values specified in an array.\n\nSyntax: { field: { $in: [value1, value2, ...] } }\n\nExamples:\n// Find users in specific cities\ndb.users.find({ city: { $in: [\"New York\", \"London\", \"Tokyo\"] } })\n\n// Find products in categories\ndb.products.find({ category: { $in: [\"Electronics\", \"Books\"] } })\n\n// Works with numbers too\ndb.products.find({ rating: { $in: [4, 5] } })",
-    "category": "674a1b2c3d4e5f6789012356",
-    "tags": ["674a1b2c3d4e5f6789012357", "674a1b2c3d4e5f6789012359"],
+    "title": "map.values()",
+    "answer": "Returns a new Iterator object that contains the values for each element in the Map in insertion order.\n\nSyntax: map.values()\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  ['age', 30],\n  ['active', true]\n]);\n\n// Iterate over values\nfor (const value of map.values()) {\n  console.log(value); // 'John', 30, true\n}\n\n// Convert to array\nconst valuesArray = [...map.values()]; // ['John', 30, true]\n\n// Find values\nconst hasJohn = [...map.values()].includes('John'); // true\n\n// Sum numeric values\nconst numbers = [...map.values()].filter(val => typeof val === 'number');\nconst sum = numbers.reduce((acc, val) => acc + val, 0);\n\n// Transform values\nconst upperCaseStrings = [...map.values()]\n  .filter(val => typeof val === 'string')\n  .map(str => str.toUpperCase());\n\n// Check all values meet condition\nconst allTruthy = [...map.values()].every(val => Boolean(val));\n\nReturns Iterator of values in insertion order.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "$and",
-    "answer": "Joins query clauses with a logical AND - returns documents that match all conditions.\n\nSyntax: { $and: [ { condition1 }, { condition2 }, ... ] }\n\nExamples:\n// Find users aged 25-35 in New York\ndb.users.find({\n  $and: [\n    { age: { $gte: 25 } },\n    { age: { $lte: 35 } },\n    { city: \"New York\" }\n  ]\n})\n\n// Usually implicit\ndb.users.find({ age: { $gte: 25, $lte: 35 }, city: \"New York\" })",
-    "category": "674a1b2c3d4e5f6789012356",
-    "tags": ["674a1b2c3d4e5f678901235a", "674a1b2c3d4e5f6789012357"],
-    "isStarred": false
-  },
-  {
-    "title": "$or",
-    "answer": "Joins query clauses with a logical OR - returns documents that match any condition.\n\nSyntax: { $or: [ { condition1 }, { condition2 }, ... ] }\n\nExamples:\n// Find users in NY or London\ndb.users.find({\n  $or: [\n    { city: \"New York\" },\n    { city: \"London\" }\n  ]\n})\n\n// Find cheap or highly rated products\ndb.products.find({\n  $or: [\n    { price: { $lt: 20 } },\n    { rating: { $gte: 4.5 } }\n  ]\n})",
-    "category": "674a1b2c3d4e5f6789012356",
-    "tags": ["674a1b2c3d4e5f678901235a", "674a1b2c3d4e5f6789012357"],
+    "title": "map.entries()",
+    "answer": "Returns a new Iterator object that contains [key, value] pairs for each element in the Map in insertion order.\n\nSyntax: map.entries()\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  ['age', 30],\n  ['city', 'NYC']\n]);\n\n// Iterate over entries\nfor (const [key, value] of map.entries()) {\n  console.log(`${key}: ${value}`);\n}\n\n// Same as iterating over map directly\nfor (const [key, value] of map) {\n  console.log(`${key}: ${value}`);\n}\n\n// Convert to array of arrays\nconst entriesArray = [...map.entries()];\n// [['name', 'John'], ['age', 30], ['city', 'NYC']]\n\n// Convert to object\nconst obj = Object.fromEntries(map.entries());\n// { name: 'John', age: 30, city: 'NYC' }\n\n// Filter entries\nconst stringEntries = [...map.entries()]\n  .filter(([key, value]) => typeof value === 'string');\n\n// Transform entries\nconst transformed = [...map.entries()]\n  .map(([key, value]) => [key.toUpperCase(), value]);\n\nReturns Iterator of [key, value] pairs. Same as map[Symbol.iterator]().",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "sort()",
-    "answer": "Orders query results by specified field(s).\n\nSyntax: .sort({ field: 1 }) // ascending or .sort({ field: -1 }) // descending\n\nExamples:\n// Sort by price ascending\ndb.products.find().sort({ price: 1 })\n\n// Sort by price descending\ndb.products.find().sort({ price: -1 })\n\n// Sort by multiple fields\ndb.products.find().sort({ category: 1, price: -1 })",
-    "category": "674a1b2c3d4e5f678901235b",
-    "tags": ["674a1b2c3d4e5f678901235c", "674a1b2c3d4e5f678901235d"],
+    "title": "map.forEach()",
+    "answer": "Calls a function for each key-value pair in the Map, in insertion order.\n\nSyntax: map.forEach(callback(value, key, map), thisArg)\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  ['age', 30],\n  ['city', 'NYC']\n]);\n\n// Basic iteration (note: value comes first, then key)\nmap.forEach((value, key) => {\n  console.log(`${key}: ${value}`);\n});\n\n// With map parameter\nmap.forEach((value, key, mapRef) => {\n  console.log(`Map size: ${mapRef.size}`);\n});\n\n// Using thisArg\nconst context = { prefix: 'User' };\nmap.forEach(function(value, key) {\n  console.log(`${this.prefix} ${key}: ${value}`);\n}, context);\n\n// Side effects\nconst results = [];\nmap.forEach((value, key) => {\n  results.push(`${key}=${value}`);\n});\n\n// Conditional operations\nmap.forEach((value, key) => {\n  if (typeof value === 'string') {\n    map.set(key, value.toUpperCase());\n  }\n});\n\n// Break pattern (use for...of instead for early exit)\n// forEach cannot be stopped early\n\nNo return value. Cannot break early like for...of loops.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "limit()",
-    "answer": "Restricts the number of documents returned by a query.\n\nSyntax: .limit(number)\n\nExamples:\n// Get first 5 products\ndb.products.find().limit(5)\n\n// Get 3 most expensive products\ndb.products.find().sort({ price: -1 }).limit(3)\n\n// Often combined with sort and skip\ndb.users.find().sort({ age: -1 }).skip(10).limit(5)",
-    "category": "674a1b2c3d4e5f678901235b",
-    "tags": ["674a1b2c3d4e5f678901235c", "674a1b2c3d4e5f678901235e"],
-    "isStarred": false
-  },
-  {
-    "title": "skip()",
-    "answer": "Skips a specified number of documents in query results.\n\nSyntax: .skip(number)\n\nExamples:\n// Skip first 10 documents\ndb.products.find().skip(10)\n\n// Pagination: Get page 3 (10 per page)\ndb.products.find().skip(20).limit(10)\n\n// Get second page of results\nconst page = 2;\nconst perPage = 5;\ndb.products.find().skip((page - 1) * perPage).limit(perPage)",
-    "category": "674a1b2c3d4e5f678901235b",
-    "tags": ["674a1b2c3d4e5f678901235c", "674a1b2c3d4e5f678901235f"],
-    "isStarred": false
-  },
-  {
-    "title": "aggregate()",
-    "answer": "Processes data through a pipeline of stages for complex operations.\n\nSyntax: db.collection.aggregate([stage1, stage2, ...])\n\nExamples:\n// Group by category and count\ndb.products.aggregate([\n  {\n    $group: {\n      _id: \"$category\",\n      count: { $sum: 1 },\n      avgPrice: { $avg: \"$price\" }\n    }\n  }\n])\n\n// Match, sort, and limit\ndb.products.aggregate([\n  { $match: { price: { $gte: 50 } } },\n  { $sort: { price: -1 } },\n  { $limit: 5 }\n])",
-    "category": "674a1b2c3d4e5f6789012360",
-    "tags": ["674a1b2c3d4e5f6789012361", "674a1b2c3d4e5f6789012362"],
+    "title": "Array.from(map)",
+    "answer": "Converts a Map to an array of [key, value] pairs.\n\nSyntax: Array.from(map) or [...map]\n\nExamples:\nconst map = new Map([\n  ['name', 'John'],\n  ['age', 30],\n  ['city', 'NYC']\n]);\n\n// Convert to array\nconst array = Array.from(map);\n// [['name', 'John'], ['age', 30], ['city', 'NYC']]\n\n// Using spread operator (same result)\nconst array2 = [...map];\n\n// Convert with transformation\nconst strings = Array.from(map, ([key, value]) => `${key}=${value}`);\n// ['name=John', 'age=30', 'city=NYC']\n\n// Extract just keys or values\nconst keys = Array.from(map.keys());\nconst values = Array.from(map.values());\n\n// Filter during conversion\nconst filtered = Array.from(map)\n  .filter(([key, value]) => typeof value === 'string');\n\n// Sort entries (Maps maintain insertion order)\nconst sorted = Array.from(map)\n  .sort(([a], [b]) => a.localeCompare(b));\n\n// Back to Map\nconst newMap = new Map(sorted);\n\nUseful for applying array methods to Map data.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "createIndex()",
-    "answer": "Creates an index on a collection to improve query performance.\n\nSyntax: db.collection.createIndex({ field: 1 }, options)\n\nExamples:\n// Create ascending index\ndb.users.createIndex({ email: 1 })\n\n// Create compound index\ndb.products.createIndex({ category: 1, price: -1 })\n\n// Create text index for search\ndb.articles.createIndex({ title: \"text\", content: \"text\" })\n\n// Create unique index\ndb.users.createIndex({ email: 1 }, { unique: true })",
-    "category": "674a1b2c3d4e5f6789012363",
-    "tags": ["674a1b2c3d4e5f6789012364", "674a1b2c3d4e5f6789012365"],
+    "title": "Map vs Object",
+    "answer": "Key differences between Map and Object for choosing the right data structure.\n\nComparison:\n\nMap advantages:\n- Any type can be a key (objects, primitives, functions)\n- Size property available\n- Maintains insertion order guaranteed\n- Iterable by default\n- No default keys\n- Better performance for frequent additions/deletions\n\nObject advantages:\n- Literal syntax { key: value }\n- JSON serializable\n- Property access syntax (obj.key)\n- Smaller memory overhead for small datasets\n- More familiar to most developers\n\nExamples:\n// Map - any key type\nconst map = new Map();\nmap.set(1, 'number key');\nmap.set('1', 'string key');\nmap.set(true, 'boolean key');\nmap.set({}, 'object key');\n\n// Object - string/symbol keys only\nconst obj = {\n  1: 'becomes string key',\n  '1': 'same key as above',\n  [Symbol('key')]: 'symbol key'\n};\n\n// Size\nmap.size; // Direct property\nObject.keys(obj).length; // Must calculate\n\n// Iteration\nfor (const [key, value] of map) { } // Direct\nfor (const [key, value] of Object.entries(obj)) { } // Convert first\n\nUse Map for: dynamic keys, non-string keys, frequent additions/deletions, when size matters.\nUse Object for: records with known keys, JSON serialization, when using object methods.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": true
   },
   {
-    "title": "countDocuments()",
-    "answer": "Returns the count of documents that match the query criteria.\n\nSyntax: db.collection.countDocuments(filter)\n\nExamples:\n// Count all documents\ndb.users.countDocuments()\n\n// Count with filter\ndb.users.countDocuments({ age: { $gte: 18 } })\n\n// Count products in category\ndb.products.countDocuments({ category: \"Electronics\" })\n\nNote: Use countDocuments() instead of deprecated count() method.",
-    "category": "674a1b2c3d4e5f678901235b",
-    "tags": ["674a1b2c3d4e5f6789012366", "674a1b2c3d4e5f6789012367"],
+    "title": "WeakMap",
+    "answer": "A WeakMap is similar to Map but with key differences: keys must be objects and are held weakly.\n\nKey differences from Map:\n- Keys must be objects (not primitives)\n- Keys are held weakly (garbage collected if no other references)\n- No size property\n- Not iterable\n- Only has: set(), get(), has(), delete()\n\nExamples:\n// Create WeakMap\nconst weakMap = new WeakMap();\n\n// Keys must be objects\nconst obj1 = { id: 1 };\nconst obj2 = { id: 2 };\n\nweakMap.set(obj1, 'data for obj1');\nweakMap.set(obj2, 'data for obj2');\n\n// Cannot use primitives as keys\n// weakMap.set('string', 'value'); // TypeError!\n\n// Basic operations\nweakMap.get(obj1); // 'data for obj1'\nweakMap.has(obj1); // true\nweakMap.delete(obj1); // true\n\n// Memory management - when obj2 is no longer referenced elsewhere\nobj2 = null; // WeakMap entry gets garbage collected automatically\n\n// Common use case: private data\nconst privateData = new WeakMap();\nclass MyClass {\n  constructor(value) {\n    privateData.set(this, { secret: value });\n  }\n  \n  getSecret() {\n    return privateData.get(this).secret;\n  }\n}\n\n// DOM element metadata\nconst elementData = new WeakMap();\nfunction attachData(element, data) {\n  elementData.set(element, data);\n}\n// When element is removed from DOM, data is automatically cleaned up\n\nUse WeakMap for: private data, metadata for objects, preventing memory leaks.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": false
   },
   {
-    "title": "distinct()",
-    "answer": "Returns an array of distinct values for a specified field across a collection.\n\nSyntax: db.collection.distinct(field, query)\n\nExamples:\n// Get all unique categories\ndb.products.distinct(\"category\")\n\n// Get unique cities for users over 25\ndb.users.distinct(\"city\", { age: { $gt: 25 } })\n\n// Get unique tags\ndb.articles.distinct(\"tags\")\n\nUseful for populating dropdown lists or analyzing data variety.",
-    "category": "674a1b2c3d4e5f678901235b",
-    "tags": ["674a1b2c3d4e5f6789012366", "674a1b2c3d4e5f6789012368"],
+    "title": "Map Performance Tips",
+    "answer": "Best practices and performance considerations when working with Maps.\n\nPerformance characteristics:\n- O(1) average time for set, get, has, delete\n- Better than Object for frequent additions/deletions\n- Iteration is O(n) but maintains insertion order\n- Memory overhead slightly higher than Object\n\nOptimization tips:\n\nExamples:\n// 1. Use Map for dynamic key scenarios\nconst userCache = new Map(); // Better than {}\n\n// 2. Batch operations when possible\nfunction bulkSet(map, entries) {\n  entries.forEach(([key, value]) => map.set(key, value));\n  return map;\n}\n\n// 3. Clear vs new Map for reset\nmap.clear(); // Reuses existing Map\n// vs\nmap = new Map(); // Creates new Map (may trigger GC)\n\n// 4. Use has() before get() for expensive operations\nif (expensiveCache.has(key)) {\n  const result = expensiveCache.get(key);\n  return processResult(result);\n}\n\n// 5. Avoid converting to Array frequently\n// Slow - converts every time\nfunction findValue(map, predicate) {\n  return [...map.values()].find(predicate);\n}\n\n// Better - iterate directly\nfunction findValue(map, predicate) {\n  for (const value of map.values()) {\n    if (predicate(value)) return value;\n  }\n}\n\n// 6. Use appropriate key types\nconst stringKeyMap = new Map(); // Fast\nconst objectKeyMap = new Map(); // Slightly slower lookup\n\n// 7. Size-based optimizations\nif (map.size > 10000) {\n  // Consider WeakMap or cleanup strategies\n}\n\nChoose Map over Object when: keys are unknown until runtime, keys are not strings, need to iterate frequently, frequent addition/deletion of key-value pairs.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
     "isStarred": false
   },
   {
-    "title": "replaceOne()",
-    "answer": "Replaces the entire document (except _id) that matches the filter.\n\nSyntax: db.collection.replaceOne(filter, replacement, options)\n\nExample:\n// Replace entire user document\ndb.users.replaceOne(\n  { email: \"john@email.com\" },\n  {\n    name: \"John Smith\",\n    email: \"john.smith@email.com\",\n    age: 30,\n    city: \"Los Angeles\"\n  }\n)\n\nNote: Unlike update operations, this replaces the entire document structure.",
-    "category": "674a1b2c3d4e5f678901234b",
-    "tags": ["674a1b2c3d4e5f678901234c", "674a1b2c3d4e5f6789012369"],
-    "isStarred": false
+    "title": "Common Map Patterns",
+    "answer": "Frequently used patterns and recipes for working with Maps effectively.\n\nUseful patterns:\n\nExamples:\n// 1. Caching/Memoization\nconst cache = new Map();\nfunction expensiveFunction(arg) {\n  if (cache.has(arg)) {\n    return cache.get(arg);\n  }\n  const result = /* expensive calculation */;\n  cache.set(arg, result);\n  return result;\n}\n\n// 2. Counting occurrences\nfunction countOccurrences(arr) {\n  const counts = new Map();\n  for (const item of arr) {\n    counts.set(item, (counts.get(item) || 0) + 1);\n  }\n  return counts;\n}\n\n// 3. Grouping by property\nfunction groupBy(array, keyFn) {\n  const groups = new Map();\n  for (const item of array) {\n    const key = keyFn(item);\n    if (!groups.has(key)) {\n      groups.set(key, []);\n    }\n    groups.get(key).push(item);\n  }\n  return groups;\n}\n\n// 4. Default value pattern\nfunction getWithDefault(map, key, defaultValue) {\n  if (!map.has(key)) {\n    map.set(key, defaultValue);\n  }\n  return map.get(key);\n}\n\n// 5. Map chaining for transformations\nconst result = new Map(\n  [...originalMap]\n    .filter(([key, value]) => value > 10)\n    .map(([key, value]) => [key, value * 2])\n);\n\n// 6. Merge Maps\nfunction mergeMaps(...maps) {\n  const merged = new Map();\n  for (const map of maps) {\n    for (const [key, value] of map) {\n      merged.set(key, value);\n    }\n  }\n  return merged;\n}\n\n// 7. Two-way lookup\nclass BiMap {\n  constructor() {\n    this.keyToValue = new Map();\n    this.valueToKey = new Map();\n  }\n  \n  set(key, value) {\n    this.keyToValue.set(key, value);\n    this.valueToKey.set(value, key);\n  }\n  \n  getByKey(key) { return this.keyToValue.get(key); }\n  getByValue(value) { return this.valueToKey.get(value); }\n}\n\nThese patterns solve common programming problems efficiently with Maps.",
+    "category": "68b00ca31470f8c4f9b77760",
+    "tags": [],
+    "isStarred": true
   }
 ]

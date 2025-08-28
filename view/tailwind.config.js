@@ -27,6 +27,7 @@ module.exports = {
           hover: '#242424',
           active: '#2A2A2A',
           text: '#606060',
+          secondary: '#141414',
         },
       },
       fontFamily: {

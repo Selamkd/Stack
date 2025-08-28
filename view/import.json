@@ -1,0 +1,177 @@
+[
+  { "name": "even-or-odd", "level": "8kyu", "completed": false },
+  { "name": "opposite-number", "level": "8kyu", "completed": false },
+  { "name": "string-repeat", "level": "8kyu", "completed": false },
+  { "name": "remove-string-spaces", "level": "8kyu", "completed": false },
+  {
+    "name": "convert-boolean-values-to-strings-yes-or-no",
+    "level": "8kyu",
+    "completed": false
+  },
+  { "name": "reversed-strings", "level": "8kyu", "completed": false },
+  { "name": "sum-of-positive", "level": "8kyu", "completed": false },
+  { "name": "vowel-count", "level": "7kyu", "completed": false },
+  { "name": "disemvowel-trolls", "level": "7kyu", "completed": false },
+  { "name": "jaden-casing-strings", "level": "7kyu", "completed": false },
+  {
+    "name": "find-the-smallest-integer-in-the-array",
+    "level": "8kyu",
+    "completed": false
+  },
+  {
+    "name": "remove-first-and-last-character",
+    "level": "8kyu",
+    "completed": false
+  },
+  {
+    "name": "sum-of-two-lowest-positive-integers",
+    "level": "7kyu",
+    "completed": false
+  },
+  { "name": "shortest-word", "level": "7kyu", "completed": false },
+  { "name": "get-the-middle-character", "level": "7kyu", "completed": false },
+  { "name": "list-filtering", "level": "7kyu", "completed": false },
+  { "name": "square-every-digit", "level": "7kyu", "completed": false },
+  { "name": "complementary-dna", "level": "7kyu", "completed": false },
+  { "name": "credit-card-mask", "level": "7kyu", "completed": false },
+  { "name": "descending-order", "level": "7kyu", "completed": false },
+  { "name": "multiply", "level": "8kyu", "completed": false },
+  { "name": "century-from-year", "level": "8kyu", "completed": false },
+  {
+    "name": "basic-mathematical-operations",
+    "level": "8kyu",
+    "completed": false
+  },
+  { "name": "sum-arrays", "level": "8kyu", "completed": false },
+  {
+    "name": "beginner-lost-without-a-map",
+    "level": "8kyu",
+    "completed": false
+  },
+  { "name": "youre-a-square", "level": "7kyu", "completed": false },
+  { "name": "two-to-one", "level": "7kyu", "completed": false },
+  { "name": "mumbling", "level": "7kyu", "completed": false },
+  { "name": "friend-or-foe", "level": "7kyu", "completed": false },
+  { "name": "binary-addition", "level": "7kyu", "completed": false },
+
+  { "name": "dubstep", "level": "6kyu", "completed": false },
+  { "name": "stop-gninnips-my-sdrow", "level": "6kyu", "completed": false },
+  { "name": "duplicate-encoder", "level": "6kyu", "completed": false },
+  {
+    "name": "count-characters-in-your-string",
+    "level": "6kyu",
+    "completed": false
+  },
+  { "name": "find-the-parity-outlier", "level": "6kyu", "completed": false },
+  {
+    "name": "replace-with-alphabet-position",
+    "level": "6kyu",
+    "completed": false
+  },
+  { "name": "create-phone-number", "level": "6kyu", "completed": false },
+  { "name": "bit-counting", "level": "6kyu", "completed": false },
+  { "name": "sum-of-digits-digital-root", "level": "6kyu", "completed": false },
+  { "name": "persistent-bugger", "level": "6kyu", "completed": false },
+  { "name": "who-likes-it", "level": "6kyu", "completed": false },
+  { "name": "array-dot-diff", "level": "6kyu", "completed": false },
+  { "name": "take-a-ten-minute-walk", "level": "6kyu", "completed": false },
+  { "name": "multiples-of-3-or-5", "level": "6kyu", "completed": false },
+  { "name": "playing-with-digits", "level": "6kyu", "completed": false },
+  { "name": "equal-sides-of-an-array", "level": "6kyu", "completed": false },
+  { "name": "detect-pangram", "level": "6kyu", "completed": false },
+  { "name": "roman-numerals-encoder", "level": "6kyu", "completed": false },
+  { "name": "sort-the-odd", "level": "6kyu", "completed": false },
+  { "name": "mexican-wave", "level": "6kyu", "completed": false },
+  { "name": "iq-test", "level": "6kyu", "completed": false },
+  { "name": "break-camelcase", "level": "6kyu", "completed": false },
+  { "name": "split-strings", "level": "6kyu", "completed": false },
+  { "name": "counting-duplicates", "level": "6kyu", "completed": false },
+  { "name": "your-order-please", "level": "6kyu", "completed": false },
+  { "name": "tribonacci-sequence", "level": "6kyu", "completed": false },
+  { "name": "find-the-odd-int", "level": "6kyu", "completed": false },
+  {
+    "name": "convert-string-to-camel-case",
+    "level": "6kyu",
+    "completed": false
+  },
+  {
+    "name": "write-number-in-expanded-form",
+    "level": "6kyu",
+    "completed": false
+  },
+  { "name": "unique-in-order", "level": "6kyu", "completed": false },
+  { "name": "build-tower", "level": "6kyu", "completed": false },
+  { "name": "title-case", "level": "6kyu", "completed": false },
+  { "name": "reverse-or-rotate", "level": "6kyu", "completed": false },
+  { "name": "data-reverse", "level": "6kyu", "completed": false },
+  { "name": "prize-draw", "level": "6kyu", "completed": false },
+  {
+    "name": "simple-encryption-number-1-alternating-split",
+    "level": "6kyu",
+    "completed": false
+  },
+  { "name": "consecutive-strings", "level": "6kyu", "completed": false },
+  { "name": "nth-fibonacci", "level": "6kyu", "completed": false },
+  {
+    "name": "simple-fun-number-79-delete-a-digit",
+    "level": "6kyu",
+    "completed": false
+  },
+  { "name": "camel-case-method", "level": "6kyu", "completed": false },
+
+  { "name": "moving-zeros-to-the-end", "level": "5kyu", "completed": false },
+  { "name": "valid-parentheses", "level": "5kyu", "completed": false },
+  { "name": "string-incrementer", "level": "5kyu", "completed": false },
+  { "name": "rgb-to-hex-conversion", "level": "5kyu", "completed": false },
+  { "name": "human-readable-time", "level": "5kyu", "completed": false },
+  { "name": "pete-the-baker", "level": "5kyu", "completed": false },
+  {
+    "name": "extract-the-domain-name-from-a-url",
+    "level": "5kyu",
+    "completed": false
+  },
+  { "name": "rot13", "level": "5kyu", "completed": false },
+  {
+    "name": "first-non-repeating-character",
+    "level": "5kyu",
+    "completed": false
+  },
+  { "name": "simple-pig-latin", "level": "5kyu", "completed": false },
+  { "name": "maximum-subarray-sum", "level": "5kyu", "completed": false },
+  { "name": "directions-reduction", "level": "5kyu", "completed": false },
+  { "name": "primes-in-numbers", "level": "5kyu", "completed": false },
+  { "name": "weight-for-weight", "level": "5kyu", "completed": false },
+  { "name": "scramblies", "level": "5kyu", "completed": false },
+  { "name": "best-travel", "level": "5kyu", "completed": false },
+  { "name": "josephus-survivor", "level": "5kyu", "completed": false },
+  { "name": "mean-square-error", "level": "5kyu", "completed": false },
+  {
+    "name": "simple-assembler-interpreter",
+    "level": "5kyu",
+    "completed": false
+  },
+  { "name": "paginationhelper", "level": "5kyu", "completed": false },
+
+  { "name": "snail", "level": "4kyu", "completed": false },
+  { "name": "range-extraction", "level": "4kyu", "completed": false },
+  {
+    "name": "most-frequently-used-words-in-a-text",
+    "level": "4kyu",
+    "completed": false
+  },
+  { "name": "sum-strings-as-numbers", "level": "4kyu", "completed": false },
+  {
+    "name": "next-bigger-number-with-the-same-digits",
+    "level": "4kyu",
+    "completed": false
+  },
+  { "name": "strip-comments", "level": "4kyu", "completed": false },
+  {
+    "name": "catching-car-mileage-numbers",
+    "level": "4kyu",
+    "completed": false
+  },
+  { "name": "permutations", "level": "4kyu", "completed": false },
+  { "name": "sudoku-solution-validator", "level": "4kyu", "completed": false },
+  { "name": "breadth-first-search", "level": "4kyu", "completed": false }
+]

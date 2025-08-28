@@ -131,7 +131,7 @@ export default function Notes() {
                   {[...Array(3)].map((_, i) => (
                     <div
                       key={i}
-                      className="animate-pulse border border-custom-border bg-custom-surface rounded-lg p-4"
+                      className="animate-pulse border border-custom-border glass-card rounded-lg p-4"
                     >
                       <div className="h-4 bg-custom-border rounded w-3/4 mb-2"></div>
                       <div className="h-3 bg-custom-border rounded w-1/2"></div>
@@ -144,26 +144,21 @@ export default function Notes() {
                     <div
                       key={note._id}
                       className={`border border-custom-border bg-custom-surface rounded-lg overflow-hidden hover:border-custom-hover transition-all cursor-pointer ${
-                        isSelected(note._id) ? 'border-[#242424] ' : ''
+                        isSelected(note._id)
+                          ? 'border-[#242424] glass-card '
+                          : ''
                       }`}
                     >
-                      <div className="p-4">
+                      <div className="p-2">
                         <button
                           onClick={() => handleNoteSelect(note)}
                           className="w-full text-left"
                         >
-                          <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-start justify-between mb-1">
                             <div className="flex-1 min-w-0">
-                              <h3 className="text-lg font-medium text-white mb-1 break-words truncate">
+                              <h3 className="text-md font-medium text-white mb-1 break-words truncate">
                                 {note.title || 'Untitled'}
                               </h3>
-                              <p className="text-sm text-zinc-400 break-words line-clamp-2">
-                                {note.content
-                                  ? note.content
-                                      .replace(/<[^>]*>/g, '')
-                                      .substring(0, 100) + '...'
-                                  : 'No content'}
-                              </p>
                             </div>
                             <div className="flex items-center gap-2 ml-4 flex-shrink-0">
                               <button
@@ -175,7 +170,7 @@ export default function Notes() {
                                 className="p-2 rounded-lg transition-all duration-200 text-custom-text hover:text-red-400 hover:bg-red-400/20 border border-transparent hover:border-red-400/20"
                                 title="Delete note"
                               >
-                                <Trash2 className="w-4 h-4" />
+                                <Trash2 className="w-3 h-3" />
                               </button>
                             </div>
                           </div>

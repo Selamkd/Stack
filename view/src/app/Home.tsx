@@ -1,3 +1,5 @@
+import { Component, useEffect, useState } from 'react';
+import APIService from '../service/api.service';
 import {
   FileText,
   Code,
@@ -6,11 +8,15 @@ import {
   Clock,
   Activity,
   Command,
+  ComponentIcon,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import APIService from '../service/api.service';
-
-interface RecentActivity {
+import QuickActions from '../components/QuickActions';
+import RecentActivity from '../components/RecentActivity';
+import { ITicket } from '../../../back/src/models/ticket.model';
+import { format } from 'date-fns';
+import CodewarsActivityCard from '../components/CodewarsActivity';
+import DailyTodos from '../components/DailyTodos';
+export interface IRecentActivity {
   id: string;
   type: 'note' | 'snippet' | 'ticket' | 'lookup';
   title: string;
@@ -19,10 +25,11 @@ interface RecentActivity {
 }
 
 export default function Dashboard() {
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [recentActivity, setRecentActivity] = useState<IRecentActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
+  const tickets: ITicket[] = [];
 
   useEffect(() => {
     loadDashboardData();
@@ -32,16 +39,14 @@ export default function Dashboard() {
     try {
       setIsLoading(true);
 
-      const [notes, snippets, tickets, lookups] = await Promise.all([
+      const [notes, snippets, lookups] = await Promise.all([
         APIService.get('notes'),
         APIService.get('snippets'),
-        APIService.get('tickets'),
+
         APIService.get('quicklookups'),
       ]);
 
-      console.log(tickets);
-
-      const activities: RecentActivity[] = [
+      const activities: IRecentActivity[] = [
         ...notes.slice(-3).map((note: any) => ({
           id: note._id,
           type: 'note' as const,
@@ -93,29 +98,12 @@ export default function Dashboard() {
     );
   }
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'note':
-        return <FileText className="w-4 h-4" />;
-      case 'snippet':
-        return <Code className="w-4 h-4" />;
-      case 'ticket':
-        return <Ticket className="w-4 h-4" />;
-      case 'lookup':
-        return <Search className="w-4 h-4" />;
-      default:
-        return <Activity className="w-4 h-4" />;
-    }
-  };
-
   return (
     <main className="mx-5 min-h-screen p-4 md:p-6 my-2 md:my-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-zinc-400">
-            Overview of your productivity workspace
-          </p>
+          <p className="text-zinc-400">{format(new Date(), 'PPP')}</p>
         </div>
         <div className="flex items-center gap-2 mt-4 md:mt-0">
           <span className="text-sm text-zinc-500">
@@ -144,11 +132,8 @@ export default function Dashboard() {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
               <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
-                <button
-                  onClick={handleSearch}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-custom-border hover:bg-lime-200 text-white hover:text-gray-800 rounded text-sm font-medium transition-colors"
-                >
-                  Search
+                <button onClick={handleSearch}>
+                  <Search />
                 </button>
               </div>
             </div>
@@ -158,7 +143,7 @@ export default function Dashboard() {
                 {
                   key: 'all',
                   label: 'All',
-                  icon: Search,
+                  icon: ComponentIcon,
                 },
                 {
                   key: 'notes',
@@ -198,83 +183,12 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-
+      <div className="grid grid-cols-1">
+        <QuickActions />
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="group relative border border-custom-border bg-gradient-to-br from-slate-200/5 to-transparent rounded-xl p-6 overflow-hidden hover:border-slate-400/30 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-200/5 to-transparent group-hover:opacity-100 transition-opacity duration-300"></div>
-
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-slate-200/15 rounded-lg border border-slate-200/25">
-                <Clock className="w-5 h-5 text-slate-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-white">
-                Recent Activity
-              </h3>
-            </div>
-
-            <div className="space-y-3">
-              {recentActivity.slice(0, 6).map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-center gap-3 p-3 bg-custom-base rounded-lg border border-custom-border hover:bg-custom-hover transition-colors"
-                >
-                  <div className="text-zinc-400">
-                    {getTypeIcon(activity.type)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white truncate">
-                      {activity.title}
-                    </p>
-                    <p className="text-xs text-zinc-500">
-                      {activity.action} • {activity.timestamp}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="group relative border border-custom-border  bg-gradient-to-br from-emerald-200/5 to-transparent  rounded-xl p-6 overflow-hidden hover:border-custome-border transition-all duration-300">
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <h3 className="text-lg font-semibold text-white">
-                Quick Actions
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <button className="flex w-full justify-between group/btn p-4 bg-custom-base hover:bg-custom-hover border border-custom-border rounded-lg transition-all text-left ">
-                <p className="text-md font-lg  text-white">Notes</p>
-                <div className="p-2 bg-blue-200/15 rounded-lg border border-blue-200/25 w- h-fit mb-2 group-hover/btn:bg-blue-200/25 transition-colors">
-                  <FileText className="w-4 h-4 text-lime-200/50" />
-                </div>
-              </button>
-
-              <button className="flex w-full justify-between  group/btn p-4 bg-custom-base hover:bg-custom-hover border border-custom-border rounded-lg transition-all text-left">
-                <p className="text-sm font-medium text-white">Snippets</p>
-                <div className="p-2 bg-green-200/15 rounded-lg border border-lime-200/25 w-fit mb-2 group-hover/btn:bg-lime-200/25 transition-colors">
-                  <Code className="w-4 h-4 text-lime-200" />
-                </div>
-              </button>
-
-              <button className="flex w-full justify-between group/btn p-4 bg-custom-base hover:bg-custom-hover border border-custom-border rounded-lg transition-all text-left ">
-                <p className="text-sm font-medium text-white">Ticket Board</p>
-                <div className="p-2 bg-orange-200/15 rounded-lg border border-lime-200/25  h-fit w-fit mb-2 group-hover/btn:bg-orange-200/25 transition-colors">
-                  <Ticket className="w-4 h-4 text-brand-400" />
-                </div>
-              </button>
-
-              <button className="flex w-full justify-between group/btn p-4 bg-custom-base hover:bg-custom-hover border border-custom-border rounded-lg transition-all text-left">
-                <p className="text-sm font-medium text-white">Quick Lookups</p>
-                <div className="p-2 bg-purple-200/15 rounded-lg border border-purple-200/25 w-fit mb-2 group-hover/btn:bg-purple-200/25 transition-colors">
-                  <Search className="w-4 h-4 text-purple-200" />
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
+        <CodewarsActivityCard />
+        <DailyTodos />
       </div>
     </main>
   );

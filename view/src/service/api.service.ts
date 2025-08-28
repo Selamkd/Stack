@@ -4,8 +4,8 @@ export class APIService {
   static BASE_URL =
     (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
-  static async request(endpoint: string, options: RequestInit) {
-    const url = `${this.BASE_URL}/${endpoint}`;
+  static async request(endpoint: string, options: RequestInit, base?: string) {
+    const url = base ? `${base}/${endpoint}` : `${this.BASE_URL}/${endpoint}`;
 
     if (!options.headers) {
       options.headers = {
@@ -40,7 +40,11 @@ export class APIService {
     }
   }
 
-  static async get(endpoint: string, params?: Record<string, string>) {
+  static async get(
+    endpoint: string,
+    params?: Record<string, string>,
+    base?: string
+  ) {
     let url = endpoint;
 
     if (params && Object.keys(params).length > 0) {
@@ -72,6 +76,26 @@ export class APIService {
 
   static async delete(endpoint: string): Promise<any> {
     return this.request(endpoint, { method: 'DELETE' });
+  }
+
+  static async getExternal(
+    endpoint: string,
+    baseUrl: string,
+    params?: Record<string, string>
+  ) {
+    let url = endpoint;
+
+    if (params && Object.keys(params).length > 0) {
+      const queryParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          queryParams.append(key, value);
+        }
+      });
+      url = `${url}?${queryParams.toString()}`;
+    }
+
+    return this.request(url, { method: 'GET' }, baseUrl);
   }
 }
 export default APIService;

@@ -25,6 +25,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, '../back/src/models'),
       },
       {
+        find: '@/utils',
+        replacement: path.resolve(__dirname, '../back/src/utils'),
+      },
+      {
         find: '@/components',
         replacement: path.resolve(__dirname, 'src/components'),
       },

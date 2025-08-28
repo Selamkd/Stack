@@ -24,7 +24,7 @@ export default function TicketDroppable(props: ITicketDroppable) {
 
   return (
     <div ref={setNodeRef}>
-      <div className="flex-1 min-h-screen border-l border-r border-b border-custom-border/80 rounded-b-lg bg-custom-hover/20 p-2">
+      <div className="flex-1 border-l overflow-y-scroll scrollbar-thin  max-h-screen min-h-screen border-r border-b border-custom-border/80 rounded-b-lg p-2">
         <div className="space-y-3">
           {tickets.map((ticket) => (
             <TicketCard
@@ -81,7 +81,7 @@ export function TicketCard(props: ITicketCard) {
 
   return (
     <TicketDraggable id={ticket._id}>
-      <div className="group min-w-[340px] relative bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded-xl overflow-hidden transition-all duration-300 hover:border-[#3a3a3a] hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
+      <div className="group relative bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded-xl overflow-hidden transition-all duration-300 hover:border-[#3a3a3a] hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
         <div
           className={`h-1 w-full ${
             ticket.stage === 'parked'

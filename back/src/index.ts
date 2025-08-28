@@ -9,11 +9,24 @@ import apiRouter from './routes/app.routes';
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const DB_URI = process.env.DB_CONNECTION_KEY;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:3001',
+      'http://localhost:3000',
+      'http://127.0.0.1:5173',
+      'https://stack-gules-five.vercel.app',
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 app.use(express.json());
 app.use('/api', apiRouter);
 
