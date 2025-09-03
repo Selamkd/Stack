@@ -14,28 +14,6 @@ export default function ProjectBoard() {
   const [ticketId, setTicketId] = useState<string | null>(null);
   const STAGES = ['parked', 'backlog', 'development', 'done'];
 
-  const [ticketsWithStages, setTicketsWithStages] = useState<
-    Record<string, ITicket[]>
-  >({});
-
-  useEffect(() => {
-    const mapTickets: Record<string, ITicket[]> = {};
-    setTicketsWithStages(() => {
-      STAGES.forEach((stage) => {
-        mapTickets[stage] = [];
-      });
-
-      filtered.forEach((ticket) => {
-        const key = ticket.stage;
-        if (mapTickets[key]) {
-          mapTickets[key].push(ticket);
-        }
-      });
-
-      return mapTickets;
-    });
-  }, [tickets]);
-
   useEffect(() => {
     getTickets();
   }, []);
@@ -81,6 +59,14 @@ export default function ProjectBoard() {
 
     return matchesSearch;
   });
+
+  const ticketsByStage: Record<string, ITicket[]> = STAGES.reduce(
+    (acc, stage) => {
+      acc[stage] = filtered.filter((ticket) => ticket.stage === stage);
+      return acc;
+    },
+    {} as Record<string, ITicket[]>
+  );
 
   function handleAddnrefresh() {
     getTickets();
@@ -140,7 +126,7 @@ export default function ProjectBoard() {
               </header>
 
               <TicketDroppable
-                tickets={ticketsWithStages[stage] || []}
+                tickets={ticketsByStage[stage] || []}
                 refresh={getTickets}
                 column={stage}
                 handleEdit={handleEdit}
