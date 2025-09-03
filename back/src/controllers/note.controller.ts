@@ -52,10 +52,32 @@ export const upsertNote = async (req: Request, res: Response) => {
   try {
     const { _id, title, content, tags, isStarred, category } = req.body;
 
+    let contentString: string;
+    if (typeof content === 'object') {
+      contentString = JSON.stringify(content);
+    } else if (typeof content === 'string') {
+      contentString = content;
+    } else {
+      contentString = JSON.stringify({
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [{ type: 'text', text: '' }],
+          },
+        ],
+      });
+    }
+
     if (_id !== 'new') {
       const updatedNote = await Note.findByIdAndUpdate(
         _id,
-        { $set: req.body },
+        {
+          $set: {
+            title: title ? title : 'Untitled Note',
+            content: contentString,
+          },
+        },
         { new: true, runValidators: true }
       );
 
@@ -68,24 +90,25 @@ export const upsertNote = async (req: Request, res: Response) => {
       logger.info('Note updated successfully:', _id);
       res.status(200).json(updatedNote);
     } else {
-      if (!title || !content) {
+      if (!title || !contentString) {
         logger.warn('Missing required fields for note creation');
         res.status(400).json({ message: 'Title and content are required' });
         return;
       }
 
       const newNote = new Note({
-        title,
-        content,
+        title: title ? title : 'Untitled Note',
+        content: contentString,
+        tags,
+        isStarred,
+        category,
       });
 
       const savedNote = await newNote.save();
-
       res.status(201).json(savedNote);
     }
   } catch (error) {
     logger.error('Error creating/updating note:', error);
-
     res.status(500).json({ message: 'Error creating/updating note', error });
   }
 };
