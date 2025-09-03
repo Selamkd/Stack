@@ -15,6 +15,7 @@ interface ITicketDroppable {
 }
 export default function TicketDroppable(props: ITicketDroppable) {
   const { tickets, refresh, handleEdit } = props;
+
   const { setNodeRef } = useDroppable({
     id: `ticket-droppable${props.column}`,
     data: {
@@ -23,18 +24,19 @@ export default function TicketDroppable(props: ITicketDroppable) {
   });
 
   return (
-    <div ref={setNodeRef}>
-      <div className="flex-1 min-h-screen border-l border-r border-b border-custom-border/80 rounded-b-lg bg-custom-hover/20 p-2">
-        <div className="space-y-3">
-          {tickets.map((ticket) => (
-            <TicketCard
-              key={ticket._id}
-              ticket={ticket}
-              refresh={refresh}
-              handleEdit={handleEdit}
-            />
-          ))}
-        </div>
+    <div
+      ref={setNodeRef}
+      className="flex-1 overflow-y-scroll scrollbar-thin max-h-screen min-h-screen border-r border-l border-b border-custom-border/80 rounded-b-lg p-2"
+    >
+      <div className="space-y-3">
+        {tickets.map((ticket) => (
+          <TicketCard
+            key={ticket._id}
+            ticket={ticket}
+            refresh={refresh}
+            handleEdit={handleEdit}
+          />
+        ))}
       </div>
     </div>
   );

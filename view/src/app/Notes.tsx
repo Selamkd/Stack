@@ -2,14 +2,28 @@ import { useCallback, useEffect, useState } from 'react';
 import { INote } from '../../../back/src/models/note.model';
 import { TipTap } from '../components/TipTap';
 import APIService from '../service/api.service';
-import { Edit3, FileText, PlusSquareIcon, Search, Trash2 } from 'lucide-react';
+import {
+  Edit3,
+  FileText,
+  PlusIcon,
+  PlusSquareIcon,
+  Search,
+  Trash2,
+} from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
+import { defaultContent, NoteEditor } from '../components/NoteEditor';
 
 export default function Notes() {
   const [notes, setNotes] = useState<INote[] | null>(null);
   const [selectedNote, setSelectedNote] = useState<INote | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (!selectedNote && notes && notes.length > 0) {
+      setSelectedNote(notes[0]);
+    }
+  }, [notes]);
 
   const isSelected = (id: string) => selectedNote?._id === id;
 
@@ -19,7 +33,7 @@ export default function Notes() {
       const notesRes = await APIService.get('notes');
       setNotes(notesRes);
 
-      if (notes === null || notes.length <= 0) {
+      if (!selectedNote && notesRes.length > 0) {
         setSelectedNote(notesRes[0]);
       }
     } catch (error) {
@@ -66,10 +80,11 @@ export default function Notes() {
 
   async function createNewNote() {
     try {
+      const content = JSON.stringify(defaultContent);
       const newNote = await APIService.post('notes', {
         _id: 'new',
         title: 'Untitled Note',
-        content: '<p>Type here...</p>',
+        content: defaultContent,
       });
       setNotes((prev) => (prev ? [newNote, ...prev] : [newNote]));
       setSelectedNote(newNote);
@@ -78,11 +93,21 @@ export default function Notes() {
     }
   }
 
-  function handleDelete(id: string) {
+  async function handleDelete(id: string) {
     try {
-      APIService.delete(`notes/${id}`);
+      await APIService.delete(`notes/${id}`);
+
+      setNotes((prevNotes) => {
+        const updatedNotes = prevNotes?.filter((note) => note._id !== id) || [];
+
+        if (selectedNote?._id === id) {
+          setSelectedNote(updatedNotes.length > 0 ? updatedNotes[0] : null);
+        }
+
+        return updatedNotes;
+      });
     } catch (err) {
-      console.error('Error deleting a note');
+      console.error('Error deleting a note:', err);
     }
   }
 
@@ -99,10 +124,6 @@ export default function Notes() {
       <div className="flex h-screen border-r border-custom-border">
         <div className="w-80 border-r border-custom-border flex flex-col">
           <div className="mx-3 min-h-screen p-4 md:p-2 my-2 md:my-6">
-            <div className="flex flex-col mb-4">
-              <h1 className="text-3xl">Notes</h1>
-            </div>
-
             <div className="flex flex-col md:flex-row gap-4 mb-4">
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#404040]" />
@@ -121,7 +142,7 @@ export default function Notes() {
                 onClick={createNewNote}
                 className="flex items-center gap-2 px-4 py-2 bg-custom-surface hover:bg-custom-hover/20 hover:text-zinc- text-custom-text-400 rounded-lg transition-colors"
               >
-                <PlusSquareIcon className="w-4 h-4" />
+                <PlusIcon className="w-4 h-4" />
               </button>
             </div>
 
@@ -165,7 +186,6 @@ export default function Notes() {
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleDelete(note._id);
-                                  fetchNotes();
                                 }}
                                 className="p-2 rounded-lg transition-all duration-200 text-custom-text hover:text-red-400 hover:bg-red-400/20 border border-transparent hover:border-red-400/20"
                                 title="Delete note"
@@ -204,11 +224,9 @@ export default function Notes() {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {selectedNote ? (
             <>
-              {/* Note Header */}
               <div className="bg-custom-surface px-10 pt-10 border-custom-border p-6 w-full">
                 <input
                   type="text"
@@ -217,7 +235,11 @@ export default function Notes() {
                     setSelectedNote((prev) =>
                       prev ? { ...prev, title: e.target.value } : null
                     );
-                    debouncedSave();
+                    APIService.post('notes', {
+                      _id: selectedNote._id,
+                      title: e.target.value,
+                      content: selectedNote.content,
+                    });
                   }}
                   className="text-2xl font-bold bg-transparent text-white placeholder-zinc-500 focus:outline-none w-full"
                   placeholder="Note title..."
@@ -238,18 +260,16 @@ export default function Notes() {
                 </div>
               </div>
 
-              {/* Note Editor */}
               <div className="flex-1">
-                <TipTap
-                  key={selectedNote._id}
-                  initialContent={selectedNote.content}
-                  onUpdate={(content) => {
+                <NoteEditor
+                  noteId={selectedNote?._id}
+                  content={selectedNote.content}
+                  onContentChange={(newContent) => {
                     setSelectedNote((prev) =>
-                      prev ? { ...prev, content } : null
+                      prev ? { ...prev, content: newContent } : null
                     );
                     debouncedSave();
                   }}
-                  className="bg-custom-surface overflow-hidden shadow-xl w-full"
                 />
               </div>
             </>
