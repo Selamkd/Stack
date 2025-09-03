@@ -1,0 +1,308 @@
+/* NoteEditor Component Styles */
+
+/* Slash Command Menu */
+.note-editor-command {
+  z-index: 50;
+  height: auto;
+  max-height: 330px;
+  overflow-y: auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--custom-border, #242424);
+  background-color: var(--custom-surface, #141414);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: all 150ms ease;
+}
+
+.note-editor-command-list {
+  padding: 0.5rem;
+}
+
+.note-editor-command-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  font-size: 0.875rem;
+  color: white;
+  cursor: pointer;
+  transition: all 150ms ease;
+  border: 1px solid transparent;
+}
+
+.note-editor-command-item:hover {
+  background-color: var(--custom-hover, #404040);
+  background-color: color-mix(
+    in srgb,
+    var(--custom-hover, #404040) 20%,
+    transparent
+  );
+  color: white;
+  border-color: var(--custom-hover, #404040);
+  border-color: color-mix(
+    in srgb,
+    var(--custom-hover, #404040) 20%,
+    transparent
+  );
+}
+
+.note-editor-command-item[aria-selected='true'] {
+  background-color: var(--custom-hover, #404040);
+  background-color: color-mix(
+    in srgb,
+    var(--custom-hover, #404040) 30%,
+    transparent
+  );
+  color: white;
+}
+
+.note-editor-command-icon {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  border: 1px solid var(--custom-border, #242424);
+  background-color: var(--custom-surface, #141414);
+  background-color: color-mix(
+    in srgb,
+    var(--custom-surface, #141414) 50%,
+    transparent
+  );
+  color: var(--custom-text-400, #404040);
+}
+
+.note-editor-command-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.note-editor-command-title {
+  font-weight: 500;
+  color: white;
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-editor-command-description {
+  font-size: 0.75rem;
+  color: var(--custom-text-400, #404040);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 0.125rem;
+}
+
+/* Editor prose styling to match your theme */
+.prose.prose-invert {
+  color: white !important;
+  background-color: var(--custom-base, #0a0a0a) !important;
+}
+
+.prose.prose-invert h1,
+.prose.prose-invert h2,
+.prose.prose-invert h3,
+.prose.prose-invert h4,
+.prose.prose-invert h5,
+.prose.prose-invert h6 {
+  color: white !important;
+  font-weight: 600;
+}
+
+.prose.prose-invert h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  margin-top: 1.5rem;
+}
+
+.prose.prose-invert h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.prose.prose-invert h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.prose.prose-invert p {
+  color: white !important;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.prose.prose-invert strong {
+  color: white !important;
+  font-weight: 600;
+}
+
+.prose.prose-invert em {
+  color: #e4e4e7 !important;
+  font-style: italic;
+}
+
+.prose.prose-invert ul,
+.prose.prose-invert ol {
+  color: white !important;
+  margin-bottom: 1rem;
+}
+
+.prose.prose-invert li {
+  color: white !important;
+  margin-bottom: 0.25rem;
+}
+
+.prose.prose-invert blockquote {
+  border-left: 4px solid var(--custom-hover, #404040);
+  padding-left: 1rem;
+  color: #a1a1aa !important;
+  font-style: italic;
+  background-color: var(--custom-surface, #141414);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.prose.prose-invert code {
+  background-color: var(--custom-surface, #141414) !important;
+  color: #fbbf24 !important;
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  border: 1px solid var(--custom-border, #242424);
+}
+
+.prose.prose-invert pre {
+  background-color: var(--custom-surface, #141414) !important;
+  border: 1px solid var(--custom-border, #242424);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.prose.prose-invert pre code {
+  background-color: transparent !important;
+  border: none;
+  padding: 0;
+  color: white !important;
+}
+
+.prose.prose-invert a {
+  color: #60a5fa !important;
+  text-decoration: underline;
+  text-decoration-color: #60a5fa;
+}
+
+.prose.prose-invert a:hover {
+  color: #93c5fd !important;
+  text-decoration-color: #93c5fd;
+}
+
+.prose.prose-invert hr {
+  border-color: var(--custom-border, #242424) !important;
+  margin: 2rem 0;
+}
+
+/* Table styles */
+.prose.prose-invert table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  border: 1px solid var(--custom-border, #242424);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.prose.prose-invert th,
+.prose.prose-invert td {
+  border: 1px solid var(--custom-border, #242424);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.prose.prose-invert th {
+  background-color: var(--custom-surface, #141414);
+  font-weight: 600;
+  color: white !important;
+}
+
+.prose.prose-invert td {
+  color: white !important;
+}
+
+.prose.prose-invert tr:nth-child(even) {
+  background-color: var(--custom-surface, #141414);
+}
+
+/* Focus styles */
+.prose.prose-invert:focus,
+.prose.prose-invert:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Placeholder text */
+.prose.prose-invert .is-empty::before {
+  content: attr(data-placeholder);
+  color: var(--custom-text-400, #404040) !important;
+  pointer-events: none;
+  font-style: italic;
+}
+
+/* Selection styles */
+.prose.prose-invert ::selection {
+  background-color: #374151;
+  color: white;
+}
+
+/* Custom list markers */
+.prose.prose-invert ul > li::marker {
+  color: var(--custom-text-400, #404040);
+}
+
+.prose.prose-invert ol > li::marker {
+  color: var(--custom-text-400, #404040);
+}
+
+.prose.prose-invert input[type='checkbox'] {
+  accent-color: #ddd6fe;
+  margin-right: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .note-editor-command-item:hover {
+    background-color: rgba(64, 64, 64, 0.2);
+    border-color: rgba(64, 64, 64, 0.2);
+  }
+
+  .note-editor-command-item[aria-selected='true'] {
+    background-color: rgba(64, 64, 64, 0.3);
+  }
+
+  .note-editor-command-icon {
+    background-color: rgba(20, 20, 20, 0.5);
+  }
+
+  /* Bubble menu fallbacks */
+  .bubble-menu-item:hover {
+    background-color: rgba(64, 64, 64, 0.2);
+    border-color: rgba(64, 64, 64, 0.3);
+  }
+
+  .bubble-menu-item[data-active='true'] {
+    background-color: rgba(64, 64, 64, 0.3);
+  }
+}

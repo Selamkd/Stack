@@ -9,7 +9,6 @@ import {
 } from 'novel';
 
 // You can overwrite the placeholder with your own configuration
-const placeholder = Placeholder;
 
 const taskList = TaskList.configure({
   HTMLAttributes: {
@@ -75,7 +74,7 @@ function cx(...args: (string | false | null | undefined)[]): string {
 
 export const defaultExtensions = [
   starterKit,
-  placeholder,
+
   taskList,
   taskItem,
   horizontalRule,

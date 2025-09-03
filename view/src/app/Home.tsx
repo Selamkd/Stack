@@ -1,20 +1,15 @@
 import { Component, useEffect, useState } from 'react';
 import APIService from '../service/api.service';
-import {
-  BotMessageSquare,
-  Brain,
-  Forward,
-  Gavel,
-  TelescopeIcon,
-  Wand,
-  WandSparkles,
-} from 'lucide-react';
+import { BotMessageSquare, TelescopeIcon } from 'lucide-react';
 import QuickActions from '../components/QuickActions';
-import RecentActivity from '../components/RecentActivity';
+
 import { ITicket } from '../../../back/src/models/ticket.model';
-import { format } from 'date-fns';
+
 import CodewarsActivityCard from '../components/CodewarsActivity';
 import DailyTodos from '../components/DailyTodos';
+import SpotifyCurrentlyPlaying from '../components/Currently';
+import GitHubContributionGraph from '../components/GithubGraph';
+import { StickyNotes } from '../components/StickeyNotes';
 export interface IRecentActivity {
   id: string;
   type: 'note' | 'snippet' | 'ticket' | 'lookup';
@@ -130,9 +125,13 @@ export default function Dashboard() {
       <div className="grid grid-cols-1">
         <QuickActions />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <CodewarsActivityCard />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-8">
+        <StickyNotes />
+        <SpotifyCurrentlyPlaying />
+      </div>
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <DailyTodos />
+        <CodewarsActivityCard />
       </div>
     </main>
   );
