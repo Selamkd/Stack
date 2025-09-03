@@ -6,6 +6,8 @@ import {
 import APIService from '../service/api.service';
 import { ISlug } from '../../../back/src/models/slug.model';
 import { Activity, RedoDot, RotateCcw, Slack } from 'lucide-react';
+import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 
 const CODEWARS_BASE_API: string = 'https://www.codewars.com/api/v1';
 
@@ -20,11 +22,6 @@ function CodewarsActivityCard() {
   useEffect(() => {
     loadData();
   }, []);
-
-  const completedChallenges = useMemo(() => {
-    const completed = challenges?.filter((c) => c.completed === true);
-    return completed?.length;
-  }, [challenges]);
 
   async function loadData() {
     setLoading(true);
@@ -103,7 +100,7 @@ function CodewarsActivityCard() {
       {profile && (
         <ProfileSection
           profile={profile}
-          completed={completedChallenges || undefined}
+          challenges={challenges || undefined}
         />
       )}
 
@@ -115,7 +112,7 @@ function CodewarsActivityCard() {
             <div className="flex w-full justify-end">
               <div className="flex items-center gap-2">
                 <span
-                  className={`px-2 py-1 text-xs font-medium rounded border ${getRankColor(
+                  className={`px-2 py-1 text-xs font-medium rounded  ${getRankColor(
                     potd.rank?.color || 'grey'
                   )}`}
                 >
@@ -132,14 +129,34 @@ function CodewarsActivityCard() {
             </div>
 
             {potd.description && (
-              <div className="bg-custom-secondary rounded-lg p-4 border border-slate-700/30">
-                <h4 className="text-xl font-bold text-white leading-tight mb-3">
+              <>
+                <h4 className="text-xl font-bold mx-2 text-white leading-tight mb-3">
                   {potd.name}
                 </h4>
-                <p className="text-slate-300 text-sm leading-relaxed line-clamp-4">
-                  {potd.description.split('\\n')[0]}
-                </p>
-              </div>
+                <div className="bg-custom-secondary rounded-lg p-4 border border-slate-700/30">
+                  <SyntaxHighlighter
+                    language={'TypeScript'}
+                    style={tomorrow}
+                    customStyle={{
+                      margin: 0,
+
+                      background: 'transparent',
+                      fontSize: '0.875rem',
+                      lineHeight: '1.5',
+                      maxHeight: '200px',
+
+                      fontFamily:
+                        'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+                    }}
+                    editable={true}
+                    wrapLines={true}
+                    wrapLongLines={true}
+                    showLineNumbers={false}
+                  >
+                    {potd.description.split('\\n')[0]}
+                  </SyntaxHighlighter>
+                </div>
+              </>
             )}
           </div>
 
@@ -174,10 +191,15 @@ function CodewarsActivityCard() {
 
 interface IProfile {
   profile: IUserProfile;
-  completed: number | undefined;
+  challenges: ISlug[] | undefined;
 }
 function ProfileSection(props: IProfile) {
-  const { profile, completed } = props;
+  const { profile, challenges } = props;
+
+  const completed = useMemo(() => {
+    const completed = challenges?.filter((c) => c.completed === true);
+    return completed?.length;
+  }, [challenges]);
   return (
     <div className="relative z-10 mb-2">
       <div className="flex items-center justify-between mb-4">
@@ -211,7 +233,9 @@ function ProfileSection(props: IProfile) {
           </div>
           <div>
             <div className="text-1xl font-bold text-gray-400">
-              {`${completed}/100`}
+              {`${completed}/${
+                challenges !== undefined ? challenges.length : 0
+              }`}
             </div>
             <p className="text-xs text-slate-400">Completed</p>
           </div>
@@ -252,8 +276,8 @@ function LanguageBadges(props: ILanguage) {
 const getRankColor = (color: string | undefined): string => {
   const colorMap: Record<string, string> = {
     white: 'text-gray-100 bg-gray-700/30 border-gray-600',
-    yellow: 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30',
-    blue: 'text-blue-400 bg-blue-500/20 border-blue-500/30',
+    yellow: 'text-yellow-200/60 bg-yellow-300/20 border-yellow-500/20',
+    blue: 'text-blue-200/60 bg-blue-500/20 border-blue-200/30',
     purple: 'text-purple-400 bg-purple-500/20 border-purple-500/30',
     red: 'text-red-400 bg-red-500/20 border-red-500/30',
   };
@@ -262,10 +286,10 @@ const getRankColor = (color: string | undefined): string => {
 
 const getCategoryColor = (category: string | undefined): string => {
   const categoryMap: Record<string, string> = {
-    algorithms: 'text-emerald-400 bg-emerald-500/20',
-    fundamentals: 'text-blue-400 bg-blue-500/20',
-    bug_fixes: 'text-orange-400 bg-orange-500/20',
-    refactoring: 'text-purple-400 bg-purple-500/20',
+    algorithms: 'text-emerald-200/60 bg-emerald-500/20',
+    fundamentals: 'text-blue-200/60 bg-blue-500/20',
+    bug_fixes: 'text-orange-200/60 bg-orange-500/20',
+    refactoring: 'text-purple-200/60 bg-purple-200/60',
   };
   return categoryMap[category || ''] || 'text-gray-400 bg-gray-500/20';
 };

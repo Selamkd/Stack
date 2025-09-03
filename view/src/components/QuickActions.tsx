@@ -1,50 +1,137 @@
-import { CircleArrowOutUpRightIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import {
+  Github,
+  Globe,
+  MessageSquare,
+  Monitor,
+  Figma,
+  GitBranch,
+  Layers,
+  Database,
+  Zap,
+  ExternalLink,
+  Activity,
+  Search,
+  FileCode,
+  Lollipop,
+  Slack,
+  SatelliteDish,
+} from 'lucide-react';
 
-export default function QuickActions() {
-  const navigate = useNavigate();
+export default function ActiveLinks() {
+  const developerLinks = [
+    {
+      url: 'https://github.com',
+      icon: Github,
+      color: 'emerald',
+      bgColor: 'bg-zinc-800',
+      hoverBgColor: 'hover:bg-zinc-750',
+      border: 'border-zinc-700 hover:border-emerald-600',
+      iconColor: 'text-emerald-200/60',
+      hoverIconColor: 'group-hover/link:text-emerald-300/50',
+    },
+    {
+      url: 'http://localhost:5173/',
+      icon: SatelliteDish,
+
+      color: 'yellow',
+      bgColor: 'bg-zinc-800',
+      hoverBgColor: 'hover:bg-zinc-750',
+      border: 'border-zinc-700 hover:border-yellow-600',
+      iconColor: 'text-amber-200/40',
+    },
+    {
+      url: 'https://developer.mozilla.org/en-US/',
+      icon: FileCode,
+
+      color: 'orange',
+      bgColor: 'bg-zinc-800',
+      hoverBgColor: 'hover:bg-zinc-750',
+      border: 'border-zinc-700 hover:border-orange-600',
+      iconColor: 'text-indigo-300/60',
+    },
+    {
+      url: 'https://lucide.dev/icons/',
+      icon: Lollipop,
+
+      color: 'pink',
+      bgColor: 'glass-card',
+      hoverBgColor: 'hover:bg-zinc-750',
+      border: 'border-zinc-700 hover:border-pink-600',
+      iconColor: 'text-pink-200/60',
+    },
+
+    {
+      url: 'https://app.slack.com',
+      icon: Slack,
+
+      color: 'indigo',
+      bgColor: 'bg-zinc-800',
+      hoverBgColor: 'hover:bg-zinc-750',
+      border: 'border-zinc-700 hover:border-indigo-600',
+      iconColor: 'text-indigo-200/60',
+    },
+  ];
+
+  const handleLinkClick = (url: string) => {
+    if (url.startsWith('http') || url.startsWith('chrome://')) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
-    <div className="group mb-4 relative p-1  border-custom-border h-fit  to-transparent  rounded-xl  overflow-hidden hover:border-custome-border transition-all duration-300">
-      <div className="relative z-10">
-        <div className="grid grid-cols-4 gap-3">
-          <button
-            onClick={() => navigate('/project-board')}
-            className="flex w-full justify-between group/btn p-4 bg-custom-base hover:glass-card border border-custom-border rounded-lg transition-all text-left "
-          >
-            <p className="text-md font-lg  text-white">Notes</p>
-            <div className="p- bg-blue-200/15 rounded-lg border border-rose-200/25  h-fit mb-2  transition-colors">
-              <CircleArrowOutUpRightIcon className="w-4 h-4 text-rose-200/50" />
-            </div>
-          </button>
+    <div className="group mb-8 relative">
+      <div className="grid grid-cols-2 sm:grid-cols-7 gap-2">
+        {developerLinks.map((link) => {
+          const Icon = link.icon;
+          return (
+            <button
+              onClick={() => handleLinkClick(link.url)}
+              className={`
+                group/link relative py-3 max-w-[120px]
+        glass-card border
+                border-custom-border
+                rounded-xl
+               
+                shadow-sm hover:shadow-md hover:shadow-black/20
+                text-center
+              
+              `}
+            >
+              <div className="relative z-10 space-y-3">
+                <div
+                  className={`
+                  inline-flex items-center justify-center w-10 h-10 
+                  rounded-lg
 
-          <button
-            onClick={() => navigate('/snippets')}
-            className="flex w-full justify-between  group/btn p-4 bg-custom-base hover:glass-card border border-custom-border rounded-lg transition-all text-left"
-          >
-            <p className="text-sm font-medium text-white">Snippets</p>
-
-            <CircleArrowOutUpRightIcon className="w-4 h-4 text-lime-200/50" />
-          </button>
-
-          <button
-            onClick={() => navigate('/project-board')}
-            className="flex w-full justify-between group/btn p-4 bg-custom-base hover:glass-card border border-custom-border rounded-lg transition-all text-left "
-          >
-            <p className="text-sm font-medium text-white">Ticket Board</p>
-
-            <CircleArrowOutUpRightIcon className="w-4 h-4 text-amber-200/50" />
-          </button>
-
-          <button
-            onClick={() => navigate('/lookups')}
-            className="flex w-full justify-between group/btn p-4 bg-custom-base hover:glass-card border border-custom-border rounded-lg transition-all text-left"
-          >
-            <p className="text-sm font-medium text-white">Quick Lookups</p>
-
-            <CircleArrowOutUpRightIcon className="w-4 h-4 text-purple-200/50" />
-          </button>
-        </div>
+                   border-zinc-800 group-hover/link:border-zinc-600
+                  transition-all duration-200
+                `}
+                >
+                  <Icon
+                    className={`w-6 h-6 ${link.iconColor} ${link.hoverIconColor} transition-colors duration-200`}
+                  />
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
+
+      <button
+        className="
+        flex mx-auto justify-center items-center
+        mt-4 w-full p-3 
+        bg-zinc-800 hover:bg-zinc-750
+        border border-zinc-700 hover:border-zinc-600
+        text-zinc-400 hover:text-zinc-300
+        rounded-lg transition-all duration-200
+        text-sm font-medium
+        shadow-sm hover:shadow-md hover:shadow-black/10
+      "
+      >
+        <Search className="w-4 h-4 mr-2" />
+        Lookups
+      </button>
     </div>
   );
 }

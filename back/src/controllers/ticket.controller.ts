@@ -45,7 +45,7 @@ export const upsertTicket = async (req: Request, res: Response) => {
       return;
     }
 
-    if (_id) {
+    if (_id !== 'new') {
       const updatedTicket = await Ticket.findByIdAndUpdate(
         _id,
         { $set: req.body },

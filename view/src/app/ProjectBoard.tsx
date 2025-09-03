@@ -11,29 +11,8 @@ export default function ProjectBoard() {
   const [search, setSearch] = useState('');
   const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
+  const [ticketId, setTicketId] = useState<string | null>(null);
   const STAGES = ['parked', 'backlog', 'development', 'done'];
-
-  const [ticketsWithStages, setTicketsWithStages] = useState<
-    Record<string, ITicket[]>
-  >({});
-
-  useEffect(() => {
-    const mapTickets: Record<string, ITicket[]> = {};
-    setTicketsWithStages(() => {
-      STAGES.forEach((stage) => {
-        mapTickets[stage] = [];
-      });
-
-      filtered.forEach((ticket) => {
-        const key = ticket.stage;
-        if (mapTickets[key]) {
-          mapTickets[key].push(ticket);
-        }
-      });
-
-      return mapTickets;
-    });
-  }, [tickets]);
 
   useEffect(() => {
     getTickets();
@@ -81,17 +60,26 @@ export default function ProjectBoard() {
     return matchesSearch;
   });
 
+  const ticketsByStage: Record<string, ITicket[]> = STAGES.reduce(
+    (acc, stage) => {
+      acc[stage] = filtered.filter((ticket) => ticket.stage === stage);
+      return acc;
+    },
+    {} as Record<string, ITicket[]>
+  );
+
   function handleAddnrefresh() {
     getTickets();
     setTicketModalOpen(false);
   }
-  function handleEdit() {
+  function handleEdit(id: string) {
     setTicketModalOpen(true);
+    setTicketId(id);
   }
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <main className=" mx-5 min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
+      <main className=" mx-5 min-h-screen p-4 md:p-4 my-2 md:my-6 rounded-lg">
         <div className="flex flex-col mb-4">
           <h1 className="text-3xl">Project Tracker Board</h1>
         </div>
@@ -129,7 +117,7 @@ export default function ProjectBoard() {
             )}
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {' '}
           {STAGES.map((stage) => (
             <div className="flex flex-col">
@@ -138,7 +126,7 @@ export default function ProjectBoard() {
               </header>
 
               <TicketDroppable
-                tickets={ticketsWithStages[stage] || []}
+                tickets={ticketsByStage[stage] || []}
                 refresh={getTickets}
                 column={stage}
                 handleEdit={handleEdit}
@@ -146,7 +134,11 @@ export default function ProjectBoard() {
             </div>
           ))}
         </div>
-        <AddTicketModal isOpen={ticketModalOpen} onClose={handleAddnrefresh} />
+        <AddTicketModal
+          isOpen={ticketModalOpen}
+          onClose={handleAddnrefresh}
+          ticketId={ticketId}
+        />
       </main>
     </DndContext>
   );

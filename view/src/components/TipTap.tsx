@@ -1,10 +1,10 @@
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Highlight from '@tiptap/extension-highlight';
-import { InnerEditorUI } from './InnerEditor';
+
 import { BulletList, ListItem } from '@tiptap/extension-list';
 
-const extensions = [StarterKit, Highlight, BulletList, ListItem];
+const extensions = [StarterKit, Highlight];
 const content = '<p>Type here....</p>';
 
 interface ITipTap {
@@ -48,9 +48,7 @@ export function TipTap(props: ITipTap) {
         }}
         autofocus={'start'}
         injectCSS={false}
-      >
-        <InnerEditorUI />
-      </EditorProvider>
+      ></EditorProvider>
     </div>
   );
 }
