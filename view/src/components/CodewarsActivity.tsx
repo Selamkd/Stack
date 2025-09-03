@@ -21,11 +21,6 @@ function CodewarsActivityCard() {
     loadData();
   }, []);
 
-  const completedChallenges = useMemo(() => {
-    const completed = challenges?.filter((c) => c.completed === true);
-    return completed?.length;
-  }, [challenges]);
-
   async function loadData() {
     setLoading(true);
     try {
@@ -103,7 +98,7 @@ function CodewarsActivityCard() {
       {profile && (
         <ProfileSection
           profile={profile}
-          completed={completedChallenges || undefined}
+          challenges={challenges || undefined}
         />
       )}
 
@@ -174,10 +169,15 @@ function CodewarsActivityCard() {
 
 interface IProfile {
   profile: IUserProfile;
-  completed: number | undefined;
+  challenges: ISlug[] | undefined;
 }
 function ProfileSection(props: IProfile) {
-  const { profile, completed } = props;
+  const { profile, challenges } = props;
+
+  const completed = useMemo(() => {
+    const completed = challenges?.filter((c) => c.completed === true);
+    return completed?.length;
+  }, [challenges]);
   return (
     <div className="relative z-10 mb-2">
       <div className="flex items-center justify-between mb-4">
@@ -211,7 +211,9 @@ function ProfileSection(props: IProfile) {
           </div>
           <div>
             <div className="text-1xl font-bold text-gray-400">
-              {`${completed}/100`}
+              {`${completed}/${
+                challenges !== undefined ? challenges.length : 0
+              }`}
             </div>
             <p className="text-xs text-slate-400">Completed</p>
           </div>

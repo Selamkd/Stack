@@ -1,14 +1,13 @@
 import { Component, useEffect, useState } from 'react';
 import APIService from '../service/api.service';
 import {
-  FileText,
-  Code,
-  Ticket,
-  Search,
-  Clock,
-  Activity,
-  Command,
-  ComponentIcon,
+  BotMessageSquare,
+  Brain,
+  Forward,
+  Gavel,
+  TelescopeIcon,
+  Wand,
+  WandSparkles,
 } from 'lucide-react';
 import QuickActions from '../components/QuickActions';
 import RecentActivity from '../components/RecentActivity';
@@ -99,20 +98,8 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="mx-5 min-h-screen p-4 md:p-6 my-2 md:my-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-zinc-400">{format(new Date(), 'PPP')}</p>
-        </div>
-        <div className="flex items-center gap-2 mt-4 md:mt-0">
-          <span className="text-sm text-zinc-500">
-            Last updated: {new Date().toLocaleTimeString()}
-          </span>
-        </div>
-      </div>
-
-      <div className="group relative border border-custom-border  bg-gradient-to-br from-blue-200/5 to-transparent  rounded-xl p-6 overflow-hidden transition-all duration-300 mb-8">
+    <main className="mx-5 min-h-screen p-4 md:p-6 ">
+      <div className="group relative border border-custom-border  bg-gradient-to-br from-blue-200/5 to-transparent  rounded-xl p-8 overflow-hidden transition-all duration-300 mb-8">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-200/5 to-transparen transition-opacity duration-300"></div>
 
         <div className="relative z-10">
@@ -121,64 +108,21 @@ export default function Dashboard() {
           <div className="space-y-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Command className="h-5 w-5 text-zinc-400" />
+                <BotMessageSquare className="h-5 w-5 text-zinc-400" />
               </div>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search across all your content..."
+                placeholder="Looking for a snippet, doc, or fix?"
                 className="w-full pl-12 pr-24 py-3 bg-custom-base border border-custom-border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-lime-200/10 focus:border-lime-200/10"
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
               <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
                 <button onClick={handleSearch}>
-                  <Search />
+                  <TelescopeIcon className=" h-5 w-5 text-zinc-400" />
                 </button>
               </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {[
-                {
-                  key: 'all',
-                  label: 'All',
-                  icon: ComponentIcon,
-                },
-                {
-                  key: 'notes',
-                  label: 'Notes',
-                  icon: FileText,
-                },
-                {
-                  key: 'snippets',
-                  label: 'Code',
-                  icon: Code,
-                },
-                {
-                  key: 'tickets',
-                  label: 'Tickets',
-                  icon: Ticket,
-                },
-                {
-                  key: 'lookups',
-                  label: 'Lookups',
-                  icon: Search,
-                },
-              ].map(({ key, label, icon: Icon }) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedFilter(key)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
-                    selectedFilter === key
-                      ? `bg-[#242424]  border border-lime-200/30 text-lime-200 `
-                      : 'bg-custom-base text-zinc-300 border border-custom-border hover:bg-custom-hover hover:border-zinc-600'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </button>
-              ))}
             </div>
           </div>
         </div>

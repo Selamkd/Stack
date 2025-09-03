@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import APIService from '../service/api.service';
 import { X } from 'lucide-react';
+import { ITicket } from '../../../back/src/models/ticket.model';
 
 interface ITicketFormModal {
   isOpen: boolean;
   onClose: () => void;
+  ticketId: string | null;
 }
 export default function AddTicketModal(props: ITicketFormModal) {
-  const { isOpen, onClose } = props;
+  const { isOpen, onClose, ticketId } = props;
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -15,7 +17,35 @@ export default function AddTicketModal(props: ITicketFormModal) {
   const [stage, setStage] = useState<
     'backlog' | 'development' | 'done' | 'parked'
   >('backlog');
+  const [ticket, setTicket] = useState<ITicket>();
 
+  useEffect(() => {
+    async function fetchTicket() {
+      if (ticketId) {
+        const res = await APIService.get(`tickets/${ticketId}`);
+        setTicket(res);
+        setTitle(res.title);
+        setCategory(res.category);
+        setDescription(res.description);
+        setStage(res.stage);
+      } else {
+        setTitle('');
+        setCategory('');
+        setDescription('');
+        setStage('backlog');
+      }
+    }
+
+    fetchTicket();
+  }, [ticketId]);
+
+  async function fetchTicket() {
+    if (ticketId) {
+      const res = await APIService.get(`tickets/${ticketId}`);
+
+      setTicket(res);
+    }
+  }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
@@ -25,8 +55,6 @@ export default function AddTicketModal(props: ITicketFormModal) {
         category: category.trim(),
         stage,
       });
-
-      console.log(res);
 
       setTitle('');
       setDescription('');

@@ -11,7 +11,7 @@ interface ITicketDroppable {
   column: string;
 
   refresh: () => void;
-  handleEdit: () => void;
+  handleEdit: (id: string) => void;
 }
 export default function TicketDroppable(props: ITicketDroppable) {
   const { tickets, refresh, handleEdit } = props;
@@ -24,7 +24,7 @@ export default function TicketDroppable(props: ITicketDroppable) {
 
   return (
     <div ref={setNodeRef}>
-      <div className="flex-1 border-l overflow-y-scroll scrollbar-thin  max-h-screen min-h-screen border-r border-b border-custom-border/80 rounded-b-lg p-2">
+      <div className="flex-1 min-h-screen border-l border-r border-b border-custom-border/80 rounded-b-lg bg-custom-hover/20 p-2">
         <div className="space-y-3">
           {tickets.map((ticket) => (
             <TicketCard
@@ -43,7 +43,7 @@ interface ITicketCard {
   ticket: ITicket;
 
   refresh?: () => void;
-  handleEdit: () => void;
+  handleEdit: (id: string) => void;
 }
 
 export function TicketCard(props: ITicketCard) {
@@ -131,7 +131,7 @@ export function TicketCard(props: ITicketCard) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleEdit();
+                  handleEdit(ticket?._id);
                 }}
                 className="p-2 rounded-lg transition-all duration-200 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 border border-transparent hover:border-blue-400/20"
                 title="Edit ticket"
