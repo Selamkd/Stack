@@ -80,7 +80,7 @@ export default function ActiveLinks() {
 
   return (
     <div className="group mb-8 relative">
-      <div className="grid grid-cols-2 sm:grid-cols-7 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-7 gap-2 max-w-3xl xl:max-w-4xl">
         {developerLinks.map((link) => {
           const Icon = link.icon;
           return (

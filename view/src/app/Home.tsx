@@ -130,8 +130,8 @@ export default function Dashboard() {
         <SpotifyCurrentlyPlaying />
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <DailyTodos />
         <CodewarsActivityCard />
+        <DailyTodos />
       </div>
     </main>
   );

@@ -50,6 +50,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
     e.preventDefault();
     try {
       const res = await APIService.post('tickets', {
+        _id: 'new',
         title: title.trim(),
         description: description.trim(),
         category: category.trim(),

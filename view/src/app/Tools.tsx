@@ -1,28 +1,27 @@
 import {
-  FileCode,
   FileDown,
-  Github,
-  Lollipop,
   MapPinHouse,
   Palette,
-  SatelliteDish,
-  Slack,
   SquareTerminal,
   TextQuote,
 } from 'lucide-react';
 
+interface ITool {
+  url: string;
+  name: string;
+  icon: any;
+  description: string;
+  iconColor: string;
+  hoverIconColor: string;
+}
 export default function Tools() {
-  const tools = [
+  const tools: ITool[] = [
     {
       url: 'https://github.com',
       name: 'Tailwind Color → HEX',
       icon: Palette,
       description:
         'Convert Tailwind CSS classes to HEX values or find the closest Tailwind color for any HEX input.',
-      color: 'emerald',
-      bgColor: 'bg-zinc-800',
-      hoverBgColor: 'hover:bg-zinc-750',
-      border: 'border-zinc-700 hover:border-emerald-600',
       iconColor: 'text-emerald-200/60',
       hoverIconColor: 'group-hover/link:text-emerald-300/50',
     },
@@ -31,10 +30,7 @@ export default function Tools() {
       icon: TextQuote,
       name: 'Lorem Ipsum Generator',
       description: 'Generate placeholder text for layouts.',
-      color: 'yellow',
-      bgColor: 'bg-zinc-800',
-      hoverBgColor: 'hover:bg-zinc-750',
-      border: 'border-zinc-700 hover:border-yellow-600',
+      hoverIconColor: 'group-hover/link:text-amber-300/50',
       iconColor: 'text-amber-200/40',
     },
     {
@@ -42,22 +38,8 @@ export default function Tools() {
       icon: FileDown,
       name: 'Sample PDF Generator',
       description: 'Create downloadable sample PDFs for testing.',
-      color: 'orange',
-      bgColor: 'bg-zinc-800',
-      hoverBgColor: 'hover:bg-zinc-750',
-      border: 'border-zinc-700 hover:border-orange-600',
+      hoverIconColor: 'group-hover/link:text-emerald-300/50',
       iconColor: 'text-rose-400/50',
-    },
-    {
-      url: 'https://lucide.dev/icons/',
-      icon: MapPinHouse,
-      name: 'Find my IP Address',
-      description: 'Get current IP address.',
-      color: 'pink',
-      bgColor: 'glass-card',
-      hoverBgColor: 'hover:bg-zinc-750',
-      border: 'border-zinc-700 hover:border-pink-600',
-      iconColor: 'text-pink-200/60',
     },
     {
       url: 'https://app.slack.com',
@@ -65,11 +47,16 @@ export default function Tools() {
       name: 'Daily Shortcuts',
       description:
         'Access a curated list of productivity shortcuts and command references.',
-      color: 'indigo',
-      bgColor: 'bg-zinc-800',
-      hoverBgColor: 'hover:bg-zinc-750',
-      border: 'border-zinc-700 hover:border-indigo-600',
+      hoverIconColor: 'group-hover/link:text-emerald-300/50',
       iconColor: 'text-indigo-200/60',
+    },
+    {
+      url: 'https://lucide.dev/icons/',
+      icon: MapPinHouse,
+      name: 'Find my IP Address',
+      description: 'Get current IP address.',
+      hoverIconColor: 'group-hover/link:text-emerald-300/50',
+      iconColor: 'text-pink-200/60',
     },
   ];
 
@@ -79,7 +66,7 @@ export default function Tools() {
         <h1 className="text-3xl">Tools</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 xl:grid-cols-3 max-w-3xl mx-auto mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 xl:grid-cols-3 lg:gap-8 max-w-3xl xl:max-w-6xl mx-auto mt-6">
         {tools.map((tool) => (
           <SnippetCard tool={tool} />
         ))}
@@ -88,10 +75,10 @@ export default function Tools() {
   );
 }
 
-export function SnippetCard({ tool }: any) {
+export function SnippetCard({ tool }: { tool: ITool }) {
   const Icon = tool.icon;
   return (
-    <section className="border   w-[350px] flex flex-col justify-between items-center border-[#242424] bg-custom-surface rounded-lg overflow-hidden hover:border-custom-hover transition-all pt-10 ">
+    <section className="border cursor-pointer hover:scale-105 w-[350px] flex flex-col justify-between items-center border-[#242424] bg-custom-surface rounded-lg overflow-hidden hover:border-custom-hover transition-all pt-10 ">
       <div className="">
         <Icon
           className={`w-[100px] h-[100px] ${tool.iconColor} ${tool.hoverIconColor} transition-colors duration-200`}
