@@ -6,7 +6,10 @@ import {
 import APIService from '../service/api.service';
 import { ISlug } from '../../../back/src/models/slug.model';
 import { Activity, RedoDot, RotateCcw, Slack } from 'lucide-react';
-import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {
+  nord,
+  solarizedDark,
+} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
 const CODEWARS_BASE_API: string = 'https://www.codewars.com/api/v1';
@@ -136,10 +139,10 @@ function CodewarsActivityCard() {
                 <div className="bg-custom-secondary rounded-lg p-4 border border-slate-700/30">
                   <SyntaxHighlighter
                     language={'TypeScript'}
-                    style={tomorrow}
+                    style={nord}
                     customStyle={{
                       margin: 0,
-
+                      color: '#e4e4e7',
                       background: 'transparent',
                       fontSize: '0.875rem',
                       lineHeight: '1.5',

@@ -18,7 +18,7 @@ export const StickyNotes: React.FC = () => {
   const chalkColors: ChalkColor[] = [
     {
       name: 'chalk-white',
-      color: '#e4e4e790',
+      color: '#e4e4e7',
     },
     {
       name: 'chalk-emerald',

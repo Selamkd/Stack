@@ -16,6 +16,7 @@ import ViewNote from './app/ViewNote';
 
 import Home from './app/Home';
 import ProjectBoard from './app/ProjectBoard';
+import Tools from './app/Tools';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -29,11 +30,9 @@ root.render(
         <Route path="notes" element={<Notes />} />
         <Route path="note/:id" element={<ViewNote />} />
         <Route path="snippets" element={<Snippets />} />
-
         <Route path="lookups" element={<Lookups />} />
-
         <Route path="project-board" element={<ProjectBoard />} />
-
+        <Route path="tools" element={<Tools />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/notes/new" element={<ManageNote />} />
         <Route path="/admin/notes/:id" element={<ManageNote />} />
