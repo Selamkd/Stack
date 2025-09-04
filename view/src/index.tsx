@@ -17,6 +17,7 @@ import ViewNote from './app/ViewNote';
 import Home from './app/Home';
 import ProjectBoard from './app/ProjectBoard';
 import Tools from './app/Tools';
+import TextGenerator from './app/tools/TextGenerator';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -33,6 +34,7 @@ root.render(
         <Route path="lookups" element={<Lookups />} />
         <Route path="project-board" element={<ProjectBoard />} />
         <Route path="tools" element={<Tools />} />
+        <Route path="tools/text-generator" element={<TextGenerator />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/notes/new" element={<ManageNote />} />
         <Route path="/admin/notes/:id" element={<ManageNote />} />

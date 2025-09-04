@@ -5,6 +5,7 @@ import {
   SquareTerminal,
   TextQuote,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface ITool {
   url: string;
@@ -17,7 +18,7 @@ interface ITool {
 export default function Tools() {
   const tools: ITool[] = [
     {
-      url: 'https://github.com',
+      url: '/text-generator',
       name: 'Tailwind Color → HEX',
       icon: Palette,
       description:
@@ -77,8 +78,12 @@ export default function Tools() {
 
 export function SnippetCard({ tool }: { tool: ITool }) {
   const Icon = tool.icon;
+  const navigate = useNavigate();
   return (
-    <section className="border cursor-pointer hover:scale-105 w-[350px] flex flex-col justify-between items-center border-[#242424] bg-custom-surface rounded-lg overflow-hidden hover:border-custom-hover transition-all pt-10 ">
+    <section
+      onClick={() => navigate(`/tools${tool.url}`)}
+      className="border cursor-pointer hover:scale-105 w-[350px] flex flex-col justify-between items-center border-[#242424] bg-custom-surface rounded-lg overflow-hidden hover:border-custom-hover transition-all pt-10 "
+    >
       <div className="">
         <Icon
           className={`w-[100px] h-[100px] ${tool.iconColor} ${tool.hoverIconColor} transition-colors duration-200`}
