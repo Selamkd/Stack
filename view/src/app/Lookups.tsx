@@ -2,6 +2,23 @@ import { Search, Copy, X, FileText, Code, Ticket } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { IQuickLookup } from '../../../back/src/models/quicklookup.model';
 import APIService from '../service/api.service';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+
+import {
+  a11yDark,
+  anOldHope,
+  atomOneDark,
+  atomOneDarkReasonable,
+  dracula,
+  nightOwl,
+  nord,
+  zenburn,
+} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {
+  duotoneDark,
+  duotoneEarth,
+  lucario,
+} from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function QuickLookup() {
   const [lookups, setLookups] = useState<IQuickLookup[]>([]);
@@ -75,7 +92,7 @@ export default function QuickLookup() {
 
   const commonOperators = filtered
     .reverse()
-    .slice(0, 60)
+    .slice(0, 100)
     .map((lookup) => ({
       symbol: lookup.title,
       name: lookup.title,
@@ -93,9 +110,9 @@ export default function QuickLookup() {
   }
 
   return (
-    <div className="min-h-screen bg-custom-base">
-      <main className="mx-5 min-h-[700px] p-4 md:px-6 my-2  flex flex-col items-center justify-center">
-        <div className="max-w-4xl mx-auto w-full">
+    <div className="min-h-screen">
+      <main className="mx-5 min-h-[900px] p-4 md:px-6 my-2  flex flex-col items-center justify-center">
+        <div className="max-w-4xl mx-auto w-full mt-20">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Quick Lookup</h1>
             <p className="text-zinc-400">
@@ -110,7 +127,7 @@ export default function QuickLookup() {
                 onClick={() => handleFilterChange(category)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
                   selectedFilter === category
-                    ? `bg-blue-400/5 border border-lime-200/30 text-lime-200 `
+                    ? `bg-blue-400/5 border border-emerald-200/30 text-emerald-200/80 `
                     : 'bg-custom-base text-zinc-300 border border-custom-border hover:bg-custom-hover hover:border-zinc-600'
                 }`}
               >
@@ -145,7 +162,7 @@ export default function QuickLookup() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h2 className="text-2xl font-bold text-white">
-                      <span className="text-lime-200/70">
+                      <span className="text-blue-200/80">
                         {selectedLookup.title}
                       </span>{' '}
                     </h2>
@@ -163,8 +180,28 @@ export default function QuickLookup() {
               </div>
 
               <div className="prose prose-invert max-w-none">
-                <div className="text-zinc-300 leading-relaxed whitespace-pre-wrap">
-                  {selectedLookup.answer}
+                <div className="text-zinc-400 leading-relaxed whitespace-pre-wrap">
+                  <SyntaxHighlighter
+                    language={'TypeScript'}
+                    style={nord}
+                    customStyle={{
+                      margin: 0,
+                      color: '#e4e4e7',
+                      background: 'transparent',
+                      fontSize: '0.875rem',
+                      lineHeight: '1.5',
+                      maxHeight: '600px',
+
+                      fontFamily:
+                        'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+                    }}
+                    editable={true}
+                    wrapLines={true}
+                    wrapLongLines={true}
+                    showLineNumbers={false}
+                  >
+                    {selectedLookup.answer.split('\\n')[0]}
+                  </SyntaxHighlighter>
                 </div>
               </div>
 
@@ -173,7 +210,7 @@ export default function QuickLookup() {
                   {selectedLookup.tags.map((tag) => (
                     <span
                       key={tag._id}
-                      className="px-3 py-1 bg-custom-surface/70 border border-custom-hover rounded-full text-xs text-zinc-400 hover:text-lime-200 hover:border-custom-hover transition-colors cursor-pointer"
+                      className="px-3 py-1 bg-custom-surface/70 border border-custom-hover rounded-full text-xs text-zinc-400 hover:text-emerald-200/60 hover:border-custom-hover transition-colors cursor-pointer"
                     >
                       {tag.name}
                     </span>
@@ -183,21 +220,23 @@ export default function QuickLookup() {
             </div>
           )}
 
-          <div className="mb-8">
-            <p className="text-zinc-400 mb-4 text-center">Or, pick one:</p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {commonOperators.map((op, index) => (
-                <button
-                  key={`${op.symbol}-${index}`}
-                  onClick={() => handleOperatorClick(op.symbol)}
-                  className="px-3 py-2 bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded text-zinc-300 hover:bg-[#242424] hover:border-lime-200/30 hover:text-lime-200 transition-all text-sm font-mono min-w-[3rem] text-center"
-                  title={op.name}
-                >
-                  {op.symbol}
-                </button>
-              ))}
+          {!selectedLookup && (
+            <div className="mb-8">
+              <p className="text-zinc-400 mb-4 text-center">Or, pick one:</p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {commonOperators.map((op, index) => (
+                  <button
+                    key={`${op.symbol}-${index}`}
+                    onClick={() => handleOperatorClick(op.symbol)}
+                    className="px-3 py-2 bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded text-zinc-300 hover:bg-[#242424] hover:border-blue-200/30 hover:text-blue-200 transition-all text-sm font-mono min-w-[3rem] text-center"
+                    title={op.name}
+                  >
+                    {op.symbol}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {search && !selectedLookup && (
             <div className="text-center border border-custom-border bg-custom-surface rounded-lg p-12">

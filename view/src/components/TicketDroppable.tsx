@@ -56,28 +56,13 @@ export function TicketCard(props: ITicketCard) {
     console.log('called');
     setIsDeleting(true);
     try {
-      APIService.delete(`ticket/${ticket?._id}`).then(() => {
+      APIService.delete(`tickets/${ticket?._id}`).then(() => {
         if (refresh) {
           refresh();
         }
       });
     } finally {
       setIsDeleting(false);
-    }
-  };
-
-  const getStageColor = (stage: string) => {
-    switch (stage) {
-      case 'parked':
-        return 'bg-gray-500/20 text-gray-300';
-      case 'backlog':
-        return 'bg-blue-500/20 text-blue-300';
-      case 'development':
-        return 'bg-yellow-500/20 text-yellow-300';
-      case 'done':
-        return 'bg-green-500/20 text-green-300';
-      default:
-        return 'bg-gray-500/20 text-gray-300';
     }
   };
 
@@ -89,27 +74,17 @@ export function TicketCard(props: ITicketCard) {
             ticket.stage === 'parked'
               ? 'bg-gray-500'
               : ticket.stage === 'backlog'
-              ? 'bg-blue-500/50'
+              ? 'bg-blue-300/50'
               : ticket.stage === 'development'
-              ? 'bg-yellow-500/50'
-              : 'bg-green-500/50'
+              ? 'bg-yellow-300/50'
+              : 'bg-green-300/50'
           }`}
         />
 
         <div className="p-5">
-          <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start justify-between mb-2">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-2">
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${getStageColor(
-                    ticket.stage
-                  )}`}
-                >
-                  {ticket.stage}
-                </span>
-              </div>
-
-              <h3 className="text-lg text-start mt-4 font-semibold text-white mb-2 break-words leading-tight group-hover:text-blue-100 transition-colors">
+              <h3 className="text-lg text-start mt-2 font-semibold text-white mb-2 break-words leading-tight group-hover:text-blue-100 transition-colors">
                 {ticket.title}
               </h3>
 

@@ -6,7 +6,10 @@ import {
 import APIService from '../service/api.service';
 import { ISlug } from '../../../back/src/models/slug.model';
 import { Activity, RedoDot, RotateCcw, Slack } from 'lucide-react';
-import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {
+  nord,
+  solarizedDark,
+} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
 const CODEWARS_BASE_API: string = 'https://www.codewars.com/api/v1';
@@ -94,7 +97,7 @@ function CodewarsActivityCard() {
   }
 
   return (
-    <div className="group relative border-custom-border cursor-pointer bg-gradient-to-br from-slate-200/5 to-transparent rounded-xl p-6 overflow-hidden hover:border-slate-400/30 transition-all duration-300">
+    <div className="group relative border-custom-border cursor-pointer blue-glass rounded-xl p-6 overflow-hidden hover:border-slate-400/30 transition-all duration-300">
       <div className="absolute inset-0 hover-glass "></div>
 
       {profile && (
@@ -136,10 +139,10 @@ function CodewarsActivityCard() {
                 <div className="bg-custom-secondary rounded-lg p-4 border border-slate-700/30">
                   <SyntaxHighlighter
                     language={'TypeScript'}
-                    style={tomorrow}
+                    style={nord}
                     customStyle={{
                       margin: 0,
-
+                      color: '#e4e4e7',
                       background: 'transparent',
                       fontSize: '0.875rem',
                       lineHeight: '1.5',
@@ -178,7 +181,14 @@ function CodewarsActivityCard() {
 
           <button
             onClick={handleChallengeClick}
-            className="btn-full"
+            className=" flex mx-auto justify-center items-center
+        mt-4 w-full p-3 
+        bg-lime-200/60 hover:bg-zinc-750
+        border border-zinc-700 hover:border-zinc-600
+        text-white hover:text-zinc-300
+        rounded-lg transition-all duration-200
+        text-sm font-medium
+        shadow-sm hover:shadow-md hover:shadow-black/10"
             type="button"
           >
             Start Challenge →

@@ -94,7 +94,7 @@ export default function Dashboard() {
 
   return (
     <main className="mx-5 min-h-screen p-4 md:p-6 ">
-      <div className="group relative border border-custom-border  bg-gradient-to-br from-blue-200/5 to-transparent  rounded-xl p-8 overflow-hidden transition-all duration-300 mb-8">
+      <div className="group relative border border-custom-border  blue-glass  rounded-xl p-8 overflow-hidden transition-all duration-300 mb-8">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-200/5 to-transparen transition-opacity duration-300"></div>
 
         <div className="relative z-10">
@@ -130,8 +130,8 @@ export default function Dashboard() {
         <SpotifyCurrentlyPlaying />
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <DailyTodos />
         <CodewarsActivityCard />
+        <DailyTodos />
       </div>
     </main>
   );

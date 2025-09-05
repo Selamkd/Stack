@@ -123,7 +123,7 @@ export default function DailyTodos({
   };
 
   return (
-    <div className="group relative border border-custom-border bg-custom-surface rounded-xl p-0 overflow-hidden transition-all duration-300 max-h-[600px]">
+    <div className="group relative border border-custom-border blue-glass rounded-xl p-0 overflow-hidden transition-all duration-300 max-h-[600px]">
       <div className="flex items-center gap-3 p-4 pb-3 border-b border-custom-border">
         <div className="flex items-center gap-2">
           <CheckSquare className="w-5 h-5 text-indigo-200/60" />
@@ -154,8 +154,6 @@ export default function DailyTodos({
           />
         </EditorRoot>
       </div>
-
-      <div className="p-3 border-t border-custom-border py-8 bg-custom-surface/50"></div>
     </div>
   );
 }

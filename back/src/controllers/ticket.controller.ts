@@ -54,7 +54,11 @@ export const upsertTicket = async (req: Request, res: Response) => {
       res.status(200).json(updatedTicket);
       return;
     } else {
-      const newTicket = new Ticket({ ...req.body });
+      const newTicket = new Ticket({
+        title: title,
+        description: description,
+        stage: stage,
+      });
       const savedTicket = await newTicket.save();
 
       logger.info('New ticket created successfully:', savedTicket._id);
