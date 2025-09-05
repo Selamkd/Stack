@@ -18,6 +18,8 @@ import Home from './app/Home';
 import ProjectBoard from './app/ProjectBoard';
 import Tools from './app/Tools';
 import TextGenerator from './app/tools/TextGenerator';
+import DailyShortcuts from './app/tools/Shortcuts';
+import PDFGenerator from './app/tools/PDFGenerator';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -35,6 +37,8 @@ root.render(
         <Route path="project-board" element={<ProjectBoard />} />
         <Route path="tools" element={<Tools />} />
         <Route path="tools/text-generator" element={<TextGenerator />} />
+        <Route path="tools/shortcuts" element={<DailyShortcuts />} />
+        <Route path="tools/pdf-generator" element={<PDFGenerator />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/notes/new" element={<ManageNote />} />
         <Route path="/admin/notes/:id" element={<ManageNote />} />

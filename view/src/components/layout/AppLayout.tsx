@@ -24,10 +24,10 @@ export default function AppLayout(props: { children: ReactNode }) {
   }
 
   return (
-    <div className="bg-custom-base min-h-screen text-zinc-200">
+    <div className="min-h-screen text-zinc-200">
       <Sidebar sidebarMode={sidebarMode} setSidebarMode={setSidebarMode} />
       <main
-        className={`flex-1 transition-all h-screen duration-300 ${
+        className={`flex-1 mt-10 transition-all h-screen duration-300 ${
           sidebarMode === 'expanded'
             ? 'ml-64'
             : sidebarMode === 'compact'
@@ -35,11 +35,11 @@ export default function AppLayout(props: { children: ReactNode }) {
             : 'ml-0'
         }`}
       >
-        <Header
+        {/* <Header
           scrolled={scrolled}
           sidebarMode={sidebarMode}
           activePage={getActivePage()}
-        />
+        /> */}
 
         {props?.children}
       </main>

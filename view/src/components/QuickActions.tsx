@@ -1,21 +1,4 @@
-import {
-  Github,
-  Globe,
-  MessageSquare,
-  Monitor,
-  Figma,
-  GitBranch,
-  Layers,
-  Database,
-  Zap,
-  ExternalLink,
-  Activity,
-  Search,
-  FileCode,
-  Lollipop,
-  Slack,
-  SatelliteDish,
-} from 'lucide-react';
+import { Github, FileCode, Lollipop, Slack, SatelliteDish } from 'lucide-react';
 
 export default function ActiveLinks() {
   const developerLinks = [
@@ -88,12 +71,12 @@ export default function ActiveLinks() {
               onClick={() => handleLinkClick(link.url)}
               className={`
                 group/link relative py-3 max-w-[120px]
-        glass-card border
+     blue-glass border
                 border-custom-border
                 rounded-xl
                
                 shadow-sm hover:shadow-md hover:shadow-black/20
-                text-center
+                text-center blue
               
               `}
             >
@@ -116,22 +99,6 @@ export default function ActiveLinks() {
           );
         })}
       </div>
-
-      <button
-        className="
-        flex mx-auto justify-center items-center
-        mt-4 w-full p-3 
-        bg-zinc-800 hover:bg-zinc-750
-        border border-zinc-700 hover:border-zinc-600
-        text-zinc-400 hover:text-zinc-300
-        rounded-lg transition-all duration-200
-        text-sm font-medium
-        shadow-sm hover:shadow-md hover:shadow-black/10
-      "
-      >
-        <Search className="w-4 h-4 mr-2" />
-        Lookups
-      </button>
     </div>
   );
 }

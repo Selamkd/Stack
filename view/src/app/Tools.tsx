@@ -27,7 +27,7 @@ export default function Tools() {
       hoverIconColor: 'group-hover/link:text-emerald-300/50',
     },
     {
-      url: 'http://localhost:5173/',
+      url: '/text-generator',
       icon: TextQuote,
       name: 'Lorem Ipsum Generator',
       description: 'Generate placeholder text for layouts.',
@@ -35,7 +35,7 @@ export default function Tools() {
       iconColor: 'text-amber-200/40',
     },
     {
-      url: 'https://developer.mozilla.org/en-US/',
+      url: '/pdf-generator',
       icon: FileDown,
       name: 'Sample PDF Generator',
       description: 'Create downloadable sample PDFs for testing.',
@@ -43,7 +43,7 @@ export default function Tools() {
       iconColor: 'text-rose-400/50',
     },
     {
-      url: 'https://app.slack.com',
+      url: '/shortcuts',
       icon: SquareTerminal,
       name: 'Daily Shortcuts',
       description:
@@ -82,7 +82,7 @@ export function SnippetCard({ tool }: { tool: ITool }) {
   return (
     <section
       onClick={() => navigate(`/tools${tool.url}`)}
-      className="border cursor-pointer hover:scale-105 w-[350px] flex flex-col justify-between items-center border-[#242424] bg-custom-surface rounded-lg overflow-hidden hover:border-custom-hover transition-all pt-10 "
+      className="border blue-glass cursor-pointer hover:scale-105 w-[350px] flex flex-col justify-between items-center border-[#242424] rounded-lg overflow-hidden hover:border-custom-hover transition-all pt-10 "
     >
       <div className="">
         <Icon

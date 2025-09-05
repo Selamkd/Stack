@@ -12,7 +12,7 @@ export default function Header(props: IHeader) {
   const navigate = useNavigate();
   return (
     <header
-      className={`sticky top-0 z-10 w-full bg-[#0A0A0A]/90 backdrop-blur-sm border-b border-[#1A1A1A] transition-all ${
+      className={`sticky top-0 z-10 w-full blue-gbackdrop-blur-sm border-b border-[#1A1A1A] transition-all ${
         props?.scrolled ? 'py-2' : 'py-3.5'
       }`}
     >

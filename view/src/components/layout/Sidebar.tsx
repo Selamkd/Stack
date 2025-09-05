@@ -46,7 +46,7 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 bg-gradient-to-b from-zinc-900/95 to-black/95 backdrop-blur-xl border-r border-zinc-800/50 z-50 transition-all duration-300 ease-in-out ${
+      className={`fixed inset-y-0 left-0 blue-glass backdrop-blur-xl border-r border-zinc-800/50 z-50 transition-all duration-300 ease-in-out ${
         sidebarMode === 'expanded'
           ? 'w-64'
           : sidebarMode === 'compact'

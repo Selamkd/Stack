@@ -197,23 +197,15 @@ export function SnippetCard(props: ISnippetCard) {
   };
 
   return (
-    <section className="border border-[#242424] bg-custom-surface rounded-md overflow-hidden hover:border-custom-hover transition-all">
+    <section className="border border-[#242424] blue-glass bg-custom-surface rounded-md overflow-hidden hover:border-custom-hover transition-all">
       <div className="p-4">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-medium text-white mb-1 break-words">
-              {snippet.title}
-            </h3>
-            <p className="text-sm text-zinc-400 break-words">
-              {snippet.description}
-            </p>
-          </div>
+        <div className="flex items-start justify-end mb-3">
           <div className="flex items-center gap-2 ml-4 flex-shrink-0">
             <button
               onClick={() => bookmarkSnippet()}
               className={`p-2 rounded-lg transition-all duration-200 ${
                 snippet.isStarred
-                  ? 'text-lime-200/40 hover:text-lime-200 hover:bg-lime-400/20'
+                  ? 'text-rose-300/60 hover:text-rose-400 hover:bg-rose-400/20'
                   : 'text-custom-text hover:text-white hover:bg-[#242424]border border-transparent'
               }`}
             >
@@ -265,7 +257,9 @@ export function SnippetCard(props: ISnippetCard) {
             <Copy className="w-4 h-4" />
           </button>
         </div>
-
+        <h3 className="text-sm font-medium text-gray-400 mb-1 break-words">
+          ====== {snippet.title} =======
+        </h3>
         <div className="flex flex-wrap items-center gap-2 mb-3">
           {snippet.tags &&
             snippet.tags.map((tag) => {

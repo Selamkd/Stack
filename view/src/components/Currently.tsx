@@ -162,7 +162,7 @@ const SpotifyCurrentlyPlaying = () => {
   );
 
   return (
-    <div className="bg-zinc-900/50 relative border border-zinc-800 rounded-xl shadow-xl p-6 w-full max-w-sm max-h-sm h-[350px] mx-auto backdrop-blur-sm">
+    <div className="blue-glass border border-custom-border relative  rounded-xl p-6 w-full max-w-sm max-h-sm h-[350px] mx-auto backdrop-blur-sm">
       <div className="flex   items-center space-x-1 mb-4 border-b border-zinc-600">
         <SpotifyIcon />
         <h1 className="text-lg font-semibold"> Currently Playing</h1>

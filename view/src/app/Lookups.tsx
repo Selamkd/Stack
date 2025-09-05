@@ -110,7 +110,7 @@ export default function QuickLookup() {
   }
 
   return (
-    <div className="min-h-screen bg-custom-base">
+    <div className="min-h-screen">
       <main className="mx-5 min-h-[900px] p-4 md:px-6 my-2  flex flex-col items-center justify-center">
         <div className="max-w-4xl mx-auto w-full mt-20">
           <div className="text-center mb-8">

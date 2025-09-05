@@ -5,6 +5,7 @@ import {
   RefreshCw,
   CheckCircle,
   DoorOpen,
+  FileDown,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -102,7 +103,7 @@ const words = [
   'quia',
 ];
 
-export default function LoremIpsumGenerator() {
+export default function PDFGenerator() {
   const [generatedText, setGeneratedText] = useState('');
   const [amount, setAmount] = useState(50);
   const [type, setType] = useState('words');
@@ -149,7 +150,7 @@ export default function LoremIpsumGenerator() {
       <main className="mx-5 min-h-screen">
         <header className="flex relative justify-center bg-custom-surface border rounded-md border-custom-border mb-10  rounded-b-xl">
           <div>
-            <TextQuote className="w-[50px] cursor-point p-2  h-[100px] text-amber-200/60 hover:text-rose-300/50 transition-colors duration-200" />
+            <FileDown className="w-[50px] cursor-point p-2  h-[100px] text-rose-300/60 hover:text-rose-300/50 transition-colors duration-200" />
           </div>
           <div onClick={() => navigate('/tools')}>
             <DoorOpen className="w-[50px]  absolute right-0 cursor-point p-2  h-[100px] text-indigo-200/60 hover:text-rose-300/50 transition-colors duration-200" />
@@ -161,12 +162,12 @@ export default function LoremIpsumGenerator() {
             <div className="flex h-full flex-col items-start  w-full px-8 mx-auto justify-center mb-3">
               <div className="flex-1 min-w-0 w-full">
                 <h3 className="text-lg font-medium text-white mb-1 break-words">
-                  Settings
+                  Generate Sample PDF
                 </h3>
                 <div className="space-y-3 w-full">
                   <div>
                     <label className="block text-xs text-zinc-400 mb-1">
-                      Type
+                      Size
                     </label>
                     <select
                       value={type}
@@ -175,22 +176,7 @@ export default function LoremIpsumGenerator() {
                     >
                       <option value="words">Words</option>
                       <option value="sentences">Sentences</option>
-                      <option value="paragraphs">Paragraphs</option>
                     </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-zinc-400 mb-1">
-                      Amount
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="1000"
-                      value={amount}
-                      onChange={(e) => setAmount(parseInt(e.target.value) || 1)}
-                      className="w-full px-2 py-1 text-sm border bg-[#0a0a0a] border-[#242424] rounded text-white focus:outline-none focus:border-[#404040] transition-colors"
-                    />
                   </div>
                 </div>
               </div>
@@ -204,7 +190,7 @@ export default function LoremIpsumGenerator() {
                 <RefreshCw className=" text-emerald-200/60 group-hover/link:text-emerald-300/50 transition-colors duration-200" />
 
                 <h3 className="text-lg font-medium text-white mb-1 break-words">
-                  Generate Text
+                  Generate PDF
                 </h3>
               </div>
             </section>

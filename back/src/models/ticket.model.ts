@@ -1,6 +1,7 @@
 import { model, Schema, StringExpression } from 'mongoose';
 
 export interface ITicket {
+  createdAt(title: string): number;
   _id: string;
   title: string;
   description?: string;
