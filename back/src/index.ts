@@ -9,6 +9,8 @@ import apiRouter from './routes/app.routes';
 dotenv.config();
 
 const app: Express = express();
+
+app.use(express.json({ limit: '10mb' }));
 const port = process.env.PORT || 3001;
 
 const DB_URI = process.env.DB_CONNECTION_KEY;

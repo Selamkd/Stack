@@ -1,6 +1,6 @@
 import { Component, useEffect, useState } from 'react';
 import APIService from '../service/api.service';
-import { BotMessageSquare, TelescopeIcon } from 'lucide-react';
+import { BotMessageSquare, TelescopeIcon, X } from 'lucide-react';
 import QuickActions from '../components/QuickActions';
 
 import { ITicket } from '../../../back/src/models/ticket.model';
@@ -10,6 +10,23 @@ import DailyTodos from '../components/DailyTodos';
 import SpotifyCurrentlyPlaying from '../components/Currently';
 import GitHubContributionGraph from '../components/GithubGraph';
 import { StickyNotes } from '../components/StickeyNotes';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import {
+  a11yDark,
+  darcula,
+  dark,
+  nnfxDark,
+  nord,
+  solarizedDark,
+  zenburn,
+} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {
+  coldarkDark,
+  oneDark,
+  vscDarkPlus,
+  zTouch,
+} from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 export interface IRecentActivity {
   id: string;
   type: 'note' | 'snippet' | 'ticket' | 'lookup';
@@ -23,11 +40,21 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
+  const [botResponse, setBotResponse] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const tickets: ITicket[] = [];
 
   useEffect(() => {
     loadDashboardData();
   }, []);
+  function extractCodeAndText(response: string) {
+    const codeMatch = response.match(/```[a-z]*\n([\s\S]*?)```/i);
+    const code = codeMatch ? codeMatch[1] : null;
+    const text = response.replace(/```[a-z]*\n[\s\S]*?```/i, '').trim();
+    return { text, code };
+  }
+
+  const { text, code } = extractCodeAndText(botResponse || '');
 
   async function loadDashboardData() {
     try {
@@ -36,7 +63,6 @@ export default function Dashboard() {
       const [notes, snippets, lookups] = await Promise.all([
         APIService.get('notes'),
         APIService.get('snippets'),
-
         APIService.get('quicklookups'),
       ]);
 
@@ -75,11 +101,30 @@ export default function Dashboard() {
     }
   }
 
-  const handleSearch = () => {
+  async function handleSearch() {
     if (searchQuery.trim()) {
-      console.log('Searching for:', searchQuery, 'in:', selectedFilter);
+      try {
+        setIsSearching(true);
+        const response = await APIService.post('bot/ask-bot', {
+          question: searchQuery,
+        });
+        console.log(response);
+        setBotResponse(response);
+      } catch (error) {
+        console.error('Error searching:', error);
+        setBotResponse(
+          'Sorry, I encountered an error while processing your request.'
+        );
+      } finally {
+        setIsSearching(false);
+      }
     }
-  };
+  }
+
+  function clearBotResponse() {
+    setBotResponse('');
+    setSearchQuery('');
+  }
 
   if (isLoading) {
     return (
@@ -94,8 +139,8 @@ export default function Dashboard() {
 
   return (
     <main className="mx-5 min-h-screen p-4 md:p-6 ">
-      <div className="group relative border border-custom-border  blue-glass  rounded-xl p-8 overflow-hidden transition-all duration-300 mb-8">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-200/5 to-transparen transition-opacity duration-300"></div>
+      <div className="group relative border border-custom-border blue-glass rounded-xl p-8 overflow-hidden transition-all duration-300 mb-8">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-200/5 to-transparent transition-opacity duration-300"></div>
 
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-4"></div>
@@ -112,16 +157,70 @@ export default function Dashboard() {
                 placeholder="Looking for a snippet, doc, or fix?"
                 className="w-full pl-12 pr-24 py-3 bg-custom-base border border-custom-border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-lime-200/10 focus:border-lime-200/10"
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                disabled={isSearching}
               />
               <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
-                <button onClick={handleSearch}>
-                  <TelescopeIcon className=" h-5 w-5 text-zinc-400" />
+                <button
+                  onClick={handleSearch}
+                  disabled={isSearching}
+                  className="disabled:opacity-50"
+                >
+                  <TelescopeIcon className="h-5 w-5 text-zinc-400" />
                 </button>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {(botResponse || isSearching) && (
+        <div className="border border-custom-border blue-glass rounded-xl p-6 mb-8 transition-all duration-300">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <BotMessageSquare className="h-5 w-5 text-gray-400" />
+            </div>
+            {!isSearching && (
+              <button
+                onClick={clearBotResponse}
+                className="text-zinc-400 hover:text-white transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
+          <div className="bg-transparent backdrop-blur-md border border-gray-300/10 rounded-md p-4">
+            {isSearching ? (
+              <div className="flex items-center gap-3 text-zinc-400">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-200/60"></div>
+                <span>Thinking...</span>
+              </div>
+            ) : (
+              <div className="whitespace-pre-wrap text-zinc-300">
+                <SyntaxHighlighter
+                  style={nord}
+                  customStyle={{
+                    margin: 0,
+
+                    background: 'transparent',
+                    fontSize: '0.875rem',
+                    lineHeight: '1.5',
+                    maxHeight: '700px',
+                  }}
+                  language="javascript"
+                  editable={true}
+                  wrapLines={true}
+                  wrapLongLines={true}
+                  showLineNumbers={false}
+                >
+                  {botResponse}
+                </SyntaxHighlighter>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1">
         <QuickActions />
       </div>

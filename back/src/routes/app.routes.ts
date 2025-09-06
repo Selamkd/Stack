@@ -10,6 +10,7 @@ import logger from '../utils/logger';
 import ticketRoutes from './ticket.routes';
 import codeWarsRoutes from './codewars.routes';
 import slugRoutes from './slug.routes';
+import aiRoutes from './ai.routes';
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.use('/categories', categoryRoutes);
 router.use('/tickets', ticketRoutes);
 router.use('/codewars', codeWarsRoutes);
 router.use('/slugs', slugRoutes);
+router.use('/bot', aiRoutes);
 
 router.get('/ping', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
