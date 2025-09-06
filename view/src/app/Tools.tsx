@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-interface ITool {
+export interface ITool {
   url: string;
   name: string;
   icon: any;
@@ -15,52 +15,52 @@ interface ITool {
   iconColor: string;
   hoverIconColor: string;
 }
-export default function Tools() {
-  const tools: ITool[] = [
-    {
-      url: '/text-generator',
-      name: 'Tailwind Color → HEX',
-      icon: Palette,
-      description:
-        'Convert Tailwind CSS classes to HEX values or find the closest Tailwind color for any HEX input.',
-      iconColor: 'text-emerald-200/60',
-      hoverIconColor: 'group-hover/link:text-emerald-300/50',
-    },
-    {
-      url: '/text-generator',
-      icon: TextQuote,
-      name: 'Lorem Ipsum Generator',
-      description: 'Generate placeholder text for layouts.',
-      hoverIconColor: 'group-hover/link:text-amber-300/50',
-      iconColor: 'text-amber-200/40',
-    },
-    {
-      url: '/pdf-generator',
-      icon: FileDown,
-      name: 'Sample PDF Generator',
-      description: 'Create downloadable sample PDFs for testing.',
-      hoverIconColor: 'group-hover/link:text-emerald-300/50',
-      iconColor: 'text-rose-400/50',
-    },
-    {
-      url: '/shortcuts',
-      icon: SquareTerminal,
-      name: 'Daily Shortcuts',
-      description:
-        'Access a curated list of productivity shortcuts and command references.',
-      hoverIconColor: 'group-hover/link:text-emerald-300/50',
-      iconColor: 'text-indigo-200/60',
-    },
-    {
-      url: 'https://lucide.dev/icons/',
-      icon: MapPinHouse,
-      name: 'Find my IP Address',
-      description: 'Get current IP address.',
-      hoverIconColor: 'group-hover/link:text-emerald-300/50',
-      iconColor: 'text-pink-200/60',
-    },
-  ];
 
+const tools: ITool[] = [
+  {
+    url: '/text-generator',
+    name: 'Tailwind Color → HEX',
+    icon: Palette,
+    description:
+      'Convert Tailwind CSS classes to HEX values or find the closest Tailwind color for any HEX input.',
+    iconColor: 'text-emerald-200/60',
+    hoverIconColor: 'group-hover/link:text-emerald-300/50',
+  },
+  {
+    url: '/text-generator',
+    icon: TextQuote,
+    name: 'Lorem Ipsum Generator',
+    description: 'Generate placeholder text for layouts.',
+    hoverIconColor: 'group-hover/link:text-amber-300/50',
+    iconColor: 'text-amber-200/40',
+  },
+  {
+    url: '/pdf-generator',
+    icon: FileDown,
+    name: 'Sample PDF Generator',
+    description: 'Create downloadable sample PDFs for testing.',
+    hoverIconColor: 'group-hover/link:text-emerald-300/50',
+    iconColor: 'text-rose-400/50',
+  },
+  {
+    url: '/shortcuts',
+    icon: SquareTerminal,
+    name: 'Daily Shortcuts',
+    description:
+      'Access a curated list of productivity shortcuts and command references.',
+    hoverIconColor: 'group-hover/link:text-emerald-300/50',
+    iconColor: 'text-indigo-200/60',
+  },
+  {
+    url: 'https://lucide.dev/icons/',
+    icon: MapPinHouse,
+    name: 'Find my IP Address',
+    description: 'Get current IP address.',
+    hoverIconColor: 'group-hover/link:text-emerald-300/50',
+    iconColor: 'text-pink-200/60',
+  },
+];
+export default function Tools() {
   return (
     <main className="mx-5 min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
       <div className="flex flex-col mb-10">
