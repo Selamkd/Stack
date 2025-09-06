@@ -136,7 +136,7 @@ function CodewarsActivityCard() {
                 <h4 className="text-xl font-bold mx-2 text-white leading-tight mb-3">
                   {potd.name}
                 </h4>
-                <div className="bg-custom-secondary rounded-lg p-4 border border-slate-700/30">
+                <div className=" backdrop-blur-md rounded-xl scroll-thin p-4 border border-slate-700/30">
                   <SyntaxHighlighter
                     language={'TypeScript'}
                     style={nord}
@@ -147,9 +147,6 @@ function CodewarsActivityCard() {
                       fontSize: '0.875rem',
                       lineHeight: '1.5',
                       maxHeight: '200px',
-
-                      fontFamily:
-                        'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
                     }}
                     editable={true}
                     wrapLines={true}

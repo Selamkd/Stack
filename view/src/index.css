@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply bg-custom-base;
+    @apply bg-custom-surface;
   }
 
   .glass-card {

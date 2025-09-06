@@ -22,7 +22,7 @@ export const StickyNotes: React.FC = () => {
     },
     {
       name: 'chalk-emerald',
-      color: '#a7f3d090',
+      color: '#a7f3d099',
     },
     {
       name: 'chalk-amber',
@@ -76,7 +76,7 @@ export const StickyNotes: React.FC = () => {
   };
 
   return (
-    <div className="blue-glass border border-custom-border max-h-[350px] rounded-xl maxbackdrop-blur-sm">
+    <div className="blue-glass border border-custom-border max-h-[350px] rounded-xl backdrop-blur-sm">
       <div className="relative rounded-2xl overflow-hidden">
         <div className="relative z-10 px-4 pt-4 pb-2">
           <div className="flex items-center gap-2">

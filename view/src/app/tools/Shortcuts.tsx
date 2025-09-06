@@ -145,9 +145,44 @@ const shortcuts = {
   ],
 };
 
+const tabConfig = [
+  {
+    key: 'vscode',
+
+    icon: Code,
+    iconColor: 'text-blue-300/80',
+  },
+  {
+    key: 'nodeTypescript',
+
+    icon: Hexagon,
+    iconColor: 'text-emerald-200/60',
+  },
+  {
+    key: 'tiptap',
+
+    icon: FileText,
+    iconColor: 'text-amber-200/60',
+  },
+  {
+    key: 'powershell',
+
+    icon: Terminal,
+    iconColor: 'text-rose-200/60',
+  },
+  {
+    key: 'bash',
+
+    icon: SquareTerminal,
+    iconColor: 'text-cyan-200/60',
+  },
+];
+
 export default function DailyShortcuts() {
   const [copiedShortcut, setCopiedShortcut] = useState('');
+  const [activeTab, setActiveTab] = useState('vscode');
   const navigate = useNavigate();
+
   const copyToClipboard = async (text: SetStateAction<string>) => {
     try {
       if (typeof text === 'string') {
@@ -162,110 +197,86 @@ export default function DailyShortcuts() {
     }
   };
 
-  interface ShortcutSectionProps {
-    title: string;
-    icon: React.ComponentType<{ className?: string }>;
-    iconColor: string;
-    shortcuts: { keys: string; description: string }[];
-    keyPrefix: string;
-  }
-
-  const ShortcutSection: React.FC<ShortcutSectionProps> = ({
-    title,
-    icon: Icon,
-    iconColor,
-    shortcuts,
-    keyPrefix,
-  }) => (
-    <section className="border mb-8  cursor-default w-full bg-custom-surface flex flex-col border-[#242424] rounded-lg overflow-hidden transition-all">
-      <div className="flex items-center blue-glass p-6 border-b border-[#242424]">
-        <Icon className={`w-8 h-8 mr-3 ${iconColor}`} />
-        <h2 className="text-xl font-medium text-white">{title}</h2>
-      </div>
-      <div className="p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {shortcuts.map((shortcut, index) => (
-            <div
-              key={`${keyPrefix}-${index}`}
-              className="flex items-center justify-between p-3 bg-custom-surface border border-[#242424] rounded-xl hover:border-[#404040] transition-colors group"
-            >
-              <div className="flex-1 min-w-0 mr-4">
-                <div className="text-sm font-mono text-blue-300/80 mb-1 break-all">
-                  {shortcut.keys}
-                </div>
-                <div className="text-xs text-zinc-400 break-words">
-                  {shortcut.description}
-                </div>
-              </div>
-              <button
-                onClick={() => copyToClipboard(shortcut.keys)}
-                className="flex-shrink-0 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                {copiedShortcut === shortcut.keys ? (
-                  <CheckCircle className="w-4 h-4 text-emerald-300" />
-                ) : (
-                  <Copy className="w-4 h-4 text-blue-300 hover:text-blue-300 transition-colors" />
-                )}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  const activeTabConfig = tabConfig.find((tab) => tab.key === activeTab);
+  const activeShortcuts = shortcuts[activeTab as keyof typeof shortcuts];
 
   return (
     <div className="min-h-screen">
       <main className="mx-5 min-h-screen">
-        <header className="flex relative justify-center border mb-10  border-custom-border bg-custom-surface rounded-md">
+        <header className="flex relative justify-center border mb-10 border-custom-border bg-custom-surface rounded-md">
           <div>
-            <TerminalSquare className="w-[50px] cursor-point p-2  h-[100px] text-cyan-200/60 hover:text-rose-300/50 transition-colors duration-200" />
+            <TerminalSquare className="w-[50px] cursor-point p-2 h-[100px] text-cyan-200/60 hover:text-rose-300/50 transition-colors duration-200" />
           </div>
           <div onClick={() => navigate('/tools')}>
-            <DoorOpen className="w-[50px]  absolute right-0 cursor-point p-2  h-[100px] text-indigo-200/60 hover:text-rose-300/50 transition-colors duration-200" />
+            <DoorOpen className="w-[50px] absolute right-0 cursor-point p-2 h-[100px] text-indigo-200/60 hover:text-rose-300/50 transition-colors duration-200" />
           </div>
         </header>
 
-        <div className="flex  p-8 flex-col items-center w-full space-y-8">
-          <div className="w-full max-w-6xl xl:grid xl:grid-cols-2  xl:max-w-9xl xl:gap-5">
-            <ShortcutSection
-              title="VS Code Shortcuts"
-              icon={Code}
-              iconColor="text-blue-200/60"
-              shortcuts={shortcuts.vscode}
-              keyPrefix="vscode"
-            />
-            <ShortcutSection
-              title="Node.js + TypeScript"
-              icon={Hexagon}
-              iconColor="text-emerald-200/60"
-              shortcuts={shortcuts.nodeTypescript}
-              keyPrefix="nodeTypescript"
-            />
+        <div className="flex justify-center mb-8">
+          <div className="flex flex-wrap gap-2 p-2 blue-glass border border-[#242424] rounded-lg">
+            {tabConfig.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.key;
 
-            <ShortcutSection
-              title="Markdown Editor Shortcuts"
-              icon={FileText}
-              iconColor="text-amber-200/60"
-              shortcuts={shortcuts.tiptap}
-              keyPrefix="tiptap"
-            />
+              return (
+                <div
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`flex items-center space-x-2 px-4 py-3 rounded-md transition-all duration-200 ring-0 active:ring-0 ${
+                    isActive
+                      ? `${tab.iconColor}`
+                      : `hover:bg-zinc-800/50 text-gray-500 border border-transparent hover:border-[#404040]`
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-            <ShortcutSection
-              title="PowerShell Commands"
-              icon={Terminal}
-              iconColor="text-rose-200/60"
-              shortcuts={shortcuts.powershell}
-              keyPrefix="powershell"
-            />
-
-            <ShortcutSection
-              title="Bash Commands"
-              icon={Terminal}
-              iconColor="text-cyan-200/60"
-              shortcuts={shortcuts.bash}
-              keyPrefix="bash"
-            />
+        <div className="flex p-8 flex-col items-center w-full">
+          <div className="w-full max-w-6xl">
+            <section className="border cursor-default w-full bg-custom-surface flex flex-col border-[#242424] rounded-lg overflow-hidden transition-all">
+              <div className="flex items-center blue-glass p-6 border-b border-[#242424]">
+                {activeTabConfig && (
+                  <>
+                    <activeTabConfig.icon
+                      className={`w-8 h-8 mr-3 ${activeTabConfig.iconColor}`}
+                    />
+                  </>
+                )}
+              </div>
+              <div className="p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {activeShortcuts.map((shortcut, index) => (
+                    <div
+                      key={`${activeTab}-${index}`}
+                      className="flex items-center justify-between p-3 bg-custom-surface border border-[#242424] rounded-xl hover:border-[#404040] transition-colors group"
+                    >
+                      <div className="flex-1 min-w-0 mr-4">
+                        <div className="text-sm font-mono text-blue-200/80 mb-1 break-all">
+                          {shortcut.keys}
+                        </div>
+                        <div className="text-xs text-zinc-400 break-words">
+                          {shortcut.description}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(shortcut.keys)}
+                        className="flex-shrink-0 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        {copiedShortcut === shortcut.keys ? (
+                          <CheckCircle className="w-4 h-4 text-emerald-300" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-blue-300 hover:text-blue-300 transition-colors" />
+                        )}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </main>

@@ -11,6 +11,8 @@ router.get('/code-challenges', async (req: Request, res: Response) => {
       { $match: { completed: false } },
       { $sample: { size: 1 } },
     ]);
+
+    console.log(randomSlug);
     const codewarsRes = await fetch(
       `${CODEWARS_BASE_API}/code-challenges/${randomSlug.name}`
     );
