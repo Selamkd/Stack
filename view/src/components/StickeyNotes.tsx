@@ -76,7 +76,7 @@ export const StickyNotes: React.FC = () => {
   };
 
   return (
-    <div className="blue-glass border border-custom-border max-h-[350px] rounded-xl backdrop-blur-sm">
+    <div className="blue-glass shadow-xl border border-custom-border max-h-[350px] rounded-xl backdrop-blur-sm">
       <div className="relative rounded-2xl overflow-hidden">
         <div className="relative z-10 px-4 pt-4 pb-2">
           <div className="flex items-center gap-2">
@@ -101,7 +101,7 @@ export const StickyNotes: React.FC = () => {
           <div
             className="min-h-[200px] shadow-lg p-4 rounded"
             style={{
-              background: 'rgba(0, 0, 0, 0.9)',
+              background: 'rgba(0, 0, 0, 0.3)',
               backdropFilter: 'blur(1px)',
               boxShadow: 'inset 0 1px 4px rgba(0, 0, 0, 0.3)',
             }}

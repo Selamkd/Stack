@@ -156,16 +156,27 @@ interface INavButton {
 function NavButton({ icon, label, link, isActive, mode }: INavButton) {
   const navigate = useNavigate();
 
+  const colors = [
+    'emerald-300/60',
+    'blue-300/60',
+    'indigo-300/60',
+    'amber-300/60',
+    'rose-300/60',
+    'cyan-300/60',
+  ];
+  const random = colors[Math.floor(Math.random() * 6)];
+
   if (mode === 'compact') {
     return (
       <button
         onClick={() => navigate(link)}
-        className={`flex items-center justify-center w-12 h-12 mx-auto rounded-lg transition-all duration-200
+        className={`flex items-center justify-center w-12 h-12 mx-auto rounded-lg focus:outline-none focus:ring-0 active:outline-none active:ring-0
+ transition-all duration-200 border-0 active:border-0
           ${
             isActive
-              ? 'bg-custom-active text-white'
+              ? `bg-transparent  border border-zinc-800 text-${random}`
               : 'text-zinc-500 hover:text-zinc-300 hover:bg-custom-surface'
-          }`}
+          }     `}
         title={label}
       >
         {icon}
