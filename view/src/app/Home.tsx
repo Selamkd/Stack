@@ -1,31 +1,16 @@
-import { Component, useEffect, useState } from 'react';
-import APIService from '../service/api.service';
-import { BotMessageSquare, TelescopeIcon, X } from 'lucide-react';
+import { BotMessageSquare, SearchIcon, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import QuickActions from '../components/QuickActions';
+import APIService from '../service/api.service';
 
 import { ITicket } from '../../../back/src/models/ticket.model';
 
-import CodewarsActivityCard from '../components/CodewarsActivity';
-import DailyTodos from '../components/DailyTodos';
-import SpotifyCurrentlyPlaying from '../components/Currently';
-import GitHubContributionGraph from '../components/GithubGraph';
-import { StickyNotes } from '../components/StickeyNotes';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {
-  a11yDark,
-  darcula,
-  dark,
-  nnfxDark,
-  nord,
-  solarizedDark,
-  zenburn,
-} from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import {
-  coldarkDark,
-  oneDark,
-  vscDarkPlus,
-  zTouch,
-} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import CodewarsActivityCard from '../components/CodewarsActivity';
+import SpotifyCurrentlyPlaying from '../components/Currently';
+import DailyTodos from '../components/DailyTodos';
+import { StickyNotes } from '../components/StickeyNotes';
 
 export interface IRecentActivity {
   id: string;
@@ -42,19 +27,12 @@ export default function Dashboard() {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [botResponse, setBotResponse] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+
   const tickets: ITicket[] = [];
 
   useEffect(() => {
     loadDashboardData();
   }, []);
-  function extractCodeAndText(response: string) {
-    const codeMatch = response.match(/```[a-z]*\n([\s\S]*?)```/i);
-    const code = codeMatch ? codeMatch[1] : null;
-    const text = response.replace(/```[a-z]*\n[\s\S]*?```/i, '').trim();
-    return { text, code };
-  }
-
-  const { text, code } = extractCodeAndText(botResponse || '');
 
   async function loadDashboardData() {
     try {
@@ -138,10 +116,8 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="mx-5 min-h-screen p-4 md:p-6 ">
-      <div className="group relative border border-custom-border blue-glass rounded-xl p-8 overflow-hidden transition-all duration-300 mb-8">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-200/5 to-transparent transition-opacity duration-300"></div>
-
+    <main className="max-w-7xl mx-auto min-h-screen p-4 md:p-6">
+      <div className="group relative blue-glass border border-custom-border  rounded-xl p-8 overflow-hidden transition-all duration-300 mb-8">
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-4"></div>
 
@@ -154,7 +130,7 @@ export default function Dashboard() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Looking for a snippet, doc, or fix?"
+                placeholder="Ask your question...."
                 className="w-full pl-12 pr-24 py-3 bg-custom-base border border-custom-border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-lime-200/10 focus:border-lime-200/10"
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 disabled={isSearching}
@@ -165,11 +141,12 @@ export default function Dashboard() {
                   disabled={isSearching}
                   className="disabled:opacity-50"
                 >
-                  <TelescopeIcon className="h-5 w-5 text-zinc-400" />
+                  <SearchIcon className="h-5 w-5 text-zinc-400" />
                 </button>
               </div>
             </div>
           </div>
+          <QuickActions />
         </div>
       </div>
 
@@ -189,23 +166,23 @@ export default function Dashboard() {
             )}
           </div>
 
-          <div className="bg-transparent backdrop-blur-md border border-gray-300/10 rounded-md p-4">
+          <div className="bg-transparent backdrop-blur-lg border border-gray-300/10 rounded-md p-4">
             {isSearching ? (
               <div className="flex items-center gap-3 text-zinc-400">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-200/60"></div>
                 <span>Thinking...</span>
               </div>
             ) : (
-              <div className="whitespace-pre-wrap text-zinc-300">
+              <div className="whitespace-pre-wrap text-zinc-200">
                 <SyntaxHighlighter
-                  style={nord}
+                  style={atomOneDark}
                   customStyle={{
                     margin: 0,
-
                     background: 'transparent',
                     fontSize: '0.875rem',
                     lineHeight: '1.5',
                     maxHeight: '700px',
+                    fontFamily: '-moz-initial',
                   }}
                   language="javascript"
                   editable={true}
@@ -221,16 +198,13 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1">
-        <QuickActions />
-      </div>
+      <div className="grid grid-cols-1"></div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-8">
         <StickyNotes />
         <SpotifyCurrentlyPlaying />
       </div>
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1  gap-6">
         <CodewarsActivityCard />
-        <DailyTodos />
       </div>
     </main>
   );

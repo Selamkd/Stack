@@ -62,7 +62,7 @@ export default function ActiveLinks() {
   };
 
   return (
-    <div className="group mb-8 relative">
+    <div className="group mt-5 relative w-full">
       <div className="grid grid-cols-2 sm:grid-cols-7 gap-2 max-w-3xl xl:max-w-4xl">
         {developerLinks.map((link) => {
           const Icon = link.icon;
@@ -72,7 +72,7 @@ export default function ActiveLinks() {
               className={`
                 group/link relative py-3 max-w-[120px]
      blue-glass border
-                border-custom-border
+                border-zinc-800
                 rounded-xl
                
                 shadow-sm hover:shadow-md hover:shadow-black/20
