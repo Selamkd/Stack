@@ -39,15 +39,22 @@ if (!DB_URI) {
 async function connectToDB() {
   try {
     if (!DB_URI) {
-      throw new Error('Database connection string is undefined');
+      throw new Error('Database URI not provided');
     }
-    await mongoose.connect(DB_URI);
+
+    await mongoose.connect(DB_URI, {
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+    });
+
+    logger.info('Connected to MongoDB');
 
     app.listen(port, () => {
       logger.info(`Server started on port: ${port}`);
     });
   } catch (error) {
     logger.error(`Failed to start the server: ${error}`);
+    process.exit(1);
   }
 }
 

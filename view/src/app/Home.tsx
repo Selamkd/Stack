@@ -20,6 +20,8 @@ export interface IRecentActivity {
   timestamp: string;
 }
 
+
+
 export default function Dashboard() {
   const [recentActivity, setRecentActivity] = useState<IRecentActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,11 +40,13 @@ export default function Dashboard() {
     try {
       setIsLoading(true);
 
-      const [notes, snippets, lookups] = await Promise.all([
-        APIService.get('notes'),
+      const [notesResponse, snippets, lookups] = await Promise.all([
+        APIService.get('notes', { page: '1', limit: '5' }),
         APIService.get('snippets'),
         APIService.get('quicklookups'),
       ]);
+
+      const notes = Array.isArray(notesResponse) ? notesResponse : notesResponse.data || [];
 
       const activities: IRecentActivity[] = [
         ...notes.slice(-3).map((note: any) => ({
@@ -86,7 +90,6 @@ export default function Dashboard() {
         const response = await APIService.post('bot/ask-bot', {
           question: searchQuery,
         });
-        console.log(response);
         setBotResponse(response);
       } catch (error) {
         console.error('Error searching:', error);

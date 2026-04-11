@@ -63,11 +63,8 @@ export default function ProjectBoard() {
   const ticketsByStage: Record<string, ITicket[]> = STAGES.reduce(
     (acc, stage) => {
       acc[stage] = filtered
-        .sort((a, b) => a.title.localeCompare(b.title))
-        .filter((ticket) => ticket.stage === stage);
-      acc[stage] = filtered
         .filter((ticket) => ticket.stage === stage)
-        .sort((a: any, b: any) => b - a);
+        .sort((a, b) => a.title.localeCompare(b.title));
       return acc;
     },
     {} as Record<string, ITicket[]>

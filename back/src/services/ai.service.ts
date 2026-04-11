@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 
 const client = new OpenAI({
-  apiKey: process.env.BOT_KEY,
+  apiKey: process.env.BOT_KEY || '',
 });
 
 export class OPENAIService {
@@ -16,11 +16,13 @@ export class OPENAIService {
     .`;
 
     const response = await client.chat.completions.create({
-      model: 'gpt-5-nano',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: question },
       ],
+      temperature: 0.7,
+      max_tokens: 1000,
     });
 
     return response.choices?.[0]?.message?.content || '';

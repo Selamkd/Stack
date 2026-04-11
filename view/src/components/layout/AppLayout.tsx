@@ -35,11 +35,11 @@ export default function AppLayout(props: { children: ReactNode }) {
             : 'ml-0'
         }`}
       >
-        {/* <Header
+        <Header
           scrolled={scrolled}
           sidebarMode={sidebarMode}
           activePage={getActivePage()}
-        /> */}
+        />
 
         {props?.children}
       </main>

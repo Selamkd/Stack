@@ -7,6 +7,9 @@ import Category from '../models/category.model';
 export const getAllNotes = async (req: Request, res: Response) => {
   try {
     const query: FilterQuery<INote> = {};
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.min(50, parseInt(req.query.limit as string) || 20);
+    const skip = (page - 1) * limit;
 
     if (req.query.tag) {
       query.tags = req.query.tag;
@@ -16,15 +19,27 @@ export const getAllNotes = async (req: Request, res: Response) => {
       query.isStarred = req.query.isStarred === 'true';
     }
 
-    const notes = await Note.find(query)
+    const [notes, total] = await Promise.all([
+      Note.find(query)
+        .select('_id title updatedAt createdAt isStarred')
+        .sort({ updatedAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Note.countDocuments(query),
+    ]);
 
-      .populate('category')
-      .populate('tags')
-      .sort({ updatedAt: -1 });
-
-    res.status(200).json(notes);
+    res.status(200).json({
+      data: notes,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
-    logger.error('Failed to fetch notes:', error);
+    console.error('Failed to fetch notes:', error);
     res.status(500).json({ message: 'Error fetching notes', error });
   }
 };
