@@ -29,6 +29,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
       Note.countDocuments(query),
     ]);
 
+    console.log('Fetched notes:', notes);
     res.status(200).json({
       data: notes,
       pagination: {
@@ -38,6 +39,8 @@ export const getAllNotes = async (req: Request, res: Response) => {
         pages: Math.ceil(total / limit),
       },
     });
+
+  
   } catch (error) {
     console.error('Failed to fetch notes:', error);
     res.status(500).json({ message: 'Error fetching notes', error });

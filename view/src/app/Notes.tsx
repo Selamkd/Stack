@@ -26,23 +26,32 @@ export default function Notes() {
   }, [notes]);
 
   const isSelected = (id: string) => selectedNote?._id === id;
+async function fetchNotes() {
+  try {
+    setIsLoading(true);
 
-  async function fetchNotes() {
-    try {
-      setIsLoading(true);
-      const notesRes = await APIService.get('notes');
-      setNotes(notesRes);
+    const notesRes = await APIService.get('notes');
 
-      if (!selectedNote && notesRes.length > 0) {
-        setSelectedNote(notesRes[0]);
-      }
-    } catch (error) {
-      console.error('Error loading notes:', error);
-    } finally {
-      setIsLoading(false);
+    const notesArray = Array.isArray(notesRes)
+      ? notesRes
+      : Array.isArray(notesRes?.data)
+      ? notesRes.data
+      : Array.isArray(notesRes?.notes)
+      ? notesRes.notes
+      : [];
+
+    setNotes(notesArray);
+
+    if (!selectedNote && notesArray.length > 0) {
+      setSelectedNote(notesArray[0]);
     }
+  } catch (error) {
+    console.error('Error loading notes:', error);
+    setNotes([]);
+  } finally {
+    setIsLoading(false);
   }
-
+}
   useEffect(() => {
     fetchNotes();
   }, []);

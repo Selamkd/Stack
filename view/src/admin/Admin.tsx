@@ -139,7 +139,7 @@ function AdminPage() {
         </div>
 
         <div className="divide-y divide-custom-border">
-          {getContentData(activeTab).map((item) => (
+          {getContentData(activeTab)?.map((item) => (
             <ContentItem key={item?._id} item={item} type={activeTab} />
           ))}
         </div>
