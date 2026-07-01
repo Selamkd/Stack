@@ -29,7 +29,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
       Note.countDocuments(query),
     ]);
 
-    console.log('Fetched notes:', notes);
+
     res.status(200).json({
       data: notes,
       pagination: {

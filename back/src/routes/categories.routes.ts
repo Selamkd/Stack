@@ -8,4 +8,5 @@ router.get('/:id', CategoryController.getCategoryById);
 router.post('/', CategoryController.upsertCategory);
 router.delete('/:id', CategoryController.deleteCategory);
 
+
 export default router;
