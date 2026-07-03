@@ -1,48 +1,66 @@
-import { ReactNode, useState } from 'react';
-import Sidebar, { ISideBarMode } from './Sidebar';
-import Header, { FilterTabs } from './Header';
+import { ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import CommandPalette from '../CommandPalette';
+import ManageMetaModal from '../ManageMetaModal';
+import Header from './Header';
+import Sidebar, { ISideBarMode } from './Sidebar';
+
+const PAGE_TITLES: [string, string][] = [
+  ['/chat', 'Chat'],
+  ['/notes', 'Notes'],
+  ['/note', 'Notes'],
+  ['/snippets', 'Snippets'],
+  ['/lookups', 'Quick Lookups'],
+  ['/shortcuts', 'Shortcuts'],
+  ['/project-board', 'Project Board'],
+  ['/tools', 'Tools'],
+];
 
 export default function AppLayout(props: { children: ReactNode }) {
-  const [scrolled, setScrolled] = useState(false);
   const [sidebarMode, setSidebarMode] = useState<ISideBarMode>('compact');
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const location = useLocation();
 
-  const pathname = location.pathname;
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setPaletteOpen((open) => !open);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
-  function getActivePage() {
-    if (pathname.endsWith('/')) return 'Search';
-    if (pathname.endsWith('/search/notes')) return 'Notes';
-    if (pathname.endsWith('/search/snippets')) return 'Snippets';
-    if (pathname.endsWith('/search/lookups')) return 'Lookups';
-    if (pathname.endsWith('/notes')) return 'Notes';
-    if (pathname.endsWith('/snippets')) return 'Snippets';
-    if (pathname.endsWith('/search-lookup')) return 'Lookups';
-    if (pathname.endsWith('/tools')) return 'Tools';
-    if (pathname.endsWith('/admin')) return 'Admin';
-    return 'Page';
-  }
+  const activePage =
+    PAGE_TITLES.find(([path]) => location.pathname.startsWith(path))?.[1] ||
+    'Dashboard';
 
   return (
     <div className="min-h-screen text-zinc-200">
       <Sidebar sidebarMode={sidebarMode} setSidebarMode={setSidebarMode} />
       <main
-        className={`flex-1 mt-10 transition-all h-screen duration-300 ${
-          sidebarMode === 'expanded'
-            ? 'ml-64'
-            : sidebarMode === 'compact'
-            ? 'ml-20'
-            : 'ml-0'
+        className={`transition-all duration-300 ${
+          sidebarMode === 'expanded' ? 'ml-60' : 'ml-[68px]'
         }`}
       >
         <Header
-          scrolled={scrolled}
-          sidebarMode={sidebarMode}
-          activePage={getActivePage()}
+          activePage={activePage}
+          onOpenPalette={() => setPaletteOpen(true)}
+          onOpenSettings={() => setSettingsOpen(true)}
         />
-
         {props?.children}
       </main>
+
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+      />
+      <ManageMetaModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
     </div>
   );
 }

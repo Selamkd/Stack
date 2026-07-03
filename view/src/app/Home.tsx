@@ -1,213 +1,154 @@
-import { BotMessageSquare, SearchIcon, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import QuickActions from '../components/QuickActions';
+import {
+  BotMessageSquare,
+  Check,
+  ExternalLink,
+  FilePlus2,
+  Zap,
+} from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CodewarsCard from '../components/dashboard/CodewarsCard';
+import InboxCard from '../components/dashboard/InboxCard';
+import JumpBackIn from '../components/dashboard/JumpBackIn';
+import TasksCard from '../components/dashboard/TasksCard';
+import { EMPTY_DOC } from '../components/NoteEditor';
 import APIService from '../service/api.service';
 
-import { ITicket } from '../../../back/src/models/ticket.model';
+const DEV_LINKS = [
+  { label: 'GitHub', url: 'https://github.com' },
+  { label: 'MDN', url: 'https://developer.mozilla.org/en-US/' },
+  { label: 'Lucide', url: 'https://lucide.dev/icons/' },
+  { label: 'Tailwind', url: 'https://tailwindcss.com/docs' },
+  { label: 'localhost:5173', url: 'http://localhost:5173/' },
+];
 
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import CodewarsActivityCard from '../components/CodewarsActivity';
-import SpotifyCurrentlyPlaying from '../components/Currently';
-import DailyTodos from '../components/DailyTodos';
-import { StickyNotes } from '../components/StickeyNotes';
-
-export interface IRecentActivity {
-  id: string;
-  type: 'note' | 'snippet' | 'ticket' | 'lookup';
-  title: string;
-  action: 'created' | 'updated' | 'deleted';
-  timestamp: string;
+function greeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 5) return 'Up late';
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
 }
 
-
-
 export default function Dashboard() {
-  const [recentActivity, setRecentActivity] = useState<IRecentActivity[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
-  const [botResponse, setBotResponse] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
+  const [capture, setCapture] = useState('');
+  const [captured, setCaptured] = useState(false);
+  const navigate = useNavigate();
 
-  const tickets: ITicket[] = [];
-
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  async function loadDashboardData() {
+  async function captureThought() {
+    const text = capture.trim();
+    if (!text) return;
     try {
-      setIsLoading(true);
-
-      const [notesResponse, snippets, lookups] = await Promise.all([
-        APIService.get('notes', { page: '1', limit: '5' }),
-        APIService.get('snippets'),
-        APIService.get('quicklookups'),
-      ]);
-
-      const notes = Array.isArray(notesResponse) ? notesResponse : notesResponse.data || [];
-
-      const activities: IRecentActivity[] = [
-        ...notes.slice(-3).map((note: any) => ({
-          id: note._id,
-          type: 'note' as const,
-          title: note.title || 'Untitled Note',
-          action: 'updated' as const,
-          timestamp: note.updatedAt || note.createdAt,
-        })),
-        ...snippets.slice(-2).map((snippet: any) => ({
-          id: snippet._id,
-          type: 'snippet' as const,
-          title: snippet.title,
-          action: 'created' as const,
-          timestamp: snippet.createdAt,
-        })),
-        ...tickets.slice(-2).map((ticket: any) => ({
-          id: ticket._id,
-          type: 'ticket' as const,
-          title: ticket.title,
-          action: 'updated' as const,
-          timestamp: ticket.updatedAt || ticket.createdAt,
-        })),
-      ].sort(
-        (a, b) =>
-          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
-
-      setRecentActivity(activities);
+      await APIService.post('stickies', { text, color: 'chalk-white' });
+      setCapture('');
+      setCaptured(true);
+      setTimeout(() => setCaptured(false), 1800);
+      window.dispatchEvent(new CustomEvent('sticky-captured'));
     } catch (error) {
-      console.error('Error loading dashboard data:', error);
-    } finally {
-      setIsLoading(false);
+      console.error('Error capturing thought:', error);
     }
   }
 
-  async function handleSearch() {
-    if (searchQuery.trim()) {
-      try {
-        setIsSearching(true);
-        const response = await APIService.post('bot/ask-bot', {
-          question: searchQuery,
-        });
-        setBotResponse(response);
-      } catch (error) {
-        console.error('Error searching:', error);
-        setBotResponse(
-          'Sorry, I encountered an error while processing your request.'
-        );
-      } finally {
-        setIsSearching(false);
-      }
+  async function newNote() {
+    try {
+      const note = await APIService.post('notes', {
+        _id: 'new',
+        title: 'Untitled note',
+        content: JSON.stringify(EMPTY_DOC),
+      });
+      navigate(`/notes?id=${note._id}`);
+    } catch (error) {
+      console.error('Error creating note:', error);
     }
-  }
-
-  function clearBotResponse() {
-    setBotResponse('');
-    setSearchQuery('');
-  }
-
-  if (isLoading) {
-    return (
-      <main className="mx-5 min-h-screen p-4 md:p-6 my-2 md:my-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-custom-border rounded w-1/4 mb-8"></div>
-          <div className="h-32 bg-custom-surface border border-custom-border rounded-lg mb-8"></div>
-        </div>
-      </main>
-    );
   }
 
   return (
-    <main className="max-w-7xl mx-auto min-h-screen p-4 md:p-6">
-      <div className="group relative blue-glass border border-custom-border  rounded-xl p-8 overflow-hidden transition-all duration-300 mb-8">
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-4"></div>
-
-          <div className="space-y-4">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <BotMessageSquare className="h-5 w-5 text-zinc-400" />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Ask your question...."
-                className="w-full pl-12 pr-24 py-3 bg-custom-base border border-custom-border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-lime-200/10 focus:border-lime-200/10"
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                disabled={isSearching}
-              />
-              <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
-                <button
-                  onClick={handleSearch}
-                  disabled={isSearching}
-                  className="disabled:opacity-50"
-                >
-                  <SearchIcon className="h-5 w-5 text-zinc-400" />
-                </button>
-              </div>
-            </div>
-          </div>
-          <QuickActions />
+    <main className="mx-auto min-h-screen max-w-6xl p-4 md:p-6">
+      <div className="mb-5 mt-2 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-100">
+            {greeting()}, Selam
+          </h1>
+          <p className="mt-1 text-sm text-custom-text">
+            Everything you know, one ⌘K away.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {DEV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 rounded-full border border-custom-border bg-custom-surface px-3 py-1 text-xs text-zinc-400 transition-colors hover:border-custom-active hover:text-clay"
+            >
+              {link.label}
+              <ExternalLink size={10} />
+            </a>
+          ))}
         </div>
       </div>
 
-      {(botResponse || isSearching) && (
-        <div className="border border-custom-border blue-glass rounded-xl p-6 mb-8 transition-all duration-300">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <BotMessageSquare className="h-5 w-5 text-gray-400" />
-            </div>
-            {!isSearching && (
-              <button
-                onClick={clearBotResponse}
-                className="text-zinc-400 hover:text-white transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-
-          <div className="bg-transparent backdrop-blur-lg border border-gray-300/10 rounded-md p-4">
-            {isSearching ? (
-              <div className="flex items-center gap-3 text-zinc-400">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-200/60"></div>
-                <span>Thinking...</span>
-              </div>
-            ) : (
-              <div className="whitespace-pre-wrap text-zinc-200">
-                <SyntaxHighlighter
-                  style={atomOneDark}
-                  customStyle={{
-                    margin: 0,
-                    background: 'transparent',
-                    fontSize: '0.875rem',
-                    lineHeight: '1.5',
-                    maxHeight: '700px',
-                    fontFamily: '-moz-initial',
-                  }}
-                  language="javascript"
-                  editable={true}
-                  wrapLines={true}
-                  wrapLongLines={true}
-                  showLineNumbers={false}
-                >
-                  {botResponse}
-                </SyntaxHighlighter>
-              </div>
-            )}
-          </div>
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1">
+          <Zap
+            size={15}
+            className={`absolute left-3.5 top-1/2 -translate-y-1/2 transition-colors ${
+              captured ? 'text-clay' : 'text-custom-text'
+            }`}
+          />
+          <input
+            value={capture}
+            onChange={(e) => setCapture(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && captureThought()}
+            placeholder={
+              captured
+                ? 'Captured — it’s in your inbox'
+                : 'Brain dump — capture a thought before it escapes, hit Enter'
+            }
+            className="input-base w-full py-2.5 pl-10 pr-4 text-sm"
+          />
+          {captured && (
+            <Check
+              size={15}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-clay"
+            />
+          )}
         </div>
-      )}
-
-      <div className="grid grid-cols-1"></div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-8">
-        <StickyNotes />
-        <SpotifyCurrentlyPlaying />
+        <div className="flex shrink-0 gap-2">
+          <button
+            onClick={newNote}
+            className="flex items-center gap-2 rounded-lg bg-clay/15 px-3.5 py-2 text-sm text-clay transition-colors hover:bg-clay/25"
+          >
+            <FilePlus2 size={14} />
+            New note
+          </button>
+          <button
+            onClick={() => navigate('/chat')}
+            className="flex items-center gap-2 rounded-lg bg-haze/15 px-3.5 py-2 text-sm text-haze transition-colors hover:bg-haze/25"
+          >
+            <BotMessageSquare size={14} />
+            Ask AI
+          </button>
+        </div>
       </div>
-      <div className="grid grid-cols-1  gap-6">
-        <CodewarsActivityCard />
+
+      <div className="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-5">
+        <div className="lg:col-span-3">
+          <TasksCard />
+        </div>
+        <div className="lg:col-span-2">
+          <InboxCard />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
+        <div className="lg:col-span-3">
+          <JumpBackIn />
+        </div>
+        <div className="lg:col-span-2">
+          <CodewarsCard />
+        </div>
       </div>
     </main>
   );

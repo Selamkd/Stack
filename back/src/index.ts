@@ -15,7 +15,7 @@ const port = process.env.PORT || 3001;
 
 const DB_URI = process.env.DB_CONNECTION_KEY;
 
-app.use(cors())
+app.use(cors({ exposedHeaders: ['X-Conversation-Id'] }));
 app.use(express.json());
 app.use('/api', apiRouter);
 

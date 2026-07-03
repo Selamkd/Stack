@@ -1,264 +1,294 @@
-import { Search, Copy, X, FileText, Code, Ticket } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import {
+  ArrowLeft,
+  Check,
+  Copy,
+  Pencil,
+  Plus,
+  Search,
+  SearchCode,
+  Trash2,
+  X,
+} from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { IQuickLookup } from '../../../back/src/models/quicklookup.model';
+import LookupModal from '../components/LookupModal';
 import APIService from '../service/api.service';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-
-import {
-  a11yDark,
-  anOldHope,
-  atomOneDark,
-  atomOneDarkReasonable,
-  dracula,
-  nightOwl,
-  nord,
-  zenburn,
-} from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import {
-  duotoneDark,
-  duotoneEarth,
-  lucario,
-} from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function QuickLookup() {
   const [lookups, setLookups] = useState<IQuickLookup[]>([]);
   const [search, setSearch] = useState('');
-  const [selectedLookup, setSelectedLookup] = useState<IQuickLookup | null>(
-    null
-  );
-  const [copiedMessage, setCopiedMessage] = useState<string | null>(null);
-  const [selectedFilter, setSelectedFilter] = useState('all');
+  const [selected, setSelected] = useState<IQuickLookup | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [copied, setCopied] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<IQuickLookup | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const categories: string[] = [
-    'all',
-    ...Array.from(
-      new Set(lookups.map((lookup) => lookup.category?.name || ''))
-    ).filter(Boolean),
-  ];
-  const filtered =
-    selectedFilter === 'all'
-      ? lookups
-      : lookups.filter((lookup) => lookup.category?.name === selectedFilter);
-
-  async function getLookups() {
+  async function fetchLookups(): Promise<IQuickLookup[]> {
     try {
-      const lookupsRes = await APIService.get('quicklookups');
-      setLookups(lookupsRes);
-    } catch (e) {
-      console.error('Error fetching quick lookups', e);
+      setIsLoading(true);
+      const res = await APIService.get('quicklookups');
+      setLookups(res || []);
+      return res || [];
+    } catch (error) {
+      console.error('Error fetching lookups:', error);
+      return [];
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    getLookups();
+    fetchLookups().then((list) => {
+      const q = searchParams.get('q');
+      if (q) {
+        const match = list.find(
+          (l) => l.title.toLowerCase() === q.toLowerCase()
+        );
+        if (match) setSelected(match);
+        else setSearch(q);
+      }
+    });
   }, []);
 
-  useEffect(() => {
-    if (search && filtered.length > 0) {
-      const exactMatch = filtered.find(
-        (lookup) => lookup.title.toLowerCase() === search.toLowerCase()
-      );
-      if (exactMatch) {
-        setSelectedLookup(exactMatch);
-      } else {
-        const filteredSearch = filtered.filter((lookup) =>
-          lookup.title.toLowerCase().includes(search.toLowerCase())
-        );
-        if (filteredSearch.length > 0) {
-          setSelectedLookup(filteredSearch[0]);
-        } else {
-          setSelectedLookup(null);
-        }
-      }
-    } else {
-      setSelectedLookup(null);
-    }
-  }, [search, filtered]);
+  const categories = useMemo(
+    () => [
+      'all',
+      ...Array.from(
+        new Set(lookups.map((l) => l.category?.name || '').filter(Boolean))
+      ),
+    ],
+    [lookups]
+  );
 
-  useEffect(() => {
+  const filtered = lookups.filter((lookup) => {
+    const matchesCategory =
+      categoryFilter === 'all' || lookup.category?.name === categoryFilter;
+    const q = search.toLowerCase();
+    const matchesSearch =
+      !q ||
+      lookup.title.toLowerCase().includes(q) ||
+      lookup.answer.toLowerCase().includes(q);
+    return matchesCategory && matchesSearch;
+  });
+
+  function openLookup(lookup: IQuickLookup) {
+    setSelected(lookup);
+    setConfirmingDelete(false);
+    setSearchParams({ q: lookup.title }, { replace: true });
+  }
+
+  function backToAll() {
+    setSelected(null);
     setSearch('');
-    setSelectedLookup(null);
-  }, [selectedFilter]);
+    setSearchParams({}, { replace: true });
+  }
 
-  async function handleCopyAnswer(answer: string) {
+  async function copyAnswer() {
+    if (!selected) return;
     try {
-      await navigator.clipboard.writeText(answer);
-      setCopiedMessage('Copied to clipboard!');
-      setTimeout(() => setCopiedMessage(null), 3000);
-    } catch (err) {
-      console.error('Error copying to clipboard');
+      await navigator.clipboard.writeText(selected.answer);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch (error) {
+      console.error('Error copying answer:', error);
     }
   }
 
-  const commonOperators = filtered
-    .reverse()
-    .slice(0, 100)
-    .map((lookup) => ({
-      symbol: lookup.title,
-      name: lookup.title,
-    }));
-  function handleOperatorClick(operator: string) {
-    setSearch(operator);
-  }
-
-  function clearSearch() {
-    setSearch('');
-    setSelectedLookup(null);
-  }
-  function handleFilterChange(category: string) {
-    setSelectedFilter(category);
+  async function deleteLookup() {
+    if (!selected) return;
+    if (!confirmingDelete) {
+      setConfirmingDelete(true);
+      setTimeout(() => setConfirmingDelete(false), 2500);
+      return;
+    }
+    try {
+      await APIService.delete(`quicklookups/${selected._id}`);
+      setLookups((prev) => prev.filter((l) => l._id !== selected._id));
+      backToAll();
+    } catch (error) {
+      console.error('Error deleting lookup:', error);
+    }
   }
 
   return (
-    <div className="min-h-screen">
-      <main className="mx-5 min-h-[900px] p-4 md:px-6 my-2  flex flex-col items-center justify-center">
-        <div className="max-w-4xl mx-auto w-full mt-20">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Quick Lookup</h1>
-            <p className="text-zinc-400">
-              Enter a term or operator to learn more about it:
-            </p>
-          </div>
+    <main className="mx-auto min-h-screen w-full max-w-4xl p-4 md:p-6">
+      <div className="mb-8 mt-6 text-center">
+        <h1 className="mb-1 text-2xl font-bold text-white">Quick Lookup</h1>
+        <p className="text-sm text-custom-text">
+          Terms, operators, and concepts you keep forgetting — one search away
+        </p>
+      </div>
 
-          <div className="flex w-full justify-center mb-5 gap-2 flex-wrap">
-            {categories.map((category, i) => (
+      <div className="mb-5 flex flex-wrap justify-center gap-2">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setCategoryFilter(category)}
+            className={`rounded-full px-3 py-1.5 text-xs transition-all ${
+              categoryFilter === category
+                ? 'bg-haze/15 text-haze'
+                : 'border border-custom-border text-custom-text hover:text-zinc-300'
+            }`}
+          >
+            {category === 'all' ? 'All' : category}
+          </button>
+        ))}
+        <button
+          onClick={() => {
+            setEditing(null);
+            setModalOpen(true);
+          }}
+          className="flex items-center gap-1.5 rounded-full bg-clay/10 px-3 py-1.5 text-xs text-clay transition-colors hover:bg-clay/20"
+        >
+          <Plus size={12} />
+          Add lookup
+        </button>
+      </div>
+
+      <div className="relative mb-8">
+        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-custom-text" />
+        <input
+          type="text"
+          placeholder="Search for operators, methods, or concepts…"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            if (selected) {
+              setSelected(null);
+              setSearchParams({}, { replace: true });
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && filtered.length > 0) {
+              openLookup(filtered[0]);
+            }
+          }}
+          className="input-base w-full py-3.5 pl-12 pr-12 text-base"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-custom-text transition-colors hover:text-white"
+          >
+            <X size={16} />
+          </button>
+        )}
+      </div>
+
+      {selected ? (
+        <div className="panel p-6 md:p-8">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <button
+              onClick={backToAll}
+              className="flex items-center gap-1.5 text-xs text-custom-text transition-colors hover:text-zinc-200"
+            >
+              <ArrowLeft size={13} />
+              All lookups
+            </button>
+            <div className="flex items-center gap-1">
               <button
-                key={i}
-                onClick={() => handleFilterChange(category)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
-                  selectedFilter === category
-                    ? `bg-blue-400/5 border border-emerald-200/30 text-emerald-200/80 `
-                    : 'bg-custom-base text-zinc-300 border border-custom-border hover:bg-custom-hover hover:border-zinc-600'
+                onClick={copyAnswer}
+                title="Copy answer"
+                className={`rounded-lg p-2 transition-colors ${
+                  copied
+                    ? 'text-clay'
+                    : 'text-custom-text hover:bg-custom-hover/60 hover:text-clay'
                 }`}
               >
-                {category === 'all' ? 'All' : category}
+                {copied ? <Check size={15} /> : <Copy size={15} />}
               </button>
-            ))}
+              <button
+                onClick={() => {
+                  setEditing(selected);
+                  setModalOpen(true);
+                }}
+                title="Edit lookup"
+                className="rounded-lg p-2 text-custom-text transition-colors hover:bg-custom-hover/60 hover:text-zinc-100"
+              >
+                <Pencil size={15} />
+              </button>
+              <button
+                onClick={deleteLookup}
+                title={confirmingDelete ? 'Click again to delete' : 'Delete'}
+                className={`rounded-lg p-2 transition-colors ${
+                  confirmingDelete
+                    ? 'bg-red-400/20 text-red-400'
+                    : 'text-custom-text hover:bg-custom-hover/60 hover:text-red-400'
+                }`}
+              >
+                {confirmingDelete ? <Check size={15} /> : <Trash2 size={15} />}
+              </button>
+            </div>
           </div>
-          <div className="relative mb-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#404040]" />
-              <input
-                type="text"
-                placeholder="Search for operators, methods, or concepts..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-12 pr-12 py-4 bg-blue-400/5 border-2 border-[#242424] rounded-lg text-white text-lg placeholder-[#404040] focus:outline-none focus:border-zinc-500/40 transition-colors"
-              />
-              {search && (
-                <button
-                  onClick={clearSearch}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-[#404040] hover:text-white transition-colors"
+
+          <h2 className="mb-4 text-2xl font-bold text-haze/90">
+            {selected.title}
+          </h2>
+
+          <div className="whitespace-pre-wrap rounded-lg border border-custom-border bg-custom-base p-5 font-mono text-sm leading-relaxed text-zinc-300">
+            {selected.answer}
+          </div>
+
+          {selected.tags && selected.tags.length > 0 && (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {selected.tags.map((tag) => (
+                <span
+                  key={tag._id}
+                  className="rounded-full border border-custom-border px-2.5 py-1 text-xs text-custom-text"
                 >
-                  <X className="w-5 h-5" />
-                </button>
-              )}
-            </div>
-          </div>
-
-          {selectedLookup && (
-            <div className="mb-8 bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded-xl p-8">
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-2xl font-bold text-white">
-                      <span className="text-blue-200/80">
-                        {selectedLookup.title}
-                      </span>{' '}
-                    </h2>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleCopyAnswer(selectedLookup.answer)}
-                    className="p-2 rounded-lg transition-all duration-200 text-custom-text hover:text-lime-400 hover:bg-lime-400/20 border border-transparent hover:border-lime-400/20"
-                    title="Copy answer"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="prose prose-invert max-w-none">
-                <div className="text-zinc-400 leading-relaxed whitespace-pre-wrap">
-                  <SyntaxHighlighter
-                    language={'TypeScript'}
-                    style={nord}
-                    customStyle={{
-                      margin: 0,
-                      color: '#e4e4e7',
-                      background: 'transparent',
-                      fontSize: '0.875rem',
-                      lineHeight: '1.5',
-                      maxHeight: '600px',
-
-                      fontFamily:
-                        'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-                    }}
-                    editable={true}
-                    wrapLines={true}
-                    wrapLongLines={true}
-                    showLineNumbers={false}
-                  >
-                    {selectedLookup.answer.split('\\n')[0]}
-                  </SyntaxHighlighter>
-                </div>
-              </div>
-
-              {selectedLookup.tags && selectedLookup.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-6">
-                  {selectedLookup.tags.map((tag) => (
-                    <span
-                      key={tag._id}
-                      className="px-3 py-1 bg-custom-surface/70 border border-custom-hover rounded-full text-xs text-zinc-400 hover:text-emerald-200/60 hover:border-custom-hover transition-colors cursor-pointer"
-                    >
-                      {tag.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {!selectedLookup && (
-            <div className="mb-8">
-              <p className="text-zinc-400 mb-4 text-center">Or, pick one:</p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {commonOperators.map((op, index) => (
-                  <button
-                    key={`${op.symbol}-${index}`}
-                    onClick={() => handleOperatorClick(op.symbol)}
-                    className="px-3 py-2 bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded text-zinc-300 hover:bg-[#242424] hover:border-blue-200/30 hover:text-blue-200 transition-all text-sm font-mono min-w-[3rem] text-center"
-                    title={op.name}
-                  >
-                    {op.symbol}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {search && !selectedLookup && (
-            <div className="text-center border border-custom-border bg-custom-surface rounded-lg p-12">
-              <div className="text-zinc-500">
-                <Search className="w-12 h-12 mx-auto mb-3" />
-                <h3 className="text-lg font-medium text-zinc-400 mb-2">
-                  No results found for "{search}"
-                </h3>
-                <p className="text-sm">
-                  Try searching for a different term or check the spelling
-                </p>
-              </div>
-            </div>
-          )}
-
-          {copiedMessage && (
-            <div className="fixed bottom-4 right-4 bg-lime-400/20 border border-lime-400/30 text-lime-200 px-4 py-2 rounded-lg text-sm">
-              {copiedMessage}
+                  #{tag.name}
+                </span>
+              ))}
             </div>
           )}
         </div>
-      </main>
-    </div>
+      ) : isLoading ? (
+        <div className="flex flex-wrap justify-center gap-2">
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={i}
+              className="h-9 w-24 animate-pulse rounded-lg bg-custom-hover/30"
+            />
+          ))}
+        </div>
+      ) : filtered.length > 0 ? (
+        <div className="flex flex-wrap justify-center gap-2">
+          {filtered.map((lookup) => (
+            <button
+              key={lookup._id}
+              onClick={() => openLookup(lookup)}
+              className="bg-custom-surface rounded-lg border border-custom-border px-3.5 py-2 font-mono text-sm text-zinc-300 transition-all hover:border-haze/40 hover:text-haze"
+            >
+              {lookup.title}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="panel p-10 text-center text-custom-text">
+          <SearchCode className="mx-auto mb-3 h-10 w-10" />
+          <h3 className="mb-1 text-sm font-medium text-zinc-300">
+            {search ? `Nothing found for “${search}”` : 'No lookups yet'}
+          </h3>
+          <p className="text-xs">
+            {search
+              ? 'Try a different term — or add it so future you finds it'
+              : 'Add the things you keep re-Googling'}
+          </p>
+        </div>
+      )}
+
+      <LookupModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        initial={editing || undefined}
+        onSaved={(saved) => {
+          fetchLookups().then(() => setSelected(saved));
+        }}
+      />
+    </main>
   );
 }

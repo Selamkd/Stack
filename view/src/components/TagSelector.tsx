@@ -55,7 +55,7 @@ export default function TagSelector(props: ITagSelector) {
             onClick={() => toggleTag(tag._id)}
             className={`px-3 py-1 rounded-full text-xs flex items-center ${
               selectedIds.includes(tag._id)
-                ? 'bg-lime-100/20 text-lime-200 border border-lime-500/30'
+                ? 'bg-clay/20 text-clay border border-clay/30'
                 : 'bg-custom-base text-zinc-400 border border-custom-border hover:bg-custom-surface hover:text-white'
             }`}
           >

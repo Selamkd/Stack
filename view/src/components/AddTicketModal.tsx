@@ -72,12 +72,12 @@ export default function AddTicketModal(props: ITicketFormModal) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#1a1a1a] border border-[#242424] rounded-lg w-full max-w-md">
-        <div className="flex items-center justify-between p-6 border-b border-[#242424]">
+      <div className="bg-custom-raised border border-custom-border rounded-lg w-full max-w-md">
+        <div className="flex items-center justify-between p-6 border-b border-custom-border">
           <h2 className="text-xl font-semibold text-white">Add New Ticket</h2>
           <button
             onClick={onClose}
-            className="text-[#404040] hover:text-white transition-colors disabled:opacity-50"
+            className="text-custom-text hover:text-white transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
@@ -97,7 +97,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter ticket title"
-              className="w-full px-4 py-3 bg-[#141414] border border-[#242424] rounded-lg text-white placeholder-[#404040] focus:outline-none focus:border-[#303030]"
+              className="w-full px-4 py-3 bg-custom-raised border border-custom-border rounded-lg text-white placeholder-custom-text focus:outline-none focus:border-custom-active"
               required
             />
           </div>
@@ -113,7 +113,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               placeholder="Enter ticket category"
-              className="w-full px-4 py-3 bg-[#141414] border border-[#242424] rounded-lg text-white placeholder-[#404040] focus:outline-none focus:border-[#303030] resize-none"
+              className="w-full px-4 py-3 bg-custom-raised border border-custom-border rounded-lg text-white placeholder-custom-text focus:outline-none focus:border-custom-active resize-none"
             />
           </div>
           <div>
@@ -129,7 +129,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter ticket description (optional)"
               rows={4}
-              className="w-full px-4 py-3 bg-[#141414] border border-[#242424] rounded-lg text-white placeholder-[#404040] focus:outline-none focus:border-[#303030] resize-none"
+              className="w-full px-4 py-3 bg-custom-raised border border-custom-border rounded-lg text-white placeholder-custom-text focus:outline-none focus:border-custom-active resize-none"
             />
           </div>
 
@@ -152,7 +152,7 @@ export default function AddTicketModal(props: ITicketFormModal) {
                     | 'parked'
                 )
               }
-              className="w-full px-4 py-3 bg-[#141414] border border-[#242424] rounded-lg text-white focus:outline-none focus:border-[#303030]"
+              className="w-full px-4 py-3 bg-custom-raised border border-custom-border rounded-lg text-white focus:outline-none focus:border-custom-active"
             >
               <option value="parked">Parked</option>
               <option value="backlog">Backlog</option>
@@ -165,14 +165,14 @@ export default function AddTicketModal(props: ITicketFormModal) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 bg-[#242424] hover:bg-[#303030] text-white rounded-lg"
+              className="flex-1 px-4 py-3 bg-custom-hover hover:bg-custom-active text-white rounded-lg"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!title.trim()}
-              className="flex-1 px-4 py-3 bg-custom-surface hover:bg-lime-200 hover:text-gray-900 text-white rounded-lg"
+              className="flex-1 px-4 py-3 bg-custom-surface hover:bg-clay hover:text-gray-900 text-white rounded-lg"
             >
               Create Ticket
             </button>

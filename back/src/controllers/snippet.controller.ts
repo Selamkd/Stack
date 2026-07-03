@@ -52,31 +52,32 @@ export const upsertSnippet = async (req: Request, res: Response) => {
     if (req.body._id) {
       const updatedSnippet = await Snippet.findByIdAndUpdate(
         req.body._id,
-        { $set: req.body },
+        { $set: { ...req.body, tags: tagIds } },
         { new: true }
-      ).populate('category');
+      )
+        .populate('category')
+        .populate('tags');
 
       res.status(200).json(updatedSnippet);
     } else {
-      console.log(category);
-      console.log(tags);
-      console.log(typeof category);
-      console.log(tags);
-      console.log('---test adding category count', req.body);
       const newSnippet = new Snippet({
         title,
         description,
         code,
         language,
-        category: category._id,
-
+        tags: tagIds,
+        category: category?._id || category || undefined,
         isStarred: isStarred || false,
       });
 
       const savedSnippet = await newSnippet.save();
-      const populatedSnippet = await Snippet.findById(savedSnippet._id);
+      const populatedSnippet = await Snippet.findById(savedSnippet._id)
+        .populate('category')
+        .populate('tags');
 
-      await Category.findByIdAndUpdate(category._id, { $inc: { count: 1 } });
+      if (category?._id) {
+        await Category.findByIdAndUpdate(category._id, { $inc: { count: 1 } });
+      }
 
       res.status(201).json(populatedSnippet);
     }

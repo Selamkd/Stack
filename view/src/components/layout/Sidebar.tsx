@@ -1,18 +1,17 @@
 import {
+  BotMessageSquare,
   ChevronLeft,
   FileText,
-  Hash,
   Home,
+  Layers,
   SearchCode,
-  Settings,
   SquareChevronRight,
+  SquareTerminal,
   SwatchBook,
   Trello,
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ICategory } from '../../../../back/src/models/category.model';
-import APIService from '../../service/api.service';
 
 export type ISideBarMode = 'expanded' | 'compact';
 
@@ -21,24 +20,64 @@ interface ISideBar {
   setSidebarMode: React.Dispatch<React.SetStateAction<ISideBarMode>>;
 }
 
+const NAV_ITEMS = [
+  {
+    label: 'Dashboard',
+    link: '/',
+    icon: Home,
+    accent: 'text-haze',
+  },
+  {
+    label: 'Chat',
+    link: '/chat',
+    icon: BotMessageSquare,
+    accent: 'text-clay',
+  },
+  {
+    label: 'Notes',
+    link: '/notes',
+    icon: FileText,
+    accent: 'text-clay',
+  },
+  {
+    label: 'Snippets',
+    link: '/snippets',
+    icon: SquareChevronRight,
+    accent: 'text-sand',
+  },
+  {
+    label: 'Quick Lookups',
+    link: '/lookups',
+    icon: SearchCode,
+    accent: 'text-haze',
+  },
+  {
+    label: 'Shortcuts',
+    link: '/shortcuts',
+    icon: SquareTerminal,
+    accent: 'text-dusk',
+  },
+  {
+    label: 'Project Board',
+    link: '/project-board',
+    icon: Trello,
+    accent: 'text-haze',
+  },
+  {
+    label: 'Tools',
+    link: '/tools',
+    icon: SwatchBook,
+    accent: 'text-dusk',
+  },
+];
+
 export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
   const location = useLocation();
-  const [categories, setCategories] = useState<ICategory[]>();
 
   function isActive(path: string) {
-    return location.pathname === path;
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
   }
-  useEffect(() => {
-    async function getSnippets() {
-      try {
-        const categoriesRes = await APIService.get('categories');
-        setCategories(categoriesRes);
-      } catch (e) {
-        console.error('Error fetching snippets', e);
-      }
-    }
-    getSnippets();
-  }, []);
 
   const toggleSidebar = () => {
     setSidebarMode((prev) => (prev === 'expanded' ? 'compact' : 'expanded'));
@@ -46,94 +85,42 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 blue-glass backdrop-blur-xl border-r border-zinc-800/50 z-50 transition-all duration-300 ease-in-out ${
-        sidebarMode === 'expanded'
-          ? 'w-64'
-          : sidebarMode === 'compact'
-          ? 'w-20'
-          : 'w-0'
+      className={`fixed inset-y-0 left-0 z-50 border-r border-custom-border bg-custom-surface/80 backdrop-blur-xl transition-all duration-300 ease-in-out ${
+        sidebarMode === 'expanded' ? 'w-60' : 'w-[68px]'
       }`}
     >
-      <div className="relative h-full flex flex-col">
-        <nav className="flex-1 py-6 px-4 space-y-1">
-          <NavButton
-            icon={<Home size={18} />}
-            label="Dashboard"
-            link="/"
-            isActive={isActive('/')}
-            mode={sidebarMode}
-          />
-          <NavButton
-            icon={<FileText size={18} />}
-            label="Notes"
-            link="/notes"
-            isActive={isActive('/notes')}
-            mode={sidebarMode}
-          />
-          <NavButton
-            icon={<SquareChevronRight size={18} />}
-            label="Snippets"
-            link="/snippets"
-            isActive={isActive('/snippets')}
-            mode={sidebarMode}
-          />
-          <NavButton
-            icon={<SearchCode size={18} />}
-            label="Quick Lookups"
-            link="/lookups"
-            isActive={isActive('/lookups')}
-            mode={sidebarMode}
-          />
-          <NavButton
-            icon={<Trello size={18} />}
-            label="Project Tracker"
-            link="/project-board"
-            isActive={isActive('/project-board')}
-            mode={sidebarMode}
-          />
+      <div className="flex h-full flex-col">
+        <div
+          className={`flex items-center gap-2.5 border-b border-custom-border px-5 py-4 ${
+            sidebarMode === 'compact' ? 'justify-center px-0' : ''
+          }`}
+        >
+          <Layers size={20} className="shrink-0 text-clay" />
+          {sidebarMode === 'expanded' && (
+            <span className="text-sm font-semibold tracking-wide text-white">
+              Stack
+            </span>
+          )}
+        </div>
 
-          <NavButton
-            icon={<SwatchBook size={18} />}
-            label="Tools"
-            link="/tools"
-            isActive={location.pathname === '/tools'}
-            mode={sidebarMode}
-          />
-
-          <NavButton
-            icon={<Settings size={18} />}
-            label="Config"
-            link="/admin"
-            isActive={isActive('/admin')}
-            mode={sidebarMode}
-          />
+        <nav className="flex-1 space-y-1 overflow-y-auto scrollbar-thin px-3 py-4">
+          {NAV_ITEMS.map((item) => (
+            <NavButton
+              key={item.link}
+              item={item}
+              isActive={isActive(item.link)}
+              mode={sidebarMode}
+            />
+          ))}
         </nav>
 
-        {sidebarMode === 'expanded' && (
-          <div className="px-4 py-6 border-t border-zinc-800/50">
-            <h3 className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-3">
-              Topics
-            </h3>
-
-            {categories &&
-              categories.slice(0, 5).map((cat) => (
-                <div className="space-y-1">
-                  <TagButton
-                    label={cat.name}
-                    count={cat.count ? cat.count : null}
-                  />
-                </div>
-              ))}
-          </div>
-        )}
-
-        <div className="p-4 border-t border-zinc-800/50">
+        <div className="border-t border-custom-border p-3">
           <button
             onClick={toggleSidebar}
-            className="w-full p-2 rounded-lg hover:bg-zinc-800/50 text-zinc-400 hover:text-white transition-all duration-200 flex items-center justify-center group"
+            className="flex w-full items-center justify-center rounded-lg p-2 text-zinc-500 transition-all duration-200 hover:bg-custom-hover/50 hover:text-white"
           >
             <ChevronLeft
-              size={20}
+              size={18}
               className={`transition-transform duration-300 ${
                 sidebarMode === 'compact' ? 'rotate-180' : ''
               }`}
@@ -146,77 +133,42 @@ export default function Sidebar({ sidebarMode, setSidebarMode }: ISideBar) {
 }
 
 interface INavButton {
-  icon: React.ReactNode;
-  label: string;
-  link: string;
+  item: (typeof NAV_ITEMS)[number];
   isActive: boolean;
   mode: ISideBarMode;
 }
 
-function NavButton({ icon, label, link, isActive, mode }: INavButton) {
+function NavButton({ item, isActive, mode }: INavButton) {
   const navigate = useNavigate();
-
-  const colors = [
-    'emerald-300/60',
-    'blue-300/60',
-    'indigo-300/60',
-    'amber-300/60',
-    'rose-300/60',
-    'cyan-300/60',
-  ];
-  const random = colors[Math.floor(Math.random() * 6)];
+  const Icon = item.icon;
 
   if (mode === 'compact') {
     return (
       <button
-        onClick={() => navigate(link)}
-        className={`flex items-center justify-center w-12 h-12 mx-auto rounded-lg focus:outline-none focus:ring-0 active:outline-none active:ring-0
- transition-all duration-200 border-0 active:border-0
-          ${
-            isActive
-              ? `bg-transparent  border border-zinc-800 text-${random}`
-              : 'text-zinc-500 hover:text-zinc-300 hover:bg-custom-surface'
-          }     `}
-        title={label}
+        onClick={() => navigate(item.link)}
+        title={item.label}
+        className={`mx-auto flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 ${
+          isActive
+            ? `bg-custom-raised ${item.accent}`
+            : 'text-zinc-500 hover:bg-custom-hover/50 hover:text-zinc-200'
+        }`}
       >
-        {icon}
+        <Icon size={18} />
       </button>
     );
   }
 
   return (
     <button
-      onClick={() => navigate(link)}
-      className={`flex items-center space-x-3 w-full px-3 py-2.5 rounded-lg transition-all duration-200
-        ${
-          isActive
-            ? 'bg-zinc-950/50 backdrop-blur-sm text-white border-zinc-800/50'
-            : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50 hover:backdrop-blur-sm'
-        }`}
+      onClick={() => navigate(item.link)}
+      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200 ${
+        isActive
+          ? 'bg-custom-raised text-white'
+          : 'text-zinc-500 hover:bg-custom-hover/40 hover:text-zinc-200'
+      }`}
     >
-      {icon}
-      <span className="text-sm">{label}</span>
-    </button>
-  );
-}
-
-interface ITagButton {
-  label: string;
-  count: number | null;
-}
-
-function TagButton({ label, count }: ITagButton) {
-  return (
-    <button className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200 hover:border-zinc-700/50 transition-all duration-200">
-      <div className="flex items-center">
-        <Hash size={14} className="mr-2 text-zinc-500" />
-        <span>{label}</span>
-      </div>
-      {count && (
-        <span className="text-xs bg-zinc-800/50 border border-zinc-700/30 px-2 py-0.5 rounded-full text-zinc-400">
-          {count}
-        </span>
-      )}
+      <Icon size={17} className={isActive ? item.accent : ''} />
+      <span className="text-sm">{item.label}</span>
     </button>
   );
 }

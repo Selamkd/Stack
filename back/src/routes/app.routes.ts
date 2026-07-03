@@ -10,7 +10,9 @@ import logger from '../utils/logger';
 import ticketRoutes from './ticket.routes';
 import codeWarsRoutes from './codewars.routes';
 import slugRoutes from './slug.routes';
-import aiRoutes from './ai.routes';
+import conversationRoutes from './conversation.routes';
+import { stickyRouter, todoRouter } from './board.routes';
+import boardDocRoutes from './boarddoc.routes';
 
 const router = Router();
 
@@ -25,7 +27,10 @@ router.use('/categories', categoryRoutes);
 router.use('/tickets', ticketRoutes);
 router.use('/codewars', codeWarsRoutes);
 router.use('/slugs', slugRoutes);
-router.use('/bot', aiRoutes);
+router.use('/conversations', conversationRoutes);
+router.use('/stickies', stickyRouter);
+router.use('/todos', todoRouter);
+router.use('/board-docs', boardDocRoutes);
 
 router.get('/ping', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });

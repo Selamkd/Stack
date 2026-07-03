@@ -88,20 +88,20 @@ export default function ProjectBoard() {
 
         <div className="flex flex-col md:flex-row gap-4 mb-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#404040]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-custom-text" />
             <input
               type="text"
               placeholder="Search tickets..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-[#141414] border border-[#242424] rounded-lg text-white placeholder-[#404040] focus:outline-none focus:border-[#303030]"
+              className="w-full pl-11 pr-4 py-3 bg-custom-raised border border-custom-border rounded-lg text-white placeholder-custom-text focus:outline-none focus:border-custom-active"
             />
           </div>
         </div>
         <div className="flex w-full justify-end py-2">
           <button
             onClick={() => setTicketModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-custom-surface hover:bg-lime-200  hover:text-gray-800 text-custom-text-400 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-custom-surface hover:bg-clay  hover:text-gray-800 text-custom-text-400 rounded-lg transition-colors"
           >
             <PlusSquareIcon className="w-4 h-4" />
           </button>
@@ -122,7 +122,7 @@ export default function ProjectBoard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {' '}
           {STAGES.map((stage) => (
-            <div className="flex flex-col">
+            <div key={stage} className="flex flex-col">
               <header className="px-4 py-3 border border-custom-border glass-card rounded-t-lg">
                 <p className="text-center font-medium">{stage}</p>
               </header>

@@ -1,8 +1,12 @@
 import {
+  Binary,
+  Braces,
+  Clock,
   FileDown,
-  MapPinHouse,
+  Globe,
+  LucideIcon,
   Palette,
-  SquareTerminal,
+  Regex,
   TextQuote,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -10,95 +14,105 @@ import { useNavigate } from 'react-router-dom';
 export interface ITool {
   url: string;
   name: string;
-  icon: any;
+  icon: LucideIcon;
   description: string;
   iconColor: string;
-  hoverIconColor: string;
 }
 
 const tools: ITool[] = [
   {
-    url: '/text-generator',
-    name: 'Tailwind Color → HEX',
+    url: '/color-converter',
+    name: 'Tailwind ↔ HEX',
     icon: Palette,
     description:
-      'Convert Tailwind CSS classes to HEX values or find the closest Tailwind color for any HEX input.',
-    iconColor: 'text-emerald-200/60',
-    hoverIconColor: 'group-hover/link:text-emerald-300/50',
+      'Convert Tailwind classes to HEX and find the closest Tailwind color for any HEX value.',
+    iconColor: 'text-clay/70',
   },
   {
-    url: '/text-generator',
+    url: '/json',
+    name: 'JSON Formatter',
+    icon: Braces,
+    description: 'Format, minify, and validate JSON with clear error messages.',
+    iconColor: 'text-sand/70',
+  },
+  {
+    url: '/regex',
+    name: 'Regex Tester',
+    icon: Regex,
+    description: 'Test patterns live with highlighted matches and capture groups.',
+    iconColor: 'text-dusk/70',
+  },
+  {
+    url: '/timestamp',
+    name: 'Timestamp Converter',
+    icon: Clock,
+    description: 'Unix ↔ ISO ↔ local time, with relative time at a glance.',
+    iconColor: 'text-haze/70',
+  },
+  {
+    url: '/encode',
+    name: 'Encode / Decode',
+    icon: Binary,
+    description: 'Base64, URL encoding, and UUID generation in one place.',
+    iconColor: 'text-haze/70',
+  },
+  {
+    url: '/lorem',
+    name: 'Lorem Ipsum',
     icon: TextQuote,
-    name: 'Lorem Ipsum Generator',
-    description: 'Generate placeholder text for layouts.',
-    hoverIconColor: 'group-hover/link:text-amber-300/50',
-    iconColor: 'text-amber-200/40',
+    description: 'Placeholder words, sentences, or paragraphs for layouts.',
+    iconColor: 'text-sand/70',
   },
   {
-    url: '/pdf-generator',
+    url: '/pdf',
+    name: 'Sample PDF',
     icon: FileDown,
-    name: 'Sample PDF Generator',
-    description: 'Create downloadable sample PDFs for testing.',
-    hoverIconColor: 'group-hover/link:text-emerald-300/50',
-    iconColor: 'text-rose-400/50',
+    description: 'Generate downloadable sample PDFs for testing uploads.',
+    iconColor: 'text-red-300/70',
   },
   {
-    url: '/shortcuts',
-    icon: SquareTerminal,
-    name: 'Daily Shortcuts',
-    description:
-      'Access a curated list of productivity shortcuts and command references.',
-    hoverIconColor: 'group-hover/link:text-emerald-300/50',
-    iconColor: 'text-indigo-200/60',
-  },
-  {
-    url: 'https://lucide.dev/icons/',
-    icon: MapPinHouse,
-    name: 'Find my IP Address',
-    description: 'Get current IP address.',
-    hoverIconColor: 'group-hover/link:text-emerald-300/50',
-    iconColor: 'text-pink-200/60',
+    url: '/network',
+    name: 'My Network',
+    icon: Globe,
+    description: 'Your public IP, browser, and environment info.',
+    iconColor: 'text-haze/70',
   },
 ];
+
 export default function Tools() {
   return (
-    <main className="mx-5 min-h-screen p-4 md:p-6 my-2 md:my-6 rounded-lg">
-      <div className="flex flex-col mb-10">
-        <h1 className="text-3xl">Tools</h1>
+    <main className="mx-auto min-h-screen w-full max-w-6xl p-4 md:p-6">
+      <div className="mb-6 mt-2">
+        <h1 className="text-2xl font-bold text-white">Tools</h1>
+        <p className="mt-1 text-sm text-custom-text">
+          Small utilities so you can stay out of sketchy converter websites
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 xl:grid-cols-3 lg:gap-8 max-w-3xl xl:max-w-6xl mx-auto mt-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {tools.map((tool) => (
-          <SnippetCard tool={tool} />
+          <ToolCard key={tool.url} tool={tool} />
         ))}
       </div>
     </main>
   );
 }
 
-export function SnippetCard({ tool }: { tool: ITool }) {
+function ToolCard({ tool }: { tool: ITool }) {
   const Icon = tool.icon;
   const navigate = useNavigate();
   return (
-    <section
+    <button
       onClick={() => navigate(`/tools${tool.url}`)}
-      className="border blue-glass cursor-pointer hover:scale-105 w-[350px] flex flex-col justify-between items-center border-[#242424] rounded-lg overflow-hidden hover:border-custom-hover transition-all pt-10 "
+      className="bg-custom-surface group flex flex-col items-start rounded-xl border border-custom-border p-5 text-left transition-all hover:-translate-y-0.5 hover:border-custom-active"
     >
-      <div className="">
-        <Icon
-          className={`w-[100px] h-[100px] ${tool.iconColor} ${tool.hoverIconColor} transition-colors duration-200`}
-        />
-      </div>
-      <div className="flex h-full flex-col items-start  border-t border-[#49505770]  w-full px-8 mx-auto py-4  mt-8 justify-center mb-3">
-        <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-medium text-white mb-1 break-words">
-            {tool.name}
-          </h3>
-          <p className="text-sm text-zinc-400 break-words">
-            {tool.description}
-          </p>
-        </div>
-      </div>
-    </section>
+      <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-custom-border bg-custom-surface transition-colors group-hover:border-custom-active">
+        <Icon size={20} className={tool.iconColor} />
+      </span>
+      <h3 className="mb-1 text-sm font-semibold text-white">{tool.name}</h3>
+      <p className="text-xs leading-relaxed text-custom-text">
+        {tool.description}
+      </p>
+    </button>
   );
 }

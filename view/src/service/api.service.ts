@@ -1,5 +1,3 @@
-import logger from '../../../back/src/utils/logger';
-
 export class APIService {
   static BASE_URL =
     (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3000/api';
@@ -76,6 +74,38 @@ export class APIService {
 
   static async delete(endpoint: string): Promise<any> {
     return this.request(endpoint, { method: 'DELETE' });
+  }
+
+  static async stream(
+    endpoint: string,
+    data: unknown,
+    onChunk: (chunk: string) => void
+  ): Promise<string | null> {
+    const response = await fetch(`${this.BASE_URL}/${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok || !response.body) {
+      throw new Error('Stream request failed');
+    }
+
+    const conversationId = response.headers.get('X-Conversation-Id');
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    let finished = false;
+    while (!finished) {
+      const { done, value } = await reader.read();
+      if (done) {
+        finished = true;
+      } else {
+        onChunk(decoder.decode(value, { stream: true }));
+      }
+    }
+
+    return conversationId;
   }
 
   static async getExternal(

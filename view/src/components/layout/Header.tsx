@@ -1,71 +1,43 @@
-import { Menu, Plus, SearchCheck, Settings } from 'lucide-react';
-import { ISideBarMode } from './Sidebar';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Search, Settings } from 'lucide-react';
 
 interface IHeader {
-  sidebarMode: ISideBarMode;
-  scrolled: boolean;
   activePage: string;
+  onOpenPalette: () => void;
+  onOpenSettings: () => void;
 }
 
-export default function Header(props: IHeader) {
-  const navigate = useNavigate();
+export default function Header({
+  activePage,
+  onOpenPalette,
+  onOpenSettings,
+}: IHeader) {
+  const isMac = navigator.platform.toUpperCase().includes('MAC');
+
   return (
-    <header
-      className={`sticky top-0 z-10 w-full blue-gbackdrop-blur-sm border-b border-[#1A1A1A] transition-all ${
-        props?.scrolled ? 'py-2' : 'py-3.5'
-      }`}
-    >
-      <div className="flex flex-row-reverse items-center justify-between px-4 mx-8">
-        <div className="flex items-center space-x-3">
+    <header className="sticky top-0 z-40 w-full border-b border-custom-border bg-custom-base/80 backdrop-blur-md">
+      <div className="flex items-center justify-between px-6 py-2.5">
+        <h1 className="text-sm font-medium text-zinc-400">{activePage}</h1>
+
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate('/admin')}
-            className="px-8 rounded-lg text-zinc-400 hover:text-lime-200 hover:bg-custom-surface transition-colors"
+            onClick={onOpenPalette}
+            className="flex items-center gap-2.5 rounded-lg border border-custom-border bg-custom-surface px-3 py-1.5 text-sm text-custom-text transition-colors hover:border-custom-active hover:text-zinc-300"
           >
-            <Settings size={20} />
+            <Search size={13} />
+            <span className="hidden sm:inline">Search everything…</span>
+            <kbd className="rounded border border-custom-border bg-custom-base px-1.5 py-0.5 text-[10px]">
+              {isMac ? '⌘' : 'Ctrl'} K
+            </kbd>
+          </button>
+          <button
+            onClick={onOpenSettings}
+            title="Categories & tags"
+            className="rounded-lg p-2 text-zinc-500 transition-colors hover:bg-custom-hover/50 hover:text-clay"
+          >
+            <Settings size={17} />
           </button>
         </div>
       </div>
     </header>
-  );
-}
-
-export function FilterTabs() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const tabs = [
-    { label: 'All', path: '/search' },
-    { label: 'Notes', path: '/search/notes' },
-    { label: 'Snippets', path: '/search/snippets' },
-    { label: 'Lookups', path: '/search/lookups' },
-  ];
-
-  const isSearchPage = location.pathname.startsWith('/search');
-  const isAdmin = location.pathname.endsWith('/admin');
-
-  if (isAdmin) return null;
-
-  return (
-    <div className="sticky top-16 z-5 bg-custom-base/90 backdrop-blur border-b border-[#2a2a35] px-4 py-2">
-      <div className="max-w-7xl mx-auto flex items-center space-x-1">
-        {tabs.map((tab) => {
-          const isActive = location.pathname === tab.path;
-          return (
-            <button
-              key={tab.label}
-              onClick={() => navigate(tab.path)}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                isActive
-                  ? 'border border-lime-200/20 text-lime-200/80 font-medium'
-                  : 'text-zinc-400 hover:text-white hover:bg-[#1c1c24]/70'
-              }`}
-            >
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
   );
 }

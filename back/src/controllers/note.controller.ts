@@ -88,14 +88,17 @@ export const upsertNote = async (req: Request, res: Response) => {
     }
 
     if (_id !== 'new') {
+      const updates: Record<string, unknown> = {
+        title: title ? title : 'Untitled Note',
+        content: contentString,
+      };
+      if (tags !== undefined) updates.tags = tags;
+      if (category !== undefined) updates.category = category;
+      if (isStarred !== undefined) updates.isStarred = isStarred;
+
       const updatedNote = await Note.findByIdAndUpdate(
         _id,
-        {
-          $set: {
-            title: title ? title : 'Untitled Note',
-            content: contentString,
-          },
-        },
+        { $set: updates },
         { new: true, runValidators: true }
       );
 

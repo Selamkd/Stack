@@ -43,7 +43,7 @@ function CategorySelector(props: ICategorySelector) {
           }}
           className={`flex-1 px-4 py-2 rounded-lg bg-custom-base border 
             border-custom-border
-            text-white focus:outline-none focus:ring-1 focus:ring-lime-100/20 focus:border-custom-border`}
+            text-white focus:outline-none focus:ring-1 focus:ring-clay/20 focus:border-custom-border`}
         >
           <option value="">Select a category</option>
           {categories.map((category) => (

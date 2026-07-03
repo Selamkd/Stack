@@ -2,8 +2,7 @@ import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { ITicket } from '../../../back/src/models/ticket.model';
 import { Clock, Edit3, GitBranch, Trash2 } from 'lucide-react';
 import { CSS } from '@dnd-kit/utilities';
-import { ReactNode } from 'react-markdown/lib/react-markdown';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import APIService from '../service/api.service';
 import AddTicketModal from './AddTicketModal';
 interface ITicketDroppable {
@@ -68,23 +67,23 @@ export function TicketCard(props: ITicketCard) {
 
   return (
     <TicketDraggable id={ticket._id}>
-      <div className="group relative bg-gradient-to-r from-blue-500/5 to-gray-500/5  border border-[#2a2a2a] rounded-xl overflow-hidden transition-all duration-300 hover:border-[#3a3a3a] hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
+      <div className="group relative bg-custom-raised/60 border border-custom-border rounded-xl overflow-hidden transition-all duration-300 hover:border-custom-active hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
         <div
           className={`h-1 w-full ${
             ticket.stage === 'parked'
               ? 'bg-gray-500'
               : ticket.stage === 'backlog'
-              ? 'bg-blue-300/50'
+              ? 'bg-haze/50'
               : ticket.stage === 'development'
-              ? 'bg-yellow-300/50'
-              : 'bg-green-300/50'
+              ? 'bg-sand/50'
+              : 'bg-clay/50'
           }`}
         />
 
         <div className="p-5">
           <div className="flex items-start justify-between mb-2">
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg text-start mt-2 font-semibold text-white mb-2 break-words leading-tight group-hover:text-blue-100 transition-colors">
+              <h3 className="text-lg text-start mt-2 font-semibold text-white mb-2 break-words leading-tight group-hover:text-haze transition-colors">
                 {ticket.title}
               </h3>
 
@@ -96,7 +95,7 @@ export function TicketCard(props: ITicketCard) {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-[#2a2a2a]">
+          <div className="flex items-center justify-between pt-3 border-t border-custom-border">
             <div className="flex items-center gap-3 text-xs text-zinc-500">
               <div className="flex items-center gap-1">
                 <GitBranch className="w-3 h-3" />
@@ -110,7 +109,7 @@ export function TicketCard(props: ITicketCard) {
                   e.stopPropagation();
                   handleEdit(ticket?._id);
                 }}
-                className="p-2 rounded-lg transition-all duration-200 text-zinc-400 hover:text-blue-400 hover:bg-blue-400/10 border border-transparent hover:border-blue-400/20"
+                className="p-2 rounded-lg transition-all duration-200 text-zinc-400 hover:text-haze hover:bg-haze/10 border border-transparent hover:border-haze/20"
                 title="Edit ticket"
               >
                 <Edit3 className="w-4 h-4" />

@@ -8,27 +8,20 @@ module.exports = {
         '9xl': '96rem',
       },
       colors: {
-        zinc: {
-          200: '#e4e4e7',
-          300: '#d4d4d8',
-          400: '#a1a1aa',
-          500: '#71717a',
-          600: '#52525b',
-          700: '#3f3f46',
-          800: '#27272a',
-          900: '#18181b',
-          950: '#0a0a0a',
-        },
-
         custom: {
-          base: '#0A0A0A',
-          surface: '#111111',
-          border: '#1A1A1A',
-          hover: '#242424',
-          active: '#2A2A2A',
-          text: '#606060',
-          secondary: '#141414',
+          base: '#131312',
+          surface: '#191917',
+          raised: '#201f1d',
+          border: '#2a2927',
+          hover: '#343330',
+          active: '#403e3a',
+          text: '#8a8781',
+          secondary: '#161615',
         },
+        clay: '#d9967e',
+        sand: '#cfb489',
+        haze: '#97aec4',
+        dusk: '#c79aa4',
       },
       fontFamily: {
         sans: [
@@ -51,34 +44,34 @@ module.exports = {
       typography: (theme) => ({
         DEFAULT: {
           css: {
-            color: theme('colors.zinc.400'),
+            color: theme('colors.zinc.300'),
             a: {
-              'color': theme('colors.lime.400'),
+              'color': theme('colors.clay'),
               '&:hover': {
-                color: theme('colors.lime.300'),
+                color: theme('colors.zinc.100'),
               },
             },
             h1: {
-              color: theme('colors.white'),
+              color: theme('colors.zinc.100'),
             },
             h2: {
-              color: theme('colors.white'),
+              color: theme('colors.zinc.100'),
             },
             h3: {
-              color: theme('colors.white'),
+              color: theme('colors.zinc.100'),
             },
             h4: {
-              color: theme('colors.white'),
+              color: theme('colors.zinc.100'),
             },
             code: {
-              color: theme('colors.lime.400'),
-              backgroundColor: 'rgba(17, 17, 17, 0.5)',
+              color: theme('colors.clay'),
+              backgroundColor: 'rgba(32, 31, 29, 0.8)',
               padding: '0.2em 0.4em',
               borderRadius: '0.25rem',
             },
             pre: {
-              backgroundColor: 'rgba(17, 17, 17, 0.5)',
-              border: '1px solid rgba(26, 26, 26, 0.8)',
+              backgroundColor: 'rgba(19, 19, 18, 0.8)',
+              border: '1px solid rgba(42, 41, 39, 0.9)',
             },
           },
         },
