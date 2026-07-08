@@ -10,13 +10,23 @@ dotenv.config();
 
 const app: Express = express();
 
-app.use(express.json({ limit: '10mb' }));
 const port = process.env.PORT || 3001;
 
 const DB_URI = process.env.DB_CONNECTION_KEY;
 
-app.use(cors({ exposedHeaders: ['X-Conversation-Id'] }));
-app.use(express.json());
+app.use(cors({
+  origin: [
+    'https://stack.me.uk',
+    'https://www.stack.me.uk'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['X-Conversation-Id']
+}));
+
+
+app.use(express.json({ limit: '10mb' }));
+
 app.use('/api', apiRouter);
 
 if (!DB_URI) {
